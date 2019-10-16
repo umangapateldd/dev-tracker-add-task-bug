@@ -32,7 +32,7 @@ public class AddBugTask extends Utilities {
 		LocalDateTime now = LocalDateTime.now();
 		System.out.println(dtf.format(now));
 
-		File src = new File("Bugs.xls");
+		File src = new File("Ticket.xls");
 		Workbook wb = Workbook.getWorkbook(src);
 		Sheet sh1 = wb.getSheet(0);
 
@@ -220,80 +220,44 @@ public class AddBugTask extends Utilities {
 			// reference
 			if (references.getContents().isEmpty()) {
 			} else {
-
-				textFormat(imagePath, references);
-
-//				String[] arrSplit = references.getContents().split("\n");
-//				Thread.sleep(1000);
-//
-//				for (int i = 0; i < arrSplit.length; i++) {
-//					File tempFile = new File(arrSplit[i]);
-//					boolean exists = tempFile.exists();
-//					if (exists != true) {
-//						System.out.println("attachment is not available");
-//
-//						textFormat(references);
-//
-//					} else {
-//						System.out.println("attachment is available");
-//						driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[2]"))
-//								.click();
-//						Thread.sleep(1500);
-//
-//						driver.findElement(By.name("files")).sendKeys(arrSplit[i]);
-////						Thread.sleep(20000);
-//
-//						int tmp = 0;
-//						long t = System.currentTimeMillis();
-//						long end = t + 20000;
-//
-//						do {
-//							System.out.println("currentTimeMillis = " + System.currentTimeMillis());
-//							System.out.println("end = " + end);
-//							if (System.currentTimeMillis() < end) {
-//								System.out.println("image upload timeout");
-//								tmp = 1;
-//							}
-//
-//							if (driver
-//									.findElements(
-//											By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[4]/img"))
-//									.size() > 0) {
-//								System.out.println("File is attached");
-//								tmp = 1;
-//								if (arrSplit.length > 1) {
-//									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
-//											.sendKeys(Keys.ENTER);
-//								}
-//							} else {
-//								System.out.println("File is still not attached");
-//								tmp = 0;
-////								driver.close();
-////								driver.quit();
-////								System.exit(0);
-//							}
-//						} while (tmp == 0);
-//					}
-//				}
+				if (systemName.contains("mac")) {
+					macTextFormat(imagePath, references, "p[4]");
+				} else {
+					textFormat(imagePath, references);
+				}
 			}
 
 			// Objective / Steps to Recreate
 
 			Actions action = new Actions(driver);
-			action.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).build().perform();
-			action.keyUp(Keys.CONTROL).build().perform();
+			if (systemName.contains("mac")) {
+				macTextFormat(imagePath, objective, "p[2]");
+			} else {
+				action.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).build().perform();
+				action.keyUp(Keys.CONTROL).build().perform();
 
-			driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(Keys.ARROW_DOWN);
-
-			textFormat(imagePath, objective);
+				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
+						.sendKeys(Keys.ARROW_DOWN);
+				textFormat(imagePath, objective);
+				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(Keys.DELETE);
+			}
 
 			// COS
 
 			action = new Actions(driver);
-			action.keyDown(Keys.CONTROL).sendKeys(Keys.END).build().perform();
-			action.keyUp(Keys.CONTROL).build().perform();
 
-			textFormat(imagePath, cos);
+			if (systemName.contains("mac")) {
+				macTextFormat(imagePath, cos, "xyz");
+			} else {
+				action.keyDown(Keys.CONTROL).sendKeys(Keys.END).build().perform();
+				action.keyUp(Keys.CONTROL).build().perform();
+
+				textFormat(imagePath, cos);
+				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
+						.sendKeys(Keys.BACK_SPACE);
+			}
+
+			removeExtraSpace();
 
 			// Description verification
 
@@ -317,7 +281,6 @@ public class AddBugTask extends Utilities {
 			} else {
 				try {
 					String[] arrSplit = dependent.getContents().split("/");
-					Thread.sleep(1000);
 
 					for (int i = 0; i < arrSplit.length; i++) {
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[1]/div")).click();
@@ -328,7 +291,6 @@ public class AddBugTask extends Utilities {
 								.sendKeys(Keys.ENTER);
 						Thread.sleep(1000);
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[2]/button")).click();
-						Thread.sleep(1000);
 
 						if (driver.findElements(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).size() > 0) {
 							if (driver.findElement(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).getText()
@@ -353,7 +315,6 @@ public class AddBugTask extends Utilities {
 			} else {
 				try {
 					String[] arrSplit = successor.getContents().split("/");
-					Thread.sleep(1000);
 
 					for (int i = 0; i < arrSplit.length; i++) {
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[1]/div")).click();
@@ -364,7 +325,6 @@ public class AddBugTask extends Utilities {
 								.sendKeys(Keys.ENTER);
 						Thread.sleep(1000);
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[2]/button")).click();
-						Thread.sleep(1000);
 
 						if (driver.findElements(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).size() > 0) {
 							if (driver.findElement(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).getText()
@@ -473,7 +433,7 @@ public class AddBugTask extends Utilities {
 
 			if (bug_tracking_sheet.toLowerCase().equals("yes")) {
 				createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(), taskTitle.getContents(),
-						projectName, originator.getContents(), reporter.getContents());
+						projectName, originator.getContents(), reporter.getContents(), taskType.getContents());
 			}
 
 			row++;

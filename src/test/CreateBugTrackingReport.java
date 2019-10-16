@@ -23,7 +23,7 @@ import jxl.write.biff.RowsExceededException;
 public class CreateBugTrackingReport extends Utilities {
 
 	public void createBugTracking(WebDriver driver, String DevTrackerURL, String taskTitle, String projectName,
-			String originator, String reporter)
+			String originator, String reporter, String taskType)
 			throws InterruptedException, IOException, RowsExceededException, WriteException {
 		File outputWorkbook;
 		WritableWorkbook workbook1;
@@ -34,7 +34,7 @@ public class CreateBugTrackingReport extends Utilities {
 
 		String[] headerContent = { "Date", "Title", "Originator", "Corrected By", "Reported By", "DT Link", "Project",
 				"Is Common", "Repeat Reopen", "Unit Tested? (0/1)",
-				"DT Task Name(This Column is for adding Task ID to Generate DT Link Automatically)" };
+				"DT Task Name(This Column is for adding Task ID to Generate DT Link Automatically)", "Task / Bug" };
 
 		if (outputWorkbook.exists() != true) {
 			workbook1 = Workbook.createWorkbook(outputWorkbook);
@@ -85,9 +85,10 @@ public class CreateBugTrackingReport extends Utilities {
 			String RepeatReopen = "";
 			String UnitTested = "";
 			String DTTaskName = taskID;
+			String tasktype = taskType;
 
 			String data[] = { taskDate, title, originatorName, CorrectedBy, ReportedBy, DTLink, project_Name, IsCommon,
-					RepeatReopen, UnitTested, DTTaskName };
+					RepeatReopen, UnitTested, DTTaskName, tasktype };
 
 			System.out.println("================");
 			for (int j = 0; j < row.getLastCellNum(); j++) {
