@@ -28,7 +28,7 @@ public class CreateBugTrackingReport extends Utilities {
 		File outputWorkbook;
 		WritableWorkbook workbook1;
 		WritableSheet sheet1;
-		outputWorkbook = new File("BugTracking.xls");
+		outputWorkbook = new File("TicketTracker.xls");
 
 		// BugTracking excel header content
 
@@ -38,7 +38,7 @@ public class CreateBugTrackingReport extends Utilities {
 
 		if (outputWorkbook.exists() != true) {
 			workbook1 = Workbook.createWorkbook(outputWorkbook);
-			sheet1 = workbook1.createSheet("BugTracking", 0);
+			sheet1 = workbook1.createSheet("TicketTracker", 0);
 
 			for (int headerContentData = 0; headerContentData < headerContent.length; headerContentData++) {
 				Label label = new Label(headerContentData, 0, headerContent[headerContentData]);
@@ -49,7 +49,7 @@ public class CreateBugTrackingReport extends Utilities {
 			workbook1.close();
 		}
 
-		FileInputStream fsIP = new FileInputStream(new File("BugTracking.xls"));
+		FileInputStream fsIP = new FileInputStream(new File("TicketTracker.xls"));
 		HSSFWorkbook wb = new HSSFWorkbook(fsIP);
 		HSSFSheet worksheet = wb.getSheetAt(0);
 
@@ -100,7 +100,7 @@ public class CreateBugTrackingReport extends Utilities {
 		}
 		fsIP.close();
 
-		FileOutputStream outputStream = new FileOutputStream("BugTracking.xls");
+		FileOutputStream outputStream = new FileOutputStream("TicketTracker.xls");
 		wb.write(outputStream);
 		outputStream.close();
 	}
