@@ -2,8 +2,6 @@ package test;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -666,53 +664,26 @@ public class Utilities {
 	}
 
 	public void removeExtraSpace() {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-		LocalDateTime now = LocalDateTime.now();
-		System.out.println(dtf.format(LocalDateTime.now()));
 		int pTag = 2;
 		int totalPTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
-		System.out.println("totalPTag = " + totalPTag);
-		System.out.println(dtf.format(LocalDateTime.now()));
 		while (pTag <= totalPTag) {
-			System.out.println(dtf.format(LocalDateTime.now()));
 			if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 					.size() > 0) {
-				System.out.println(dtf.format(LocalDateTime.now()));
-				System.out.println("pTag text = " + driver
-						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
-						.getText());
-				System.out.println(dtf.format(LocalDateTime.now()));
-
 				if (pTag == 2 && driver
 						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 						.getText().isEmpty()) {
-					System.out.println(dtf.format(LocalDateTime.now()));
-					System.out.println("p tag " + pTag + " and empty");
 					pTag = pTag + 2;
-					System.out.println(dtf.format(LocalDateTime.now()));
 				} else {
-					System.out.println(dtf.format(LocalDateTime.now()));
-					System.out.println("else p tag " + pTag + " and not empty");
-					System.out.println(dtf.format(LocalDateTime.now()));
-
 					if (!driver
 							.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 							.getText().isEmpty()) {
-						System.out.println(dtf.format(LocalDateTime.now()));
-						System.out.println("p tag increase");
 						pTag++;
-						System.out.println(dtf.format(LocalDateTime.now()));
 					} else if (driver
 							.findElements(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
 							.size() > 0) {
-						System.out.println(dtf.format(LocalDateTime.now()));
-						System.out.println("p tag increase with img");
 						pTag++;
-						System.out.println(dtf.format(LocalDateTime.now()));
 					} else {
-						System.out.println(dtf.format(LocalDateTime.now()));
-						System.out.println("text empty");
 						if (driver
 								.findElements(By.xpath(
 										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
@@ -720,12 +691,9 @@ public class Utilities {
 								&& driver.findElement(By.xpath(
 										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
 										.getText().equals("References")) {
-							System.out.println(dtf.format(LocalDateTime.now()));
-							System.out.println("get ref text");
 							js = (JavascriptExecutor) driver;
 							js.executeScript("arguments[0].remove()", driver.findElement(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
-							System.out.println(dtf.format(LocalDateTime.now()));
 						} else if (driver
 								.findElements(By.xpath(
 										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
@@ -733,32 +701,19 @@ public class Utilities {
 								&& driver.findElement(By.xpath(
 										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
 										.getText().equals("Conditions of Satisfaction")) {
-							System.out.println(dtf.format(LocalDateTime.now()));
-							System.out.println("get cos text");
 							js = (JavascriptExecutor) driver;
 							js.executeScript("arguments[0].remove()", driver.findElement(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
-							System.out.println(dtf.format(LocalDateTime.now()));
 						} else {
-							System.out.println(dtf.format(LocalDateTime.now()));
 							pTag++;
-							System.out.println(dtf.format(LocalDateTime.now()));
 						}
-						System.out.println(dtf.format(LocalDateTime.now()));
 					}
-					System.out.println(dtf.format(LocalDateTime.now()));
 				}
-				System.out.println(dtf.format(LocalDateTime.now()));
 			} else {
-				System.out.println(dtf.format(LocalDateTime.now()));
 				break;
 			}
-			System.out.println(dtf.format(LocalDateTime.now()));
 		}
 		System.out.println("extra space remove done");
-		dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-		now = LocalDateTime.now();
-		System.out.println(dtf.format(now));
 	}
 
 	public void textFormat(String imagePath, Cell descriptionType) throws InterruptedException {
