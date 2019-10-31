@@ -153,8 +153,7 @@ public class AddBugTask extends Utilities {
 			Thread.sleep(1000);
 			try {
 				Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
-				System.out.println(taskcategory.getContents());
-
+				
 				found = false;
 				List<WebElement> allOptions1 = selec1.getOptions();
 				Thread.sleep(1000);
@@ -213,9 +212,6 @@ public class AddBugTask extends Utilities {
 
 			driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).click();
 			Thread.sleep(1000);
-
-			System.out.println(
-					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[2]")).getText());
 
 			// reference
 			if (references.getContents().isEmpty()) {

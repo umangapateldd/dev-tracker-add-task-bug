@@ -65,7 +65,6 @@ public class Utilities {
 	@SuppressWarnings("deprecation")
 	public void macTextFormat(String imagePath, Cell descriptionType, String htmlTag) throws InterruptedException {
 		int countTag = 0;
-		System.out.println("htmlTag = " + htmlTag);
 		if (htmlTag.contains("p[")) {
 			// objective / reference
 			countTag = Integer.parseInt(htmlTag.replace("p[", "").replace("]", ""));
@@ -81,9 +80,7 @@ public class Utilities {
 		int attachmentCount = 0;
 		boolean exists = false;
 		boolean alreadybold = false;
-		System.out.println("arrsplit length = " + arrSplit.length);
 		for (int ar = 0; ar < arrSplit.length; ar++) {
-			System.out.println("arrSplit[" + ar + "] = " + arrSplit[ar]);
 			exists = false;
 			File tempFile = new File(imagePath + arrSplit[ar]);
 			String imageURL = "";
@@ -94,12 +91,8 @@ public class Utilities {
 				imageURL = imagePath + arrSplit[ar];
 			}
 
-			System.out.println("imageURL = " + imageURL);
-			System.out.println("exists = " + exists);
-
 			if (exists != true) {
 				List<String> extractedUrls = extractUrls(arrSplit[ar]);
-				System.out.println("extractedUrls.size() = " + extractedUrls.size());
 				if (extractedUrls.size() > 0) {
 					for (int urlCount = 0; urlCount < extractedUrls.size(); urlCount++) {
 						if (arrSplit[ar].contains(("<" + extractedUrls.get(urlCount).replace("<", "") + "<"))) {
@@ -111,17 +104,10 @@ public class Utilities {
 						}
 					}
 				}
-				System.out.println("arrSplit[ar] = " + arrSplit[ar]);
-
-				System.out.println("countTag = " + countTag);
-				System.out.println(driver
-						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-						.getText());
 
 				if (driver
 						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 						.getText().isEmpty()) {
-					System.out.println("qqqqqqqqqqqqqqq");
 					int cosLinkCount = 0;
 					int cosBoldConntentCount = 0;
 					int cosColorConntentCount = 0;
@@ -184,33 +170,26 @@ public class Utilities {
 						int once = 0;
 
 						while (abc < a.length) {
-							System.out.println("arrSplit[ar] = " + arrSplit[ar]);
-							System.out.println("a data = " + Arrays.toString(a));
-							System.out.println("startttttttt " + abc + "  ==  " + arrSplit[ar].charAt(a[abc]));
-
 							if (arrSplit[ar].charAt(0) != '$') {
-								System.out.println("1111111111111111111111111111");
 								if (driver
 										.findElement(By.xpath(
 												"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[2]/button[1]"))
 										.getAttribute("class")
 										.equals("note-btn btn btn-default btn-sm note-btn-bold active")) {
-									System.out.println("oooooooooooooooooooooooo");
-
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.COMMAND + "b");
 
 									Thread.sleep(1000);
 								} else {
-									System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkk");
+
 								}
 							} else {
-								System.out.println("22222222222222222222222222");
+
 							}
 
 							if (once == 0) {
-								System.out.println("once = " + arrSplit[ar].substring(0, a[abc]));
+
 								driver.findElement(By
 										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 										.sendKeys(arrSplit[ar].substring(0, a[abc]));
@@ -218,7 +197,7 @@ public class Utilities {
 							}
 
 							if (arrSplit[ar].charAt(a[abc]) == '<') {
-								System.out.println("< available");
+
 								try {
 									driver.findElement(
 											By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[1]"))
@@ -259,7 +238,7 @@ public class Utilities {
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 															+ countTag + "]/b/br"))
 													.size() > 0) {
-										System.out.println("b remove");
+
 										js = (JavascriptExecutor) driver;
 										js.executeScript("arguments[0].remove()",
 												driver.findElement(
@@ -279,10 +258,8 @@ public class Utilities {
 								}
 								abc = abc + 3;
 							} else if (arrSplit[ar].charAt(a[abc]) == '$') {
-								System.out.println("wwwwwwwwww = " + arrSplit[ar].charAt(a[abc]));
-								System.out.println("$ available abc = " + abc);
+
 								int boldWithColor = 0;
-								System.out.println("$ content " + arrSplit[ar].substring(a[abc] + 1, a[abc + 1]));
 
 								JavascriptExecutor js = (JavascriptExecutor) driver;
 								js.executeScript(
@@ -309,7 +286,7 @@ public class Utilities {
 									} else {
 										alreadybold = false;
 									}
-									System.out.println("boldWithColor abc = " + abc);
+
 									boldWithColor = 1;
 									try {
 										driver.findElement(By.xpath(
@@ -324,8 +301,6 @@ public class Utilities {
 									}
 									Thread.sleep(1500);
 									// Click Starting Color Code
-									System.out.println("get color code");
-									System.out.println("get color code abc = " + abc);
 
 									if (driver.findElements(By.xpath("//button[@style='background-color:#"
 											+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])
@@ -352,7 +327,6 @@ public class Utilities {
 										alreadybold = false;
 									}
 
-									System.out.println("get string");
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]));
@@ -368,8 +342,6 @@ public class Utilities {
 												"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[4]/div/button[2]"))
 												.click();
 									}
-									System.out.println("get end color code");
-									System.out.println("get end color code abc = " + abc);
 
 									if (driver.findElements(By.xpath("//button[@style='background-color:#"
 											+ arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4])
@@ -381,17 +353,12 @@ public class Utilities {
 										System.out.println("End color code is not proper");
 									}
 
-									System.out.println("lllllllllllll abc = " + abc);
 									if (abc + 4 < a.length) {
-										System.out.println("if ^ content abc = " + abc);
-										System.out.println("if ^ content a length= " + a.length);
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]"))
 												.sendKeys(arrSplit[ar].substring(a[abc + 4] + 1, a[abc + 5]));
 									} else {
-										System.out.println("else ^ content abc = " + abc);
-										System.out.println("else ^ content a length= " + a.length);
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]"))
@@ -404,12 +371,6 @@ public class Utilities {
 								Thread.sleep(1000);
 
 								if (abc + 2 < a.length) {
-									System.out.println("if abc + 2 < a.length = "
-											+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]));
-									System.out.println("string = " + driver
-											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
-													+ countTag + "]"))
-											.getAttribute("innerHTML").replace("<b><br></b>", "").replace("<br>", ""));
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
 											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
@@ -426,13 +387,6 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 								} else {
-									System.out.println("else abc + 2 < a.length = "
-											+ arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length()));
-									System.out.println("string = " + driver
-											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
-													+ countTag + "]"))
-											.getAttribute("innerHTML").replace("<b><br></b>", "").replace("<br>", ""));
-
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
 											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
@@ -452,17 +406,8 @@ public class Utilities {
 											.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 								}
 								abc = abc + 2;
-								System.out.println("abc increase = " + abc);
 							} else if (arrSplit[ar].charAt(a[abc]) == '~') {
-								System.out.println(Arrays.toString(a));
-								System.out.println("~~~~~~~~~~ = " + arrSplit[ar].charAt(a[abc]));
-								System.out.println("~ available abc = " + abc);
-
-								System.out.println(arrSplit[ar]);
 								String username = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]);
-								System.out.println("username = " + username);
-								//
-								System.out.println("data = " + username.substring(0, (username.indexOf(" "))));
 
 								driver.findElement(By
 										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
@@ -472,10 +417,9 @@ public class Utilities {
 										.findElement(By.xpath(
 												"//body//following::div[1][contains(@class,'note-hint-popover')]"))
 										.getAttribute("style").contains("display: block")) {
-									System.out.println("bbbbbbbbbbbbbbbb");
+
 									int userCount = driver
 											.findElements(By.xpath("//div[contains(@class,'note-hint-item')]")).size();
-									System.out.println("userCount = " + userCount);
 									if (userCount == 1) {
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
@@ -485,20 +429,20 @@ public class Utilities {
 									} else if (userCount > 1) {
 
 										for (int cnt = 1; cnt <= userCount; cnt++) {
-											System.out.println("6666666666");
+											
 											if (username.toLowerCase()
 													.equals(driver
 															.findElement(By.xpath("//div[" + cnt
 																	+ "][contains(@class,'note-hint-item')]/strong"))
 															.getText().toLowerCase())) {
-												System.out.println("77777776");
+												
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																+ countTag + "]"))
 														.sendKeys(Keys.ENTER);
 
 											} else {
-												System.out.println("888888888888");
+												
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																+ countTag + "]"))
@@ -513,17 +457,9 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(username.substring(username.indexOf(" "), username.length()));
 								}
-								System.out.println("zzzzzzzzzzzzzzzzz");
+								
 
 								if (abc + 2 < a.length) {
-									System.out.println("if abc length ~");
-									System.out.println("if abc + 2 < a.length = "
-											+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]));
-
-									System.out.println("string = " + driver
-											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
-													+ countTag + "]"))
-											.getAttribute("innerHTML").replace("<b><br></b>", "").replace("<br>", ""));
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
 											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
@@ -540,13 +476,7 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 								} else {
-									System.out.println("else abc length ~");
-									System.out.println("else abc + 2 < a.length = "
-											+ arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length()));
-									System.out.println("string = " + driver
-											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
-													+ countTag + "]"))
-											.getAttribute("innerHTML").replace("<b><br></b>", "").replace("<br>", ""));
+									
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
 											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
@@ -566,43 +496,36 @@ public class Utilities {
 								}
 								abc = abc + 2;
 							} else {
-								System.out.println("str  = " + arrSplit[ar].charAt(a[abc]));
-								System.out.println("no available");
+								
+								
 								if (arrSplit[ar].charAt(a[abc]) == '\n') {
-									System.out.println("n available");
+									
 									enter = true;
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.RETURN);
 								} else {
-									System.out.println("n not available");
+									
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(arrSplit[ar].substring(a[abc], a[abc + 1]));
 								}
-								System.out.println("a length before abc = " + a.length);
-								System.out.println("abc before = " + abc);
+								
 								abc++;
-								System.out.println("a length after abc = " + a.length);
-								System.out.println("abc after = " + abc);
+								
 							}
 						}
 					} else {
-						System.out.println("123123123123123 = " + arrSplit[ar]);
+						
 						JavascriptExecutor js = (JavascriptExecutor) driver;
 						js.executeScript(
 								"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(arrSplit[ar]) + "'",
 								driver.findElement(By.xpath(
-										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
-						System.out.println("text = " + driver.findElement(
-								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
-//						js.executeScript("arguments[0].innerHTML;", driver.findElement(
-//								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));						
 					}
 					if (enter == true) {
 						enter = false;
 					} else {
-						System.out.println("enter false");
 						driver.findElement(
 								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 								.sendKeys(Keys.ENTER);
@@ -611,7 +534,8 @@ public class Utilities {
 				}
 			} else {
 				attachmentCount++;
-				System.out.println("attachment is available");
+
+
 				try {
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[2]"))
 							.click();
@@ -722,7 +646,6 @@ public class Utilities {
 		String[] arrSplit = cosString.split("\n");
 		Thread.sleep(1000);
 		int attachmentCount = 0;
-		System.out.println("arrSplit = " + arrSplit);
 		boolean exists = false;
 		boolean alreadybold = false;
 		boolean boldContentInColor = false;
@@ -736,9 +659,6 @@ public class Utilities {
 				exists = tempFile.exists();
 				imageURL = imagePath + arrSplit[ar];
 			}
-
-			System.out.println("imageURL = " + imageURL);
-			System.out.println("exists = " + exists);
 
 			if (exists != true) {
 				int cosLinkCount = 0;
@@ -801,28 +721,22 @@ public class Utilities {
 					int abc = 0;
 					int once = 0;
 					while (abc < a.length) {
-						System.out.println("arrSplit[ar] = " + arrSplit[ar]);
-						System.out.println("a data = " + Arrays.toString(a));
-						System.out.println("startttttttt " + abc + "  ==  " + arrSplit[ar].charAt(a[abc]));
-
 						if (arrSplit[ar].charAt(0) != '$') {
-							System.out.println("1111111111111111111111111111");
 							if (driver
 									.findElement(
 											By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[2]/button[1]"))
 									.getAttribute("class")
 									.equals("note-btn btn btn-default btn-sm note-btn-bold active")) {
-								System.out.println("oooooooooooooooooooooooo");
 
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 										.sendKeys(Keys.CONTROL + "b");
 
 								Thread.sleep(1000);
 							} else {
-								System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkk");
+
 							}
 						} else {
-							System.out.println("22222222222222222222222222");
+
 						}
 
 						if (arrSplit[ar].charAt(0) != '^') {
@@ -895,7 +809,6 @@ public class Utilities {
 						}
 
 						if (arrSplit[ar].charAt(a[abc]) == '<') {
-							System.out.println("< available");
 							try {
 								driver.findElement(
 										By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[1]"))
@@ -933,8 +846,7 @@ public class Utilities {
 							}
 							abc = abc + 3;
 						} else if (arrSplit[ar].charAt(a[abc]) == '$') {
-							System.out.println("wwwwwwwwww = " + arrSplit[ar].charAt(a[abc]));
-							System.out.println("$ available abc = " + abc);
+
 							int boldWithColor = 0;
 							if (driver
 									.findElement(
@@ -960,7 +872,7 @@ public class Utilities {
 								} else {
 									alreadybold = false;
 								}
-								System.out.println("boldWithColor abc = " + abc);
+
 								boldWithColor = 1;
 								try {
 									driver.findElement(By.xpath(
@@ -975,8 +887,6 @@ public class Utilities {
 								}
 								Thread.sleep(1500);
 								// Click Starting Color Code
-								System.out.println("get color code");
-								System.out.println("get color code abc = " + abc);
 
 								if (driver.findElements(By.xpath("//button[@style='background-color:#"
 										+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])
@@ -1003,7 +913,6 @@ public class Utilities {
 									alreadybold = false;
 								}
 
-								System.out.println("get string");
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 										.sendKeys(arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]));
 
@@ -1018,8 +927,6 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[4]/div/button[2]"))
 											.click();
 								}
-								System.out.println("get end color code");
-								System.out.println("get end color code abc = " + abc);
 
 								if (driver.findElements(By.xpath("//button[@style='background-color:#"
 										+ arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4])
@@ -1031,15 +938,10 @@ public class Utilities {
 									System.out.println("End color code is not proper");
 								}
 
-								System.out.println("lllllllllllll abc = " + abc);
 								if (abc + 4 < a.length) {
-									System.out.println("if ^ content abc = " + abc);
-									System.out.println("if ^ content a length= " + a.length);
 									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 											.sendKeys(arrSplit[ar].substring(a[abc + 4] + 1, a[abc + 5]));
 								} else {
-									System.out.println("else ^ content abc = " + abc);
-									System.out.println("else ^ content a length= " + a.length);
 									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 											.sendKeys(arrSplit[ar].substring(a[abc + 4] + 1, arrSplit[ar].length()));
 								}
@@ -1059,12 +961,7 @@ public class Utilities {
 										.sendKeys(arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length()));
 							}
 							abc = abc + 2;
-							System.out.println("abc increase = " + abc);
 						} else if (arrSplit[ar].charAt(a[abc]) == '^') {
-							System.out.println("^ available");
-							System.out.println("a length in ^ = " + a.length);
-							System.out.println("abc = " + abc);
-
 							if (boldContentInColor == true) {
 
 							} else {
@@ -1090,7 +987,6 @@ public class Utilities {
 								}
 								Thread.sleep(1500);
 								// Click Starting Color Code
-								System.out.println("get color code");
 
 								if (driver.findElements(By.xpath("//button[@style='background-color:#"
 										+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
@@ -1116,8 +1012,7 @@ public class Utilities {
 									}
 									alreadybold = false;
 								}
-								System.out.println("qqqqqqqqqqq");
-								System.out.println("get string");
+
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 										.sendKeys(arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]));
 							}
@@ -1125,7 +1020,6 @@ public class Utilities {
 							if (boldContentInColor == false && arrSplit[ar].charAt(a[abc + 2]) == '$') {
 								boldContentInColor = true;
 								abc = abc + 2;
-								System.out.println("xxxxxxxx");
 								if (driver
 										.findElement(By.xpath(
 												"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[2]/button[1]"))
@@ -1165,10 +1059,8 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[4]/div/button[2]"))
 											.click();
 								}
-								System.out.println("get end color code");
-
+								
 								if (boldContentInColor == true) {
-									System.out.println("cccccccccccccccccccccccc");
 									if (driver.findElements(By.xpath("//button[@style='background-color:#"
 											+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
 											+ "' and @data-event='foreColor']")).size() > 0) {
@@ -1180,8 +1072,7 @@ public class Utilities {
 									}
 
 									if (abc + 2 < a.length) {
-										System.out.println("if ^ content abc = " + abc);
-										System.out.println("if ^ content a length= " + a.length);
+
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 												.sendKeys(arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]));
@@ -1196,8 +1087,7 @@ public class Utilities {
 
 											Thread.sleep(1000);
 										}
-										System.out.println("else ^ content abc = " + abc);
-										System.out.println("else ^ content a length= " + a.length);
+
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(
 														arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length()));
@@ -1215,14 +1105,10 @@ public class Utilities {
 									}
 
 									if (abc + 4 < a.length) {
-										System.out.println("if ^ content abc = " + abc);
-										System.out.println("if ^ content a length= " + a.length);
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 												.sendKeys(arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4]));
 									} else {
-										System.out.println("else ^ content abc = " + abc);
-										System.out.println("else ^ content a length= " + a.length);
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(
 														arrSplit[ar].substring(a[abc + 3] + 1, arrSplit[ar].length()));
@@ -1231,15 +1117,8 @@ public class Utilities {
 								}
 							}
 						} else if (arrSplit[ar].charAt(a[abc]) == '~') {
-							System.out.println(Arrays.toString(a));
-							System.out.println("wwwwwwwwww = " + arrSplit[ar].charAt(a[abc]));
-							System.out.println("~ available abc = " + abc);
 
-							System.out.println(arrSplit[ar]);
 							String username = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]);
-							System.out.println("username = " + username);
-//
-							System.out.println("data = " + username.substring(0, (username.indexOf(" "))));
 
 							driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 									.sendKeys("@" + username.substring(0, (username.indexOf(" "))));
@@ -1248,10 +1127,8 @@ public class Utilities {
 									.findElement(
 											By.xpath("//body//following::div[1][contains(@class,'note-hint-popover')]"))
 									.getAttribute("style").contains("display: block")) {
-								System.out.println("bbbbbbbbbbbbbbbb");
 								int userCount = driver
 										.findElements(By.xpath("//div[contains(@class,'note-hint-item')]")).size();
-								System.out.println("userCount = " + userCount);
 								if (userCount == 1) {
 									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 											.sendKeys(Keys.ENTER);
@@ -1259,18 +1136,15 @@ public class Utilities {
 								} else if (userCount > 1) {
 
 									for (int cnt = 1; cnt <= userCount; cnt++) {
-										System.out.println("6666666666");
 										if (username.toLowerCase().equals(driver
 												.findElement(By.xpath(
 														"//div[" + cnt + "][contains(@class,'note-hint-item')]/strong"))
 												.getText().toLowerCase())) {
-											System.out.println("77777776");
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 													.sendKeys(Keys.ENTER);
 
 										} else {
-											System.out.println("888888888888");
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 													.sendKeys(Keys.ARROW_DOWN);
@@ -1283,7 +1157,6 @@ public class Utilities {
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 										.sendKeys(username.substring(username.indexOf(" "), username.length()));
 							}
-							System.out.println("zzzzzzzzzzzzzzzzz");
 
 							if (abc + 2 < a.length) {
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
@@ -1294,27 +1167,18 @@ public class Utilities {
 							}
 							abc = abc + 2;
 						} else {
-							System.out.println("str  = " + arrSplit[ar].charAt(a[abc]));
-							System.out.println("no available");
 							if (arrSplit[ar].charAt(a[abc]) == '\n') {
-								System.out.println("n available");
 								enter = true;
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 										.sendKeys(Keys.ENTER);
 							} else {
-								System.out.println("n not available");
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 										.sendKeys(arrSplit[ar].substring(a[abc], a[abc + 1]));
 							}
-							System.out.println("a length before abc = " + a.length);
-							System.out.println("abc before = " + abc);
 							abc++;
-							System.out.println("a length after abc = " + a.length);
-							System.out.println("abc after = " + abc);
 						}
 					}
 				} else {
-					System.out.println("123123123123123 = " + arrSplit[ar]);
 					if (driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[2]/button[1]"))
 							.getAttribute("class").equals("note-btn btn btn-default btn-sm note-btn-bold active")) {
 						driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))

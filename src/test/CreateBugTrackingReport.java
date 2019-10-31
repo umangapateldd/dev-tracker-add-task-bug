@@ -53,18 +53,11 @@ public class CreateBugTrackingReport extends Utilities {
 		HSSFWorkbook wb = new HSSFWorkbook(fsIP);
 		HSSFSheet worksheet = wb.getSheetAt(0);
 
-		System.out.println("worksheet.getLastRowNum() = " + worksheet.getLastRowNum());
-		System.out.println("worksheet.getFirstRowNum() = " + worksheet.getFirstRowNum());
-
 		int rowCount = worksheet.getLastRowNum() - worksheet.getFirstRowNum();
-		System.out.println("rowCount = " + rowCount);
 		Row row = worksheet.getRow(0);
-		System.out.println("row.getCell(0) = " + row.getCell(0));
-		System.out.println("row.getLastCellNum() " + row.getLastCellNum());
 
 		// Create a loop over the cell of newly created Row
 
-		System.out.println(driver.getCurrentUrl());
 		if (driver.getCurrentUrl().contains(DevTrackerURL + "track/")) {
 			Row newRow = worksheet.createRow(rowCount + 1);
 
@@ -90,10 +83,7 @@ public class CreateBugTrackingReport extends Utilities {
 			String data[] = { taskDate, title, originatorName, CorrectedBy, ReportedBy, DTLink, project_Name, IsCommon,
 					RepeatReopen, UnitTested, DTTaskName, tasktype };
 
-			System.out.println("================");
 			for (int j = 0; j < row.getLastCellNum(); j++) {
-				System.out.println("j value = " + j);
-				System.out.println(data[j]);
 				Cell cell = newRow.createCell(j);
 				cell.setCellValue(data[j]);
 			}
