@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -63,6 +64,7 @@ public class Utilities {
 		return containedUrls;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void macTextFormat(String imagePath, Cell descriptionType, String htmlTag) throws InterruptedException {
 		int countTag = 0;
 		System.out.println("htmlTag = " + htmlTag);
@@ -287,12 +289,14 @@ public class Utilities {
 								JavascriptExecutor js = (JavascriptExecutor) driver;
 								js.executeScript(
 										"arguments[0].innerHTML = '"
-												+ driver.findElement(
-														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
-																+ countTag + "]"))
+												+ StringEscapeUtils.escapeEcmaScript(driver
+														.findElement(By.xpath(
+																"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+																		+ countTag + "]"))
 														.getAttribute("innerHTML").replace("<b><br></b>", "")
-														.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
-												+ " <b>" + arrSplit[ar].substring(a[abc] + 1, a[abc + 1]) + "</b>'",
+														.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim() + " <b>"
+														+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1]) + "</b>")
+												+ "'",
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]")));
@@ -410,13 +414,13 @@ public class Utilities {
 											.getAttribute("innerHTML").replace("<b><br></b>", "").replace("<br>", ""));
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
-											"arguments[0].innerHTML = '"
-													+ driver.findElement(By.xpath(
+											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
+													.findElement(By.xpath(
 															"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																	+ countTag + "]"))
-															.getAttribute("innerHTML").replace("<b><br></b>", "")
-															.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
-													+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]) + "'",
+													.getAttribute("innerHTML").replace("<b><br></b>", "")
+													.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
+													+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])) + "'",
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 															+ countTag + "]")));
@@ -433,13 +437,13 @@ public class Utilities {
 
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
-											"arguments[0].innerHTML = '"
-													+ driver.findElement(By.xpath(
+											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
+													.findElement(By.xpath(
 															"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																	+ countTag + "]"))
-															.getAttribute("innerHTML").replace("<b><br></b>", "")
-															.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
-													+ arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length())
+													.getAttribute("innerHTML").replace("<b><br></b>", "")
+													.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
+													+ arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length()))
 													+ "'",
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
@@ -524,13 +528,13 @@ public class Utilities {
 											.getAttribute("innerHTML").replace("<b><br></b>", "").replace("<br>", ""));
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
-											"arguments[0].innerHTML = '"
-													+ driver.findElement(By.xpath(
+											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
+													.findElement(By.xpath(
 															"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																	+ countTag + "]"))
-															.getAttribute("innerHTML").replace("<b><br></b>", "")
-															.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
-													+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]) + "'",
+													.getAttribute("innerHTML").replace("<b><br></b>", "")
+													.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
+													+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])) + "'",
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 															+ countTag + "]")));
@@ -547,13 +551,13 @@ public class Utilities {
 											.getAttribute("innerHTML").replace("<b><br></b>", "").replace("<br>", ""));
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
-											"arguments[0].innerHTML = '"
-													+ driver.findElement(By.xpath(
+											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
+													.findElement(By.xpath(
 															"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																	+ countTag + "]"))
-															.getAttribute("innerHTML").replace("<b><br></b>", "")
-															.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
-													+ arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length())
+													.getAttribute("innerHTML").replace("<b><br></b>", "")
+													.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
+													+ arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length()))
 													+ "'",
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
@@ -588,8 +592,14 @@ public class Utilities {
 					} else {
 						System.out.println("123123123123123 = " + arrSplit[ar]);
 						JavascriptExecutor js = (JavascriptExecutor) driver;
-						js.executeScript("arguments[0].innerHTML = '" + arrSplit[ar] + "'", driver.findElement(
+						js.executeScript(
+								"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(arrSplit[ar]) + "'",
+								driver.findElement(By.xpath(
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
+						System.out.println("text = " + driver.findElement(
 								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
+//						js.executeScript("arguments[0].innerHTML;", driver.findElement(
+//								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
 					}
 					if (enter == true) {
 						enter = false;
@@ -658,37 +668,50 @@ public class Utilities {
 	public void removeExtraSpace() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
-		System.out.println(dtf.format(now));
+		System.out.println(dtf.format(LocalDateTime.now()));
 		int pTag = 2;
 		int totalPTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
 		System.out.println("totalPTag = " + totalPTag);
+		System.out.println(dtf.format(LocalDateTime.now()));
 		while (pTag <= totalPTag) {
+			System.out.println(dtf.format(LocalDateTime.now()));
 			if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 					.size() > 0) {
+				System.out.println(dtf.format(LocalDateTime.now()));
 				System.out.println("pTag text = " + driver
 						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 						.getText());
+				System.out.println(dtf.format(LocalDateTime.now()));
 
 				if (pTag == 2 && driver
 						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 						.getText().isEmpty()) {
+					System.out.println(dtf.format(LocalDateTime.now()));
 					System.out.println("p tag " + pTag + " and empty");
 					pTag = pTag + 2;
+					System.out.println(dtf.format(LocalDateTime.now()));
 				} else {
+					System.out.println(dtf.format(LocalDateTime.now()));
 					System.out.println("else p tag " + pTag + " and not empty");
-					now = LocalDateTime.now();
-					System.out.println(dtf.format(now));
+					System.out.println(dtf.format(LocalDateTime.now()));
 
 					if (!driver
 							.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
-							.getText().isEmpty()
-							|| driver
-									.findElements(By.xpath(
-											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
-									.size() > 0) {
+							.getText().isEmpty()) {
+						System.out.println(dtf.format(LocalDateTime.now()));
 						System.out.println("p tag increase");
 						pTag++;
+						System.out.println(dtf.format(LocalDateTime.now()));
+					} else if (driver
+							.findElements(
+									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
+							.size() > 0) {
+						System.out.println(dtf.format(LocalDateTime.now()));
+						System.out.println("p tag increase with img");
+						pTag++;
+						System.out.println(dtf.format(LocalDateTime.now()));
 					} else {
+						System.out.println(dtf.format(LocalDateTime.now()));
 						System.out.println("text empty");
 						if (driver
 								.findElements(By.xpath(
@@ -697,10 +720,12 @@ public class Utilities {
 								&& driver.findElement(By.xpath(
 										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
 										.getText().equals("References")) {
+							System.out.println(dtf.format(LocalDateTime.now()));
 							System.out.println("get ref text");
 							js = (JavascriptExecutor) driver;
 							js.executeScript("arguments[0].remove()", driver.findElement(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
+							System.out.println(dtf.format(LocalDateTime.now()));
 						} else if (driver
 								.findElements(By.xpath(
 										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
@@ -708,18 +733,27 @@ public class Utilities {
 								&& driver.findElement(By.xpath(
 										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
 										.getText().equals("Conditions of Satisfaction")) {
+							System.out.println(dtf.format(LocalDateTime.now()));
 							System.out.println("get cos text");
 							js = (JavascriptExecutor) driver;
 							js.executeScript("arguments[0].remove()", driver.findElement(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
+							System.out.println(dtf.format(LocalDateTime.now()));
 						} else {
+							System.out.println(dtf.format(LocalDateTime.now()));
 							pTag++;
+							System.out.println(dtf.format(LocalDateTime.now()));
 						}
+						System.out.println(dtf.format(LocalDateTime.now()));
 					}
+					System.out.println(dtf.format(LocalDateTime.now()));
 				}
+				System.out.println(dtf.format(LocalDateTime.now()));
 			} else {
+				System.out.println(dtf.format(LocalDateTime.now()));
 				break;
 			}
+			System.out.println(dtf.format(LocalDateTime.now()));
 		}
 		System.out.println("extra space remove done");
 		dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");

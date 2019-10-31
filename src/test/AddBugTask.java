@@ -50,7 +50,7 @@ public class AddBugTask extends Utilities {
 
 		driver.get(DevTrackerURL.getContents());
 
-		if (DevTrackerURL.getContents().equals("https://devtracker.devdigdev.com/")) {
+		if (DevTrackerURL.getContents().trim().equals("https://devtracker.devdigdev.com/")) {
 			driver.findElement(By.name("access_login")).sendKeys("devtracker");
 			driver.findElement(By.name("access_password")).sendKeys("devtracker@022015");
 			driver.findElement(By.name("access_password")).sendKeys(Keys.ENTER);
@@ -220,42 +220,45 @@ public class AddBugTask extends Utilities {
 			// reference
 			if (references.getContents().isEmpty()) {
 			} else {
-				if (systemName.contains("mac")) {
-					macTextFormat(imagePath, references, "p[4]");
-				} else {
-					textFormat(imagePath, references);
-				}
+				macTextFormat(imagePath, references, "p[4]");
+//				if (systemName.contains("mac")) {
+//					macTextFormat(imagePath, references, "p[4]");
+//				} else {
+//					textFormat(imagePath, references);
+//				}
 			}
 
 			// Objective / Steps to Recreate
 
 			Actions action = new Actions(driver);
-			if (systemName.contains("mac")) {
-				macTextFormat(imagePath, objective, "p[2]");
-			} else {
-				action.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).build().perform();
-				action.keyUp(Keys.CONTROL).build().perform();
-
-				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
-						.sendKeys(Keys.ARROW_DOWN);
-				textFormat(imagePath, objective);
-				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(Keys.DELETE);
-			}
+//			if (systemName.contains("mac")) {
+//				macTextFormat(imagePath, objective, "p[2]");
+//			} else {
+//				action.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).build().perform();
+//				action.keyUp(Keys.CONTROL).build().perform();
+//
+//				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
+//						.sendKeys(Keys.ARROW_DOWN);
+//				textFormat(imagePath, objective);
+//				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(Keys.DELETE);
+//			}
+			macTextFormat(imagePath, objective, "p[2]");
 
 			// COS
 
 			action = new Actions(driver);
 
-			if (systemName.contains("mac")) {
-				macTextFormat(imagePath, cos, "xyz");
-			} else {
-				action.keyDown(Keys.CONTROL).sendKeys(Keys.END).build().perform();
-				action.keyUp(Keys.CONTROL).build().perform();
-
-				textFormat(imagePath, cos);
-				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
-						.sendKeys(Keys.BACK_SPACE);
-			}
+			macTextFormat(imagePath, cos, "xyz");
+//			if (systemName.contains("mac")) {
+//				macTextFormat(imagePath, cos, "xyz");
+//			} else {
+//				action.keyDown(Keys.CONTROL).sendKeys(Keys.END).build().perform();
+//				action.keyUp(Keys.CONTROL).build().perform();
+//
+//				textFormat(imagePath, cos);
+//				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
+//						.sendKeys(Keys.BACK_SPACE);
+//			}
 
 			removeExtraSpace();
 
