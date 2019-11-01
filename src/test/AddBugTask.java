@@ -12,7 +12,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
 import jxl.Cell;
@@ -153,7 +152,7 @@ public class AddBugTask extends Utilities {
 			Thread.sleep(1000);
 			try {
 				Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
-				
+
 				found = false;
 				List<WebElement> allOptions1 = selec1.getOptions();
 				Thread.sleep(1000);
@@ -226,7 +225,7 @@ public class AddBugTask extends Utilities {
 
 			// Objective / Steps to Recreate
 
-			Actions action = new Actions(driver);
+//			Actions action = new Actions(driver);
 //			if (systemName.contains("mac")) {
 //				macTextFormat(imagePath, objective, "p[2]");
 //			} else {
@@ -238,11 +237,12 @@ public class AddBugTask extends Utilities {
 //				textFormat(imagePath, objective);
 //				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(Keys.DELETE);
 //			}
+
 			macTextFormat(imagePath, objective, "p[2]");
 
 			// COS
 
-			action = new Actions(driver);
+//			action = new Actions(driver);
 
 			macTextFormat(imagePath, cos, "xyz");
 //			if (systemName.contains("mac")) {

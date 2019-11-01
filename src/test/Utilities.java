@@ -46,7 +46,7 @@ public class Utilities {
 
 		driver = new ChromeDriver(options);
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 	}
 
 	public static List<String> extractUrls(String text) {
@@ -429,20 +429,20 @@ public class Utilities {
 									} else if (userCount > 1) {
 
 										for (int cnt = 1; cnt <= userCount; cnt++) {
-											
+
 											if (username.toLowerCase()
 													.equals(driver
 															.findElement(By.xpath("//div[" + cnt
 																	+ "][contains(@class,'note-hint-item')]/strong"))
 															.getText().toLowerCase())) {
-												
+
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																+ countTag + "]"))
 														.sendKeys(Keys.ENTER);
 
 											} else {
-												
+
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																+ countTag + "]"))
@@ -457,7 +457,6 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(username.substring(username.indexOf(" "), username.length()));
 								}
-								
 
 								if (abc + 2 < a.length) {
 									js = (JavascriptExecutor) driver;
@@ -476,7 +475,7 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 								} else {
-									
+
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
 											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
@@ -496,32 +495,31 @@ public class Utilities {
 								}
 								abc = abc + 2;
 							} else {
-								
-								
+
 								if (arrSplit[ar].charAt(a[abc]) == '\n') {
-									
+
 									enter = true;
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.RETURN);
 								} else {
-									
+
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(arrSplit[ar].substring(a[abc], a[abc + 1]));
 								}
-								
+
 								abc++;
-								
+
 							}
 						}
 					} else {
-						
+
 						JavascriptExecutor js = (JavascriptExecutor) driver;
 						js.executeScript(
 								"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(arrSplit[ar]) + "'",
 								driver.findElement(By.xpath(
-										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));						
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
 					}
 					if (enter == true) {
 						enter = false;
@@ -530,11 +528,10 @@ public class Utilities {
 								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 								.sendKeys(Keys.ENTER);
 					}
-					Thread.sleep(3000);
+					Thread.sleep(1500);
 				}
 			} else {
 				attachmentCount++;
-
 
 				try {
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[2]"))
@@ -587,7 +584,8 @@ public class Utilities {
 		}
 	}
 
-	public void removeExtraSpace() {
+	public void removeExtraSpace() throws InterruptedException {
+		System.out.println("Removing Extra Space");
 		int pTag = 2;
 		int totalPTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
 		while (pTag <= totalPTag) {
@@ -598,39 +596,57 @@ public class Utilities {
 						.getText().isEmpty()) {
 					pTag = pTag + 2;
 				} else {
-					if (!driver
+					if (driver
 							.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 							.getText().isEmpty()) {
-						pTag++;
-					} else if (driver
-							.findElements(
-									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
-							.size() > 0) {
-						pTag++;
-					} else {
 						if (driver
-								.findElements(By.xpath(
-										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
-								.size() > 0
-								&& driver.findElement(By.xpath(
-										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
-										.getText().equals("References")) {
-							js = (JavascriptExecutor) driver;
-							js.executeScript("arguments[0].remove()", driver.findElement(
-									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
-						} else if (driver
-								.findElements(By.xpath(
-										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
-								.size() > 0
-								&& driver.findElement(By.xpath(
-										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
-										.getText().equals("Conditions of Satisfaction")) {
-							js = (JavascriptExecutor) driver;
-							js.executeScript("arguments[0].remove()", driver.findElement(
-									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
-						} else {
+								.findElements(By
+										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
+								.size() > 0) {
 							pTag++;
+						} else {
+							if (driver
+									.findElements(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
+									.size() > 0
+									&& driver.findElement(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
+											.getText().equals("References")) {
+								js = (JavascriptExecutor) driver;
+								js.executeScript("arguments[0].remove()", driver.findElement(
+										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));								
+							} else if (driver
+									.findElements(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
+									.size() > 0
+									&& driver
+											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+													+ (pTag + 1) + "]"))
+											.getText().equals("Conditions of Satisfaction")) {
+								js = (JavascriptExecutor) driver;
+								js.executeScript("arguments[0].remove()", driver.findElement(
+										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
+							} else {
+								
+								pTag++;
+							}
 						}
+
+//					} else if (driver
+//							.findElements(
+//									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
+//							.size() > 0) {
+//						pTag++;
+					} else {
+						pTag++;
+					}
+					if (driver
+							.findElements(
+									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br"))
+							.size() > 0) {
+						js = (JavascriptExecutor) driver;
+						js.executeScript("arguments[0].remove()", driver.findElement(
+								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br")));
 					}
 				}
 			} else {
@@ -1059,7 +1075,7 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[4]/div/button[2]"))
 											.click();
 								}
-								
+
 								if (boldContentInColor == true) {
 									if (driver.findElements(By.xpath("//button[@style='background-color:#"
 											+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
@@ -1195,7 +1211,7 @@ public class Utilities {
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 							.sendKeys(Keys.ENTER);
 				}
-				Thread.sleep(3000);
+				Thread.sleep(1500);
 			} else {
 				attachmentCount++;
 				System.out.println("attachment is available");
