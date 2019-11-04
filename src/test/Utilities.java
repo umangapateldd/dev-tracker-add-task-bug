@@ -128,6 +128,33 @@ public class Utilities {
 						}
 					}
 					boolean enter = false;
+					if (driver
+							.findElements(
+									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]/b"))
+							.size() > 0) {
+						if (driver
+								.findElement(By.xpath(
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]/b"))
+								.getText().isEmpty()
+								|| driver.findElements(By.xpath(
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]/b/br"))
+										.size() > 0) {
+							js = (JavascriptExecutor) driver;
+							js.executeScript("arguments[0].remove()", driver.findElement(By
+									.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]/b")));
+							
+							js.executeScript(
+									"arguments[0].innerHTML = '"
+											+ StringEscapeUtils.escapeEcmaScript(driver
+													.findElement(By.xpath(
+															"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+																	+ countTag + "]"))
+													.getAttribute("innerHTML").trim() + "<br>")
+											+ "'",
+									driver.findElement(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
+						}
+					}
 
 					if (cosLinkCount > 0 || cosBoldConntentCount > 0 || cosColorConntentCount > 0
 							|| cosTagUserSymbolCount > 0) {
@@ -176,9 +203,14 @@ public class Utilities {
 												"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[2]/button[1]"))
 										.getAttribute("class")
 										.equals("note-btn btn btn-default btn-sm note-btn-bold active")) {
-									driver.findElement(By.xpath(
-											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-											.sendKeys(Keys.COMMAND + "b");
+									if (systemName.contains("mac")) {
+
+									} else {
+										driver.findElement(
+												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+														+ countTag + "]"))
+												.sendKeys(Keys.CONTROL + "b");
+									}
 
 									Thread.sleep(1000);
 								} else {
@@ -318,10 +350,15 @@ public class Utilities {
 												.getAttribute("class")
 												.equals("note-btn btn btn-default btn-sm note-btn-bold active")) {
 										} else {
-											driver.findElement(
-													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
-															+ countTag + "]"))
-													.sendKeys(Keys.COMMAND + "b");
+											if (systemName.contains("mac")) {
+
+											} else {
+												driver.findElement(
+														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+																+ countTag + "]"))
+														.sendKeys(Keys.CONTROL + "b");
+											}
+
 											Thread.sleep(1000);
 										}
 										alreadybold = false;
@@ -614,7 +651,7 @@ public class Utilities {
 											.getText().equals("References")) {
 								js = (JavascriptExecutor) driver;
 								js.executeScript("arguments[0].remove()", driver.findElement(
-										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));								
+										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
 							} else if (driver
 									.findElements(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
@@ -627,7 +664,7 @@ public class Utilities {
 								js.executeScript("arguments[0].remove()", driver.findElement(
 										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
 							} else {
-								
+
 								pTag++;
 							}
 						}
