@@ -64,7 +64,7 @@ public class AddBugTask extends Utilities {
 		driver.findElement(By.name("username")).click();
 		driver.findElement(By.name("username")).sendKeys(username.getContents());
 		driver.findElement(By.name("password")).click();
-		driver.findElement(By.name("password1")).sendKeys(password.getContents());
+		driver.findElement(By.name("password")).sendKeys(password.getContents());
 		driver.findElement(By.name("password")).sendKeys(Keys.ENTER);
 
 		Thread.sleep(2000);
