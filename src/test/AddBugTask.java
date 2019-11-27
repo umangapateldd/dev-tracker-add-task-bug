@@ -1,10 +1,13 @@
 package test;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
@@ -13,19 +16,22 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.Listeners;
 
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
-import jxl.read.biff.BiffException;
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 
+@Listeners(ListenerTest.class)
 public class AddBugTask extends Utilities {
 
+	mailSend mailSend = new mailSend();
+	Cell username;
+	
 	@org.testng.annotations.Test
-	public void add_bug_task()
-			throws InterruptedException, BiffException, IOException, RowsExceededException, WriteException {
+	public void add_bug_task() throws Exception {
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
@@ -37,7 +43,7 @@ public class AddBugTask extends Utilities {
 
 		// column, row
 		Cell DevTrackerURL = sh1.getCell(1, 0);
-		Cell username = sh1.getCell(1, 1);
+		username = sh1.getCell(1, 1);
 		Cell password = sh1.getCell(1, 2);
 		String imagePath = sh1.getCell(1, 3).getContents();
 		String bug_tracking_sheet = sh1.getCell(3, 0).getContents();
@@ -58,7 +64,7 @@ public class AddBugTask extends Utilities {
 		driver.findElement(By.name("username")).click();
 		driver.findElement(By.name("username")).sendKeys(username.getContents());
 		driver.findElement(By.name("password")).click();
-		driver.findElement(By.name("password")).sendKeys(password.getContents());
+		driver.findElement(By.name("password1")).sendKeys(password.getContents());
 		driver.findElement(By.name("password")).sendKeys(Keys.ENTER);
 
 		Thread.sleep(2000);
@@ -102,6 +108,7 @@ public class AddBugTask extends Utilities {
 
 			System.out.println(taskType.getContents() + " is adding");
 			System.out.println("Title is = " + taskTitle.getContents());
+			testcase = false;
 
 			if (project_name.getContents().matches("[0-9]+")) {
 				driver.get(DevTrackerURL.getContents() + "index.php?route=common/task/loadDetailForm&project_id="
@@ -419,17 +426,16 @@ public class AddBugTask extends Utilities {
 						tmp = 0;
 					}
 				} while (tmp == 0);
-
+				js = (JavascriptExecutor) driver;
+				js.executeScript("window.scrollBy(0,250)");
 			}
 
 			now = LocalDateTime.now();
 			System.out.println(dtf.format(now));
-			driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[26]/div/div/button[1]")).click();
-
-			Thread.sleep(2000);
-
+//			driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[26]/div/div/button[1]")).click();
+			testcase = true;
+			checkLoader();
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-
 			if (bug_tracking_sheet.toLowerCase().equals("yes")) {
 				createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(), taskTitle.getContents(),
 						projectName, originator.getContents(), reporter.getContents(), taskType.getContents());
@@ -440,9 +446,79 @@ public class AddBugTask extends Utilities {
 		now = LocalDateTime.now();
 		System.out.println(dtf.format(now));
 
+//		driver.close();
+//		driver.quit();
+//		System.exit(0);
+	}
+
+	@AfterSuite
+	public void bugadd_fun_verify() throws Exception, InterruptedException {
+		String zipFilename = "test-output.zip";
+		String outputFolderName = "test-output";
+		String renamedFileName = "testoutput.txt";
+		try {
+			Assert.assertTrue(testcase);
+		} catch (AssertionError e) {
+			File f = new File(outputFolderName);
+			if (f.exists() && f.isDirectory()) {
+				File dir = new File(outputFolderName);
+				String zipDirName = zipFilename;
+
+				zipDirectory(dir, zipDirName);
+			} else {
+			}
+			Thread.sleep(1500);
+			File file = new File(zipFilename); // handler to your ZIP file
+			File file2 = new File(renamedFileName); // destination dir of your file
+			boolean success = file.renameTo(file2);
+			mailSend.mail(renamedFileName, username.getContents());
+			Thread.sleep(2000);
+
+			file = new File(renamedFileName);
+			if (file.exists()) {
+				file.delete();
+			}
+		}
 		driver.close();
 		driver.quit();
 		System.exit(0);
 	}
 
+	public void zipDirectory(File dir, String zipDirName) throws Exception {
+
+		populateFilesList(dir);
+		// now zip files one by one
+		// create ZipOutputStream to write to the zip file
+		FileOutputStream fos = new FileOutputStream(zipDirName);
+		ZipOutputStream zos = new ZipOutputStream(fos);
+		for (String filePath : filesListInDir) {
+//				System.out.println("Zipping " + filePath);
+			// for ZipEntry we need to keep only relative file path, so we used substring on
+			// absolute path
+			ZipEntry ze = new ZipEntry(filePath.substring(dir.getAbsolutePath().length() + 1, filePath.length()));
+			zos.putNextEntry(ze);
+			// read the file and write to ZipOutputStream
+			FileInputStream fis = new FileInputStream(filePath);
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = fis.read(buffer)) > 0) {
+				zos.write(buffer, 0, len);
+			}
+			zos.closeEntry();
+			fis.close();
+		}
+		zos.close();
+		fos.close();
+
+	}
+
+	public void populateFilesList(File dir) throws Exception {
+		File[] files = dir.listFiles();
+		for (File file : files) {
+			if (file.isFile())
+				filesListInDir.add(file.getAbsolutePath());
+			else
+				populateFilesList(file);
+		}
+	}
 }

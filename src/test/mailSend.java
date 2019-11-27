@@ -1,5 +1,6 @@
 package test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -10,15 +11,16 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import com.sun.mail.smtp.SMTPTransport;
-
 public class mailSend {
-	public void mail() throws IOException {
+	public void mail(String filename, String username) throws IOException, InterruptedException {
 
 		// for example, smtp.mailgun.org
 		String SMTP_SERVER = "smtp.gmail.com";
@@ -26,11 +28,11 @@ public class mailSend {
 		String PASSWORD = "Vivekbhatt@123";
 
 		String EMAIL_FROM = "vivekbhatt.devdigital@gmail.com";
-		String EMAIL_TO = "vivekbhatt.devdigital@gmail.com";
-		String EMAIL_TO_CC = "";
+		String EMAIL_TO = "vivek.bhatt@devdigital.com";
+		String EMAIL_TO_CC = "vivekbhatt.devdigital@gmail.com";
 
-		String EMAIL_SUBJECT = "Test Send Email via SMTP";
-		String EMAIL_TEXT = "Hello Java Mail \n ABC123";
+		String EMAIL_SUBJECT = "Script fail for " + username;
+		String EMAIL_TEXT = "Script is failed and see report";
 
 		Properties prop = System.getProperties();
 		prop.put("mail.smtp.host", SMTP_SERVER); // optional, defined in
@@ -39,19 +41,22 @@ public class mailSend {
 		prop.put("mail.smtp.port", "587"); // default port 25
 		prop.put("mail.smtp.starttls.enable", "true"); // default port 25
 
-		javax.mail.Session session = javax.mail.Session.getInstance(prop, null);
-		Message msg = new MimeMessage(session);
-
+		Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(USERNAME, PASSWORD);
+			}
+		});
 		try {
+			Message msg = new MimeMessage(session);
 
 			// from
 			msg.setFrom(new InternetAddress(EMAIL_FROM));
 
 			// to
-			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_TO, false));
+			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_TO));
 
 			// cc
-			msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(EMAIL_TO_CC, false));
+			msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(EMAIL_TO_CC));
 
 			// subject
 			msg.setSubject(EMAIL_SUBJECT);
@@ -69,32 +74,36 @@ public class mailSend {
 			multipart.addBodyPart(messageBodyPart);
 
 			// Part two is attachment
-			messageBodyPart = new MimeBodyPart();
-			String filename = "createparagraph.doc";
-			DataSource source = new FileDataSource(filename);
-			messageBodyPart.setDataHandler(new DataHandler(source));
-			messageBodyPart.setFileName(filename);
-			multipart.addBodyPart(messageBodyPart);
+			File file = new File(filename);
+			if (file.exists()) {
+				messageBodyPart = new MimeBodyPart();
+				DataSource source = new FileDataSource(filename);
+				messageBodyPart.setDataHandler(new DataHandler(source));
+				messageBodyPart.setFileName(filename);
+				multipart.addBodyPart(messageBodyPart);
+			}
 
 			// Send the complete message parts
 			msg.setContent(multipart);
 
 			// content
-			// msg.setText(EMAIL_TEXT);
+//			msg.setText(EMAIL_TEXT);
 
 			// msg.setSentDate(new Date());
 
 			// Get SMTPTransport
-			SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
+//			SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
 
 			// connect
-			t.connect(SMTP_SERVER, USERNAME, PASSWORD);
+//			t.connect(SMTP_SERVER, USERNAME, PASSWORD);
 
 			// send
-			t.sendMessage(msg, msg.getAllRecipients());
 
-			t.close();
+//			t.sendMessage(msg, msg.getAllRecipients());
+			Thread.sleep(2000);
+			Transport.send(msg);
 
+//			t.close();
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}

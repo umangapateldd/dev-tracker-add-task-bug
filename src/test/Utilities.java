@@ -1,13 +1,18 @@
 package test;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.openqa.selenium.By;
@@ -18,6 +23,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
 
 import jxl.Cell;
 
@@ -25,6 +32,13 @@ public class Utilities {
 	WebDriver driver;
 	JavascriptExecutor js;
 	String systemName;
+	List<String> filesListInDir = new ArrayList<String>();
+	static FileOutputStream F_OUT;
+	static ZipOutputStream Z_OUT;
+	static int N;
+	static FileLock lock;
+	List paths;
+	boolean testcase = false;
 
 	public void openBrowser() throws IOException {
 
@@ -142,7 +156,7 @@ public class Utilities {
 							js = (JavascriptExecutor) driver;
 							js.executeScript("arguments[0].remove()", driver.findElement(By
 									.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]/b")));
-							
+
 							js.executeScript(
 									"arguments[0].innerHTML = '"
 											+ StringEscapeUtils.escapeEcmaScript(driver
@@ -1303,4 +1317,28 @@ public class Utilities {
 			driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(Keys.DELETE);
 		}
 	}
+
+	public void checkLoader() {
+		int tmp = 1;
+		long t = System.currentTimeMillis();
+		long end = t + 80000;
+
+		do {
+			if (System.currentTimeMillis() > end) {
+				System.out.println("timeout");
+				tmp = 1;
+			}
+
+			if (driver.findElements(By.id("indicator")).size() > 0
+					&& driver.findElement(By.id("indicator")).getAttribute("class").equals("indicator hide")) {
+				tmp = 0;
+			} else {
+				tmp = 1;
+			}
+
+		} while (tmp == 1);
+	}
+
+	
+
 }
