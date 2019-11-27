@@ -432,7 +432,7 @@ public class AddBugTask extends Utilities {
 
 			now = LocalDateTime.now();
 			System.out.println(dtf.format(now));
-//			driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[26]/div/div/button[1]")).click();
+			driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[26]/div/div/button[1]")).click();
 			testcase = true;
 			checkLoader();
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
