@@ -29,10 +29,12 @@ public class AddBugTask extends Utilities {
 
 	mailSend mailSend = new mailSend();
 	Cell username;
-	
+	String zipFilename = "test-output.zip";
+	String outputFolderName = "test-output";
+	String renamedFileName = "testoutput.txt";
+
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
-
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 		System.out.println(dtf.format(now));
@@ -47,6 +49,7 @@ public class AddBugTask extends Utilities {
 		Cell password = sh1.getCell(1, 2);
 		String imagePath = sh1.getCell(1, 3).getContents();
 		String bug_tracking_sheet = sh1.getCell(3, 0).getContents();
+		mailSend.mail(renamedFileName, username.getContents(), "start");
 
 		MultipleFileUpload multipleFileUpload = new MultipleFileUpload();
 		CreateBugTrackingReport createBugTrackingReport = new CreateBugTrackingReport();
@@ -453,9 +456,6 @@ public class AddBugTask extends Utilities {
 
 	@AfterSuite
 	public void bugadd_fun_verify() throws Exception, InterruptedException {
-		String zipFilename = "test-output.zip";
-		String outputFolderName = "test-output";
-		String renamedFileName = "testoutput.txt";
 		try {
 			Assert.assertTrue(testcase);
 		} catch (AssertionError e) {
@@ -470,14 +470,14 @@ public class AddBugTask extends Utilities {
 			Thread.sleep(1500);
 			File file = new File(zipFilename); // handler to your ZIP file
 			File file2 = new File(renamedFileName); // destination dir of your file
-			boolean success = file.renameTo(file2);
-			mailSend.mail(renamedFileName, username.getContents());
-			Thread.sleep(2000);
+			file.renameTo(file2);
+		}
+		mailSend.mail(renamedFileName, username.getContents(), "complete");
+		Thread.sleep(2000);
 
-			file = new File(renamedFileName);
-			if (file.exists()) {
-				file.delete();
-			}
+		File file = new File(renamedFileName);
+		if (file.exists()) {
+			file.delete();
 		}
 		driver.close();
 		driver.quit();
