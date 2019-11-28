@@ -459,10 +459,9 @@ public class Utilities {
 								abc = abc + 2;
 							} else if (arrSplit[ar].charAt(a[abc]) == '~') {
 								String username = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]);
-
 								driver.findElement(By
 										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-										.sendKeys("@" + username.substring(0, (username.indexOf(" "))));
+										.sendKeys(" @" + username.substring(0, (username.indexOf(" "))));
 
 								if (driver
 										.findElement(By.xpath(
@@ -476,7 +475,6 @@ public class Utilities {
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]"))
 												.sendKeys(Keys.ENTER);
-
 									} else if (userCount > 1) {
 
 										for (int cnt = 1; cnt <= userCount; cnt++) {
@@ -491,9 +489,7 @@ public class Utilities {
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																+ countTag + "]"))
 														.sendKeys(Keys.ENTER);
-
 											} else {
-
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																+ countTag + "]"))
@@ -508,7 +504,7 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(username.substring(username.indexOf(" "), username.length()));
 								}
-
+//								
 								if (abc + 2 < a.length) {
 									js = (JavascriptExecutor) driver;
 									js.executeScript(
@@ -522,9 +518,12 @@ public class Utilities {
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 															+ countTag + "]")));
-									driver.findElement(By.xpath(
-											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-											.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
+									if (systemName.contains("mac")) {
+										driver.findElement(
+												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+														+ countTag + "]"))
+												.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
+									}
 								} else {
 
 									js = (JavascriptExecutor) driver;
@@ -1188,7 +1187,7 @@ public class Utilities {
 							String username = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]);
 
 							driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
-									.sendKeys("@" + username.substring(0, (username.indexOf(" "))));
+									.sendKeys(" @" + username.substring(0, (username.indexOf(" "))));
 
 							if (driver
 									.findElement(
@@ -1199,7 +1198,6 @@ public class Utilities {
 								if (userCount == 1) {
 									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
 											.sendKeys(Keys.ENTER);
-
 								} else if (userCount > 1) {
 
 									for (int cnt = 1; cnt <= userCount; cnt++) {
@@ -1209,8 +1207,7 @@ public class Utilities {
 												.getText().toLowerCase())) {
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
-													.sendKeys(Keys.ENTER);
-
+													.sendKeys(Keys.ENTER);											
 										} else {
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
@@ -1338,7 +1335,5 @@ public class Utilities {
 
 		} while (tmp == 1);
 	}
-
-	
 
 }

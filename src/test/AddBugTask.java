@@ -509,7 +509,6 @@ public class AddBugTask extends Utilities {
 		}
 		zos.close();
 		fos.close();
-
 	}
 
 	public void populateFilesList(File dir) throws Exception {
