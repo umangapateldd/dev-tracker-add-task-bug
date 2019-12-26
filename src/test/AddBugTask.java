@@ -32,6 +32,10 @@ public class AddBugTask extends Utilities {
 	String zipFilename = "test-output.zip";
 	String outputFolderName = "test-output";
 	String renamedFileName = "testoutput.txt";
+	String DevTrackerNumber = "";
+	boolean BranchCreateSheet = false;
+	String BranchMilestone = "";
+	Cell DevTrackerURL;
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
@@ -43,13 +47,25 @@ public class AddBugTask extends Utilities {
 		Workbook wb = Workbook.getWorkbook(src);
 		Sheet sh1 = wb.getSheet(0);
 
+		String[] sheetNames = wb.getSheetNames();
+		for (int i = 0; i < sheetNames.length; i++) {
+			if (sheetNames[i].equals("BranchCreate")) {
+				BranchCreateSheet = true;
+				break;
+			}
+		}
+
 		// column, row
-		Cell DevTrackerURL = sh1.getCell(1, 0);
+		DevTrackerURL = sh1.getCell(1, 0);
 		username = sh1.getCell(1, 1);
 		Cell password = sh1.getCell(1, 2);
 		String imagePath = sh1.getCell(1, 3).getContents();
 		String bug_tracking_sheet = sh1.getCell(3, 0).getContents();
-		mailSend.mail(renamedFileName, username.getContents(), "start");
+		if (DevTrackerURL.getContents().trim().equals("https://devtracker.devdigdev.com/")) {
+
+		} else {
+			mailSend.mail(renamedFileName, username.getContents(), "start");
+		}
 
 		MultipleFileUpload multipleFileUpload = new MultipleFileUpload();
 		CreateBugTrackingReport createBugTrackingReport = new CreateBugTrackingReport();
@@ -108,7 +124,7 @@ public class AddBugTask extends Utilities {
 				driver.quit();
 				System.exit(1);
 			}
-
+			BranchMilestone = milestone.getContents();
 			System.out.println(taskType.getContents() + " is adding");
 			System.out.println("Title is = " + taskTitle.getContents());
 			testcase = false;
@@ -439,6 +455,9 @@ public class AddBugTask extends Utilities {
 			testcase = true;
 			checkLoader();
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+			DevTrackerNumber = DevTrackerURL.getContents().replace("https://devtracker.devdigital.com/track/", "")
+					.trim();
+
 			if (bug_tracking_sheet.toLowerCase().equals("yes")) {
 				createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(), taskTitle.getContents(),
 						projectName, originator.getContents(), reporter.getContents(), taskType.getContents());
@@ -448,6 +467,66 @@ public class AddBugTask extends Utilities {
 		}
 		now = LocalDateTime.now();
 		System.out.println(dtf.format(now));
+
+		if (BranchCreateSheet == true) {
+
+			Sheet BranchCreateSheet = wb.getSheet("BranchCreate");
+
+			driver.get(BranchCreateSheet.getCell(1, 0).getContents());
+
+			driver.findElement(By.xpath("//*[@id='username']")).clear();
+			driver.findElement(By.xpath("//*[@id='username']")).sendKeys(BranchCreateSheet.getCell(1, 1).getContents());
+			Thread.sleep(1000);
+			driver.findElement(By.xpath("//*[@id='login-submit']")).click();
+			driver.findElement(By.xpath("//*[@id='password']")).clear();
+			driver.findElement(By.xpath("//*[@id='password']")).sendKeys(BranchCreateSheet.getCell(1, 2).getContents());
+			Thread.sleep(1000);
+			driver.findElement(By.xpath("//*[@id='login-submit']")).click();
+
+			boolean repositoriesMatch = false;
+			int repositoriesrow = 1;
+
+			while (repositoriesMatch == false) {
+				Thread.sleep(1500);
+				if (driver.findElement(By.xpath(
+						"//*[@id=\"root\"]/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
+								+ repositoriesrow + "]/td[1]/div/div[2]/span/a"))
+						.getText().equals(BranchMilestone)) {
+					repositoriesMatch = true;
+					driver.findElement(By.xpath(
+							"//*[@id=\"root\"]/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
+									+ repositoriesrow + "]/td[1]/div/div[2]/span/a"))
+							.click();
+
+					// Branches Menu
+					driver.findElement(By.xpath("//div[text()='Branches']")).click();
+
+					// Create Branch Button
+					driver.findElement(By.xpath(
+							"//*[@id='root']/div/div/div[2]/div/div/div[1]/div/div/div/div[1]/div[2]/div[2]/button"))
+							.click();
+
+					driver.findElement(By.xpath("//*[@id=\"select-branch\"]/div/div/div/div/div[1]")).click();
+					Thread.sleep(1000);
+
+					driver.findElement(By.xpath("//*[@id=\"select-branch\"]/div/div/div/div/div[1]")).sendKeys("dev");
+					Thread.sleep(1000);
+					driver.findElement(By.xpath("//*[@id=\"select-branch\"]/div/div/div/div/div[1]"))
+							.sendKeys(Keys.ENTER);
+					Thread.sleep(1000);
+
+					System.out.println("DevTrackerNumber = " + DevTrackerNumber);
+
+					driver.findElement(By.xpath("//input[@name=\"branchName\"]")).sendKeys(DevTrackerNumber);
+
+//					driver.findElement(By.xpath("//*[@id=\"create-branch-button\"]")).click();
+
+					break;
+				}
+
+				repositoriesrow++;
+			}
+		}
 
 //		driver.close();
 //		driver.quit();
@@ -472,7 +551,13 @@ public class AddBugTask extends Utilities {
 			File file2 = new File(renamedFileName); // destination dir of your file
 			file.renameTo(file2);
 		}
-		mailSend.mail(renamedFileName, username.getContents(), "complete");
+
+		if (DevTrackerURL.getContents().trim().equals("https://devtracker.devdigdev.com/")) {
+
+		} else {
+			mailSend.mail(renamedFileName, username.getContents(), "complete");
+		}
+
 		Thread.sleep(2000);
 
 		File file = new File(renamedFileName);
