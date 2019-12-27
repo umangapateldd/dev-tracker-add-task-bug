@@ -1,7 +1,6 @@
 package test;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileLock;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -23,8 +21,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
 
 import jxl.Cell;
 
@@ -1207,7 +1203,7 @@ public class Utilities {
 												.getText().toLowerCase())) {
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
-													.sendKeys(Keys.ENTER);											
+													.sendKeys(Keys.ENTER);
 										} else {
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
@@ -1334,6 +1330,32 @@ public class Utilities {
 			}
 
 		} while (tmp == 1);
+	}
+
+	public boolean checkElementAvailibility(String xpath) {
+		int tmp = 1;
+		long t = System.currentTimeMillis();
+		long end = t + 80000;
+
+		do {
+			if (System.currentTimeMillis() > end) {
+				System.out.println("timeout");
+				tmp = 1;
+			}
+
+			if (driver.findElements(By.xpath(xpath)).size() > 0) {
+				tmp = 0;
+			} else {
+				tmp = 1;
+			}
+
+		} while (tmp == 1);
+
+		if (tmp == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

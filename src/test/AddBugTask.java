@@ -34,7 +34,7 @@ public class AddBugTask extends Utilities {
 	String renamedFileName = "testoutput.txt";
 	String DevTrackerNumber = "";
 	boolean BranchCreateSheet = false;
-	String BranchMilestone = "";
+	String BranchMilestone = "baseproject";
 	Cell DevTrackerURL;
 
 	@org.testng.annotations.Test
@@ -420,7 +420,6 @@ public class AddBugTask extends Utilities {
 			if (uploadDocuments.getContents().isEmpty()) {
 				System.out.println("Documents are not available in excel sheet");
 			} else {
-				System.out.println("driver sta = " + driver);
 				multipleFileUpload.fileUpload(driver, imagePath, uploadDocuments);
 				driver.findElement(By.id("startall")).click();
 				Thread.sleep(1500);
@@ -455,8 +454,8 @@ public class AddBugTask extends Utilities {
 			testcase = true;
 			checkLoader();
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-			DevTrackerNumber = DevTrackerURL.getContents().replace("https://devtracker.devdigital.com/track/", "")
-					.trim();
+
+			DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
 
 			if (bug_tracking_sheet.toLowerCase().equals("yes")) {
 				createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(), taskTitle.getContents(),
@@ -470,60 +469,73 @@ public class AddBugTask extends Utilities {
 
 		if (BranchCreateSheet == true) {
 
-			Sheet BranchCreateSheet = wb.getSheet("BranchCreate");
+			Sheet BranchCreateSheetName = wb.getSheet("BranchCreate");
 
-			driver.get(BranchCreateSheet.getCell(1, 0).getContents());
+			driver.get(BranchCreateSheetName.getCell(1, 0).getContents());
 
 			driver.findElement(By.xpath("//*[@id='username']")).clear();
-			driver.findElement(By.xpath("//*[@id='username']")).sendKeys(BranchCreateSheet.getCell(1, 1).getContents());
+			driver.findElement(By.xpath("//*[@id='username']"))
+					.sendKeys(BranchCreateSheetName.getCell(1, 1).getContents());
 			Thread.sleep(1000);
 			driver.findElement(By.xpath("//*[@id='login-submit']")).click();
 			driver.findElement(By.xpath("//*[@id='password']")).clear();
-			driver.findElement(By.xpath("//*[@id='password']")).sendKeys(BranchCreateSheet.getCell(1, 2).getContents());
+			driver.findElement(By.xpath("//*[@id='password']"))
+					.sendKeys(BranchCreateSheetName.getCell(1, 2).getContents());
 			Thread.sleep(1000);
 			driver.findElement(By.xpath("//*[@id='login-submit']")).click();
 
 			boolean repositoriesMatch = false;
 			int repositoriesrow = 1;
-
+			BranchMilestone = "baseproject";
 			while (repositoriesMatch == false) {
 				Thread.sleep(1500);
-				if (driver.findElement(By.xpath(
-						"//*[@id=\"root\"]/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
-								+ repositoriesrow + "]/td[1]/div/div[2]/span/a"))
-						.getText().equals(BranchMilestone)) {
-					repositoriesMatch = true;
-					driver.findElement(By.xpath(
-							"//*[@id=\"root\"]/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
+				if (checkElementAvailibility(
+						"//*[@id='root']/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
+								+ repositoriesrow + "]/td[1]/div/div[2]/span/a")) {
+					if (driver.findElement(By.xpath(
+							"//*[@id='root']/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
 									+ repositoriesrow + "]/td[1]/div/div[2]/span/a"))
-							.click();
+							.getText().equals(BranchMilestone)) {
+						repositoriesMatch = true;
+						driver.findElement(By.xpath(
+								"//*[@id=\"root\"]/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
+										+ repositoriesrow + "]/td[1]/div/div[2]/span/a"))
+								.click();
 
-					// Branches Menu
-					driver.findElement(By.xpath("//div[text()='Branches']")).click();
+						Thread.sleep(1000);
+						// Branches Menu
+						if (checkElementAvailibility("//div[text()='Branches']")) {
+							driver.findElement(By.xpath("//div[text()='Branches']")).click();
 
-					// Create Branch Button
-					driver.findElement(By.xpath(
-							"//*[@id='root']/div/div/div[2]/div/div/div[1]/div/div/div/div[1]/div[2]/div[2]/button"))
-							.click();
+							Thread.sleep(1000);
+							// Create Branch Button
+							if (checkElementAvailibility(
+									"//*[@id='root']/div/div/div[2]/div/div/div[1]/div/div/div/div[1]/div[2]/div[2]/button")) {
+								driver.findElement(By.xpath(
+										"//*[@id='root']/div/div/div[2]/div/div/div[1]/div/div/div/div[1]/div[2]/div[2]/button"))
+										.click();
+								Thread.sleep(1000);
+								if (checkElementAvailibility("//*[@id='select-branch']/div")) {
+									driver.findElement(By.xpath("//*[@id='select-branch']/div")).click();
+									Thread.sleep(1000);
 
-					driver.findElement(By.xpath("//*[@id=\"select-branch\"]/div/div/div/div/div[1]")).click();
-					Thread.sleep(1000);
+									driver.findElement(By.xpath("//*[@id=\"react-select-4-input\"]")).sendKeys("dev");
+									Thread.sleep(1000);
+									driver.findElement(By.xpath("//*[@id=\"react-select-4-input\"]"))
+											.sendKeys(Keys.ENTER);
+									Thread.sleep(1000);
 
-					driver.findElement(By.xpath("//*[@id=\"select-branch\"]/div/div/div/div/div[1]")).sendKeys("dev");
-					Thread.sleep(1000);
-					driver.findElement(By.xpath("//*[@id=\"select-branch\"]/div/div/div/div/div[1]"))
-							.sendKeys(Keys.ENTER);
-					Thread.sleep(1000);
+									driver.findElement(By.xpath("//input[@name='branchName']"))
+											.sendKeys(DevTrackerNumber);
 
-					System.out.println("DevTrackerNumber = " + DevTrackerNumber);
-
-					driver.findElement(By.xpath("//input[@name=\"branchName\"]")).sendKeys(DevTrackerNumber);
-
-//					driver.findElement(By.xpath("//*[@id=\"create-branch-button\"]")).click();
-
-					break;
+									driver.findElement(By.xpath("//*[@id=\"create-branch-button\"]")).click();
+									Thread.sleep(5000);
+									break;
+								}
+							}
+						}
+					}
 				}
-
 				repositoriesrow++;
 			}
 		}
