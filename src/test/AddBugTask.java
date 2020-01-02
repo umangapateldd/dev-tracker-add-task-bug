@@ -36,6 +36,7 @@ public class AddBugTask extends Utilities {
 	boolean BranchCreateSheet = false;
 	String BranchMilestone = "baseproject";
 	Cell DevTrackerURL;
+	Cell taskType;
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
@@ -95,7 +96,7 @@ public class AddBugTask extends Utilities {
 			Cell project_name = sh1.getCell(0, row);
 			Cell milestone = sh1.getCell(1, row);
 			Cell taskcategory = sh1.getCell(2, row);
-			Cell taskType = sh1.getCell(3, row);
+			taskType = sh1.getCell(3, row);
 			Cell taskTitle = sh1.getCell(4, row);
 			Cell objective = sh1.getCell(5, row);
 			Cell references = sh1.getCell(6, row);
@@ -222,12 +223,17 @@ public class AddBugTask extends Utilities {
 
 			Thread.sleep(1000);
 
-			if (taskType.getContents().toLowerCase().equals("task")) {
-				// Task
-				driver.findElement(By.xpath("//*[@class='radio-inline'][1]/input[1]")).click();
-			} else if (taskType.getContents().toLowerCase().equals("bug")) {
-				// Bug
-				driver.findElement(By.xpath("//*[@class='radio-inline'][2]/input[1]")).click();
+			task_bug_radio_button_selection();
+
+			// submit button click for validation verification
+			driver.findElement(By.xpath("//*[@id='frmaddedit']/div[26]/div/div/button[1]")).click();
+
+			Thread.sleep(1000);
+			if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
+				System.out.println(taskType.getContents() + " selection again");
+				mailSend.mail(renamedFileName, username.getContents(), taskType.getContents() + "selection again");
+				Thread.sleep(1000);
+				task_bug_radio_button_selection();
 			}
 
 			driver.findElement(By.id("task_name")).sendKeys(taskTitle.getContents());
@@ -289,7 +295,7 @@ public class AddBugTask extends Utilities {
 			if ((driver.findElements(By.xpath("//span[text()='Objective']")).size() > 0
 					|| driver.findElements(By.xpath("//span[text()='Steps to Recreate']")).size() > 0)
 					&& driver.findElements(By.xpath("//span[text()='References']")).size() > 0
-					&& driver.findElements(By.xpath("//span[text()='Conditions of Satisfaction']")).size() > 0) {
+					&& driver.findElements(By.xpath("//span[text()='Acceptance Criteria']")).size() > 0) {
 				System.out.println("Description is added properly");
 			} else {
 				System.out.println("Issue in added description");
@@ -311,22 +317,48 @@ public class AddBugTask extends Utilities {
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[1]/div")).click();
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[1]/div/div/input"))
 								.sendKeys(arrSplit[i]);
-						Thread.sleep(1000);
+						Thread.sleep(2000);
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[1]/div/div/input"))
 								.sendKeys(Keys.ENTER);
-						Thread.sleep(1000);
+						Thread.sleep(1500);
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[2]/button")).click();
 
 						if (driver.findElements(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).size() > 0) {
 							if (driver.findElement(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).getText()
 									.startsWith("Please select any ")) {
+								mailSend.mail(renamedFileName, username.getContents(),
+										"Issue " + arrSplit[i] + " Dependent Predecessor task Popup text");
 								System.out.println("Some issue in Dependent task Popup text");
 							} else {
+								mailSend.mail(renamedFileName, username.getContents(),
+										"Issue " + arrSplit[i] + " Dependent Predecessor task Popup text");
 								System.out.println("Some issue in Dependent task selection");
 							}
 						} else {
 							System.out.println("Dependent task is added");
 						}
+					}
+
+					// Verify Dependent Predecessor
+
+					int dependentCount = 1;
+					arrSplit = dependent.getContents().split("/");
+					for (int i = 0; i < arrSplit.length; i++) {
+						Thread.sleep(1000);
+						if (driver.findElement(By.xpath(
+								"//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr[" + dependentCount + "]/td[1]/a"))
+								.getText().equals(arrSplit[i])) {
+						} else {
+							System.out.println(arrSplit[i] + " is not attached");
+							mailSend.mail(renamedFileName, username.getContents(),
+									"Issue " + arrSplit[i] + " Dependent Predecessor is not matched with "
+											+ driver.findElement(
+													By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
+															+ dependentCount + "]/td[1]/a"))
+													.getText());
+							break;
+						}
+						dependentCount++;
 					}
 				} catch (ElementClickInterceptedException e) {
 					js = (JavascriptExecutor) driver;
@@ -345,22 +377,48 @@ public class AddBugTask extends Utilities {
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[1]/div")).click();
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[1]/div/div/input"))
 								.sendKeys(arrSplit[i]);
-						Thread.sleep(1000);
+						Thread.sleep(2000);
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[1]/div/div/input"))
 								.sendKeys(Keys.ENTER);
-						Thread.sleep(1000);
+						Thread.sleep(1500);
 						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[2]/button")).click();
 
 						if (driver.findElements(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).size() > 0) {
 							if (driver.findElement(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).getText()
 									.startsWith("Please select any ")) {
+								mailSend.mail(renamedFileName, username.getContents(),
+										"Issue " + arrSplit[i] + " Dependent Successor task Popup text");
 								System.out.println("Some issue in successor task Popup text");
 							} else {
+								mailSend.mail(renamedFileName, username.getContents(),
+										"Issue " + arrSplit[i] + " Dependent Successor task selection");
 								System.out.println("Some issue in successor task selection");
 							}
 						} else {
 							System.out.println("successor task is added");
 						}
+					}
+					
+					// Verify Dependent Successor
+
+					int dependentCount = 1;
+					arrSplit = successor.getContents().split("/");
+					for (int i = 0; i < arrSplit.length; i++) {
+						Thread.sleep(1000);
+						if (driver.findElement(By.xpath(
+								"//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr[" + dependentCount + "]/td[1]/a"))
+								.getText().equals(arrSplit[i])) {
+						} else {
+							System.out.println(arrSplit[i] + " is not attached");
+							mailSend.mail(renamedFileName, username.getContents(),
+									"Issue " + arrSplit[i] + " Dependent Successor is not matched with "
+											+ driver.findElement(
+													By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
+															+ dependentCount + "]/td[1]/a"))
+													.getText());
+							break;
+						}
+						dependentCount++;
 					}
 				} catch (ElementClickInterceptedException e) {
 					js = (JavascriptExecutor) driver;
@@ -381,6 +439,7 @@ public class AddBugTask extends Utilities {
 			if (taskStatus.getContents().isEmpty()) {
 				System.out.println("Status is not available so set as default");
 			} else {
+				Thread.sleep(1500);
 				List<WebElement> options = driver.findElements(By.xpath("//select[@id='status']/option"));
 
 				for (WebElement option : options) {
@@ -394,8 +453,8 @@ public class AddBugTask extends Utilities {
 			if (assignee.getContents().isEmpty()) {
 				System.out.println("Assignee user is not available in excel sheet");
 			} else {
+				Thread.sleep(1500);
 				List<WebElement> options = driver.findElements(By.xpath("//select[@id='assign_user_id']/option"));
-
 				for (WebElement option : options) {
 					if (option.getText().contains(assignee.getContents())) {
 						option.click();
@@ -450,7 +509,7 @@ public class AddBugTask extends Utilities {
 
 			now = LocalDateTime.now();
 			System.out.println(dtf.format(now));
-			driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[26]/div/div/button[1]")).click();
+			driver.findElement(By.xpath("//*[@id='frmaddedit']/div[26]/div/div/button[1]")).click();
 			testcase = true;
 			checkLoader();
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
@@ -615,6 +674,16 @@ public class AddBugTask extends Utilities {
 				filesListInDir.add(file.getAbsolutePath());
 			else
 				populateFilesList(file);
+		}
+	}
+
+	public void task_bug_radio_button_selection() {
+		if (taskType.getContents().toLowerCase().equals("task")) {
+			// Task
+			driver.findElement(By.xpath("//*[@class='radio-inline'][1]/input[1]")).click();
+		} else if (taskType.getContents().toLowerCase().equals("bug")) {
+			// Bug
+			driver.findElement(By.xpath("//*[@class='radio-inline'][2]/input[1]")).click();
 		}
 	}
 }

@@ -66,6 +66,8 @@ public class mailSend {
 			// Now set the actual message
 			if (processStart.equals("start")) {
 				messageBodyPart.setText("Process Start");
+			} else if (!processStart.equals("start") || !processStart.equals("complete")) {
+				messageBodyPart.setText(processStart);
 			}
 
 			// Create a multipar message

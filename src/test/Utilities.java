@@ -668,7 +668,7 @@ public class Utilities {
 									&& driver
 											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 													+ (pTag + 1) + "]"))
-											.getText().equals("Conditions of Satisfaction")) {
+											.getText().equals("Acceptance Criteria")) {
 								js = (JavascriptExecutor) driver;
 								js.executeScript("arguments[0].remove()", driver.findElement(
 										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
