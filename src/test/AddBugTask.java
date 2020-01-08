@@ -40,6 +40,8 @@ public class AddBugTask extends Utilities {
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
+		GetSheetData.googleSheetConnection();
+
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 		System.out.println(dtf.format(now));
@@ -65,7 +67,11 @@ public class AddBugTask extends Utilities {
 		if (DevTrackerURL.getContents().trim().equals("https://devtracker.devdigdev.com/")) {
 
 		} else {
-			mailSend.mail(renamedFileName, username.getContents(), "start");
+			if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
+				mailSend.mail(renamedFileName, username.getContents(), "start");
+			} else {
+				System.out.println("no option for mail on start");
+			}
 		}
 
 		MultipleFileUpload multipleFileUpload = new MultipleFileUpload();
@@ -295,7 +301,7 @@ public class AddBugTask extends Utilities {
 			if ((driver.findElements(By.xpath("//span[text()='Objective']")).size() > 0
 					|| driver.findElements(By.xpath("//span[text()='Steps to Recreate']")).size() > 0)
 					&& driver.findElements(By.xpath("//span[text()='References']")).size() > 0
-					&& driver.findElements(By.xpath("//span[text()='Acceptance Criteria']")).size() > 0) {
+					&& driver.findElements(By.xpath("//span[text()='Conditions of Satisfaction']")).size() > 0) {
 				System.out.println("Description is added properly");
 			} else {
 				System.out.println("Issue in added description");
@@ -398,7 +404,7 @@ public class AddBugTask extends Utilities {
 							System.out.println("successor task is added");
 						}
 					}
-					
+
 					// Verify Dependent Successor
 
 					int dependentCount = 1;
@@ -515,6 +521,7 @@ public class AddBugTask extends Utilities {
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
 
 			DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+			System.out.println(DevTrackerNumber);
 
 			if (bug_tracking_sheet.toLowerCase().equals("yes")) {
 				createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(), taskTitle.getContents(),
@@ -626,7 +633,11 @@ public class AddBugTask extends Utilities {
 		if (DevTrackerURL.getContents().trim().equals("https://devtracker.devdigdev.com/")) {
 
 		} else {
-			mailSend.mail(renamedFileName, username.getContents(), "complete");
+			if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
+				mailSend.mail(renamedFileName, username.getContents(), "complete");
+			} else {
+				System.out.println("no option for mail on complete");
+			}
 		}
 
 		Thread.sleep(2000);

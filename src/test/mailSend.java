@@ -2,6 +2,7 @@ package test;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -23,12 +24,20 @@ public class mailSend {
 	String SMTP_SERVER = "smtp.gmail.com";
 	String USERNAME = "vivekbhatt.devdigital@gmail.com";
 	String PASSWORD = "Vivekbhatt@123";
+	String EMAIL_TO = "";
+	String EMAIL_FROM = "";
+	String CC_Email = "";
+	String version = "v1";
 
-	String EMAIL_FROM = "vivekbhatt.devdigital@gmail.com";
-	String EMAIL_TO = "vivek.bhatt@devdigital.com";
-	String CC_Email_Nidhi = "nidhi.jani@devdigital.com";
+	public void mail(String filename, String username, String processStart)
+			throws IOException, InterruptedException, GeneralSecurityException {
+		EMAIL_TO = GetSheetData.getData("Dev Tracker!B2").get(0).get(0).toString().toLowerCase();
+		String[] EMAIL_TOvalues = EMAIL_TO.trim().split(",");
 
-	public void mail(String filename, String username, String processStart) throws IOException, InterruptedException {
+		EMAIL_FROM = USERNAME;
+
+		CC_Email = GetSheetData.getData("Dev Tracker!B3").get(0).get(0).toString().toLowerCase();
+		String[] CC_Emailvalues = CC_Email.trim().split(",");
 
 		String EMAIL_SUBJECT = "Script run by " + username;
 
@@ -39,11 +48,6 @@ public class mailSend {
 		prop.put("mail.smtp.port", "587"); // default port 25
 		prop.put("mail.smtp.starttls.enable", "true"); // default port 25
 
-//		Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
-//			protected PasswordAuthentication getPasswordAuthentication() {
-//				return new PasswordAuthentication(USERNAME, PASSWORD);
-//			}
-//		});
 		Session session = Session.getDefaultInstance(prop, null);
 		try {
 			Message msg = new MimeMessage(session);
@@ -52,10 +56,18 @@ public class mailSend {
 			msg.setFrom(new InternetAddress(EMAIL_FROM));
 
 			// to
-			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_TO));
+			int tmp = 0;
+			while (tmp < EMAIL_TOvalues.length) {
+				msg.addRecipient(Message.RecipientType.TO, new InternetAddress(EMAIL_TOvalues[tmp]));
+				tmp++;
+			}
 
 			// cc
-			msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CC_Email_Nidhi));
+			int CCtmp = 0;
+			while (CCtmp < CC_Emailvalues.length) {
+				msg.addRecipient(Message.RecipientType.CC, new InternetAddress(CC_Emailvalues[CCtmp]));
+				CCtmp++;
+			}
 
 			// subject
 			msg.setSubject(EMAIL_SUBJECT);
@@ -65,7 +77,7 @@ public class mailSend {
 
 			// Now set the actual message
 			if (processStart.equals("start")) {
-				messageBodyPart.setText("Process Start");
+				messageBodyPart.setText("Process Start " + version);
 			} else if (!processStart.equals("start") || !processStart.equals("complete")) {
 				messageBodyPart.setText(processStart);
 			}
@@ -94,20 +106,6 @@ public class mailSend {
 			// Send the complete message parts
 			msg.setContent(multipart);
 
-			// content
-//			msg.setText(EMAIL_TEXT);
-
-			// msg.setSentDate(new Date());
-
-			// Get SMTPTransport
-//			SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
-
-			// connect
-//			t.connect(SMTP_SERVER, USERNAME, PASSWORD);
-
-			// send
-
-//			t.sendMessage(msg, msg.getAllRecipients());
 			Thread.sleep(2000);
 			Transport transport = session.getTransport("smtp");
 			transport.connect(SMTP_SERVER, USERNAME, PASSWORD);
