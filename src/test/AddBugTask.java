@@ -39,10 +39,15 @@ public class AddBugTask extends Utilities {
 	Cell taskType;
 	String DevTrackerStageURL;
 	String version = "v1";
+	String error = "";
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
 		GetSheetData.googleSheetConnection();
+		File src = new File("Ticket.xls");
+		Workbook wb = Workbook.getWorkbook(src);
+		Sheet sh1 = wb.getSheet(0);
+		username = sh1.getCell(1, 1);
 
 		if (GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString().equals(version)) {
 
@@ -50,8 +55,6 @@ public class AddBugTask extends Utilities {
 			System.out.println();
 			System.out.println("Please download latest build from "
 					+ GetSheetData.getData("Dev Tracker!D2").get(0).get(0).toString());
-			driver.close();
-			driver.quit();
 			mailSend.mail(renamedFileName, username.getContents(),
 					"Version is mismatch. " + username.getContents() + " user is working on " + version + " build");
 			System.exit(0);
@@ -60,10 +63,6 @@ public class AddBugTask extends Utilities {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 		System.out.println(dtf.format(now));
-
-		File src = new File("Ticket.xls");
-		Workbook wb = Workbook.getWorkbook(src);
-		Sheet sh1 = wb.getSheet(0);
 
 		String[] sheetNames = wb.getSheetNames();
 		for (int i = 0; i < sheetNames.length; i++) {
@@ -79,10 +78,11 @@ public class AddBugTask extends Utilities {
 
 		// column, row
 		DevTrackerURL = sh1.getCell(1, 0);
-		username = sh1.getCell(1, 1);
+
 		Cell password = sh1.getCell(1, 2);
 		String imagePath = sh1.getCell(1, 3).getContents();
 		String bug_tracking_sheet = sh1.getCell(3, 0).getContents();
+
 		if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
 
 		} else {
@@ -107,8 +107,10 @@ public class AddBugTask extends Utilities {
 		}
 		Thread.sleep(1000);
 		driver.findElement(By.name("username")).click();
+		driver.findElement(By.name("username")).clear();		
 		driver.findElement(By.name("username")).sendKeys(username.getContents());
 		driver.findElement(By.name("password")).click();
+		driver.findElement(By.name("password")).clear();		
 		driver.findElement(By.name("password")).sendKeys(password.getContents());
 		driver.findElement(By.name("password")).sendKeys(Keys.ENTER);
 
@@ -260,7 +262,7 @@ public class AddBugTask extends Utilities {
 			Thread.sleep(1000);
 			if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
 				System.out.println(taskType.getContents() + " selection again");
-				mailSend.mail(renamedFileName, username.getContents(), taskType.getContents() + "selection again");
+				error = taskType.getContents() + "selection again";
 				Thread.sleep(1000);
 				task_bug_radio_button_selection();
 			}
@@ -378,12 +380,10 @@ public class AddBugTask extends Utilities {
 									.findElement(By.xpath(
 											GetSheetData.getData("Dev Tracker Xpath!B8").get(0).get(0).toString()))
 									.getText().startsWith("Please select any ")) {
-								mailSend.mail(renamedFileName, username.getContents(),
-										"Issue " + arrSplit[i] + " Dependent Predecessor task Popup text");
+								error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
 								System.out.println("Some issue in Dependent task Popup text");
 							} else {
-								mailSend.mail(renamedFileName, username.getContents(),
-										"Issue " + arrSplit[i] + " Dependent Predecessor task Popup text");
+								error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
 								System.out.println("Some issue in Dependent task selection");
 							}
 						} else {
@@ -402,12 +402,9 @@ public class AddBugTask extends Utilities {
 								.getText().equals(arrSplit[i])) {
 						} else {
 							System.out.println(arrSplit[i] + " is not attached");
-							mailSend.mail(renamedFileName, username.getContents(),
-									"Issue " + arrSplit[i] + " Dependent Predecessor is not matched with "
-											+ driver.findElement(
-													By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
-															+ dependentCount + "]/td[1]/a"))
-													.getText());
+							error = "Issue " + arrSplit[i] + " Dependent Predecessor is not matched with "
+									+ driver.findElement(By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
+											+ dependentCount + "]/td[1]/a")).getText();
 							break;
 						}
 						dependentCount++;
@@ -449,12 +446,10 @@ public class AddBugTask extends Utilities {
 									.findElement(By.xpath(
 											GetSheetData.getData("Dev Tracker Xpath!B12").get(0).get(0).toString()))
 									.getText().startsWith("Please select any ")) {
-								mailSend.mail(renamedFileName, username.getContents(),
-										"Issue " + arrSplit[i] + " Dependent Successor task Popup text");
+								error = "Issue " + arrSplit[i] + " Dependent Successor task Popup text";
 								System.out.println("Some issue in successor task Popup text");
 							} else {
-								mailSend.mail(renamedFileName, username.getContents(),
-										"Issue " + arrSplit[i] + " Dependent Successor task selection");
+								error = "Issue " + arrSplit[i] + " Dependent Successor task selection";
 								System.out.println("Some issue in successor task selection");
 							}
 						} else {
@@ -473,12 +468,9 @@ public class AddBugTask extends Utilities {
 								.getText().equals(arrSplit[i])) {
 						} else {
 							System.out.println(arrSplit[i] + " is not attached");
-							mailSend.mail(renamedFileName, username.getContents(),
-									"Issue " + arrSplit[i] + " Dependent Successor is not matched with "
-											+ driver.findElement(
-													By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
-															+ dependentCount + "]/td[1]/a"))
-													.getText());
+							error = "Issue " + arrSplit[i] + " Dependent Successor is not matched with "
+									+ driver.findElement(By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
+											+ dependentCount + "]/td[1]/a")).getText();
 							break;
 						}
 						dependentCount++;
@@ -574,6 +566,7 @@ public class AddBugTask extends Utilities {
 			System.out.println(dtf.format(now));
 			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
 			testcase = true;
+			error = "complete";
 			checkLoader();
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
 
@@ -686,16 +679,8 @@ public class AddBugTask extends Utilities {
 			File file2 = new File(renamedFileName); // destination dir of your file
 			file.renameTo(file2);
 		}
-
-		if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
-
-		} else {
-			if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
-				mailSend.mail(renamedFileName, username.getContents(), "complete");
-			} else {
-				System.out.println("no option for mail on complete");
-			}
-		}
+		
+		mailSend.mail(renamedFileName, username.getContents(), error);
 
 		Thread.sleep(2000);
 

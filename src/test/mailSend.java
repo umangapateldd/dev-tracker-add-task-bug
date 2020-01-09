@@ -73,13 +73,12 @@ public class mailSend {
 
 			// Create the message part
 			BodyPart messageBodyPart = new MimeBodyPart();
-
+			String txt = "";
 			// Now set the actual message
 			if (processStart.equals("start")) {
-				messageBodyPart
-						.setText("Process Start " + GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString());
+				txt = "Process is started with " + GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString();
 			} else if (!processStart.equals("start") || !processStart.equals("complete")) {
-				messageBodyPart.setText(processStart);
+				txt = processStart;
 			}
 
 			// Create a multipar message
@@ -88,19 +87,24 @@ public class mailSend {
 			// Set text message part
 			multipart.addBodyPart(messageBodyPart);
 
+			File file = new File(filename);
 			if (processStart.equals("complete")) {
 				// Part two is attachment
-				File file = new File(filename);
 				if (file.exists()) {
-					messageBodyPart.setText("Report file is available");
-					messageBodyPart = new MimeBodyPart();
-					DataSource source = new FileDataSource(filename);
-					messageBodyPart.setDataHandler(new DataHandler(source));
-					messageBodyPart.setFileName(filename);
-					multipart.addBodyPart(messageBodyPart);
+					txt = "Report file is available";
 				} else {
-					messageBodyPart.setText("Task / Bug is added - Report file is not available");
+					txt = "Task / Bug is added - Report file is not available";
 				}
+			}
+
+			messageBodyPart.setText(txt);
+			
+			if (file.exists()) {
+				messageBodyPart = new MimeBodyPart();
+				DataSource source = new FileDataSource(filename);
+				messageBodyPart.setDataHandler(new DataHandler(source));
+				messageBodyPart.setFileName(filename);
+				multipart.addBodyPart(messageBodyPart);
 			}
 
 			// Send the complete message parts
@@ -111,7 +115,7 @@ public class mailSend {
 			transport.connect(SMTP_SERVER, USERNAME, PASSWORD);
 			transport.sendMessage(msg, msg.getAllRecipients());
 //			transport.close();
-			File file = new File(filename);
+			file = new File(filename);
 			if (file.exists()) {
 				file.delete();
 			}
