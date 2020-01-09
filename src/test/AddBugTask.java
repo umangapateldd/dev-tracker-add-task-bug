@@ -37,10 +37,22 @@ public class AddBugTask extends Utilities {
 	String BranchMilestone = "baseproject";
 	Cell DevTrackerURL;
 	Cell taskType;
+	String DevTrackerStageURL;
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
 		GetSheetData.googleSheetConnection();
+
+		if (GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString().equals("v1")) {
+
+		} else {
+			System.out.println();
+			System.out.println("Please download latest build from "
+					+ GetSheetData.getData("Dev Tracker!D2").get(0).get(0).toString());
+			driver.close();
+			driver.quit();
+			System.exit(0);
+		}
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
@@ -58,13 +70,17 @@ public class AddBugTask extends Utilities {
 			}
 		}
 
+		DevTrackerStageURL = GetSheetData.getData("Dev Tracker!B8").get(0).get(0).toString();
+		String DevTrackerStageAccessUsername = GetSheetData.getData("Dev Tracker!B9").get(0).get(0).toString();
+		String DevTrackerStageAccessPassword = GetSheetData.getData("Dev Tracker!B10").get(0).get(0).toString();
+
 		// column, row
 		DevTrackerURL = sh1.getCell(1, 0);
 		username = sh1.getCell(1, 1);
 		Cell password = sh1.getCell(1, 2);
 		String imagePath = sh1.getCell(1, 3).getContents();
 		String bug_tracking_sheet = sh1.getCell(3, 0).getContents();
-		if (DevTrackerURL.getContents().trim().equals("https://devtracker.devdigdev.com/")) {
+		if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
 
 		} else {
 			if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
@@ -81,9 +97,9 @@ public class AddBugTask extends Utilities {
 
 		driver.get(DevTrackerURL.getContents());
 
-		if (DevTrackerURL.getContents().trim().equals("https://devtracker.devdigdev.com/")) {
-			driver.findElement(By.name("access_login")).sendKeys("devtracker");
-			driver.findElement(By.name("access_password")).sendKeys("devtracker@022015");
+		if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
+			driver.findElement(By.name("access_login")).sendKeys(DevTrackerStageAccessUsername);
+			driver.findElement(By.name("access_password")).sendKeys(DevTrackerStageAccessPassword);
 			driver.findElement(By.name("access_password")).sendKeys(Keys.ENTER);
 		}
 		Thread.sleep(1000);
@@ -143,14 +159,18 @@ public class AddBugTask extends Utilities {
 			} else {
 				driver.get(DevTrackerURL.getContents() + "index.php?route=common/task/loadDetailForm&project_id=0");
 				Thread.sleep(2000);
-				driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[1]/div/div")).click();
-				driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[1]/div/div/div/input"))
+				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B1").get(0).get(0).toString()))
+						.click();
+				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
 						.sendKeys(project_name.getContents());
-				driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[1]/div/div/div/input")).sendKeys(Keys.ENTER);
+				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
+						.sendKeys(Keys.ENTER);
 				Thread.sleep(2000);
 			}
 
-			String projectName = driver.findElement(By.xpath("//*[@id=\"header\"]/div[2]/ul[1]/li[3]/h4/a")).getText();
+			String projectName = driver
+					.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B3").get(0).get(0).toString()))
+					.getText();
 
 			Select selec = new Select(driver.findElement(By.id("milestone_id")));
 
@@ -232,7 +252,7 @@ public class AddBugTask extends Utilities {
 			task_bug_radio_button_selection();
 
 			// submit button click for validation verification
-			driver.findElement(By.xpath("//*[@id='frmaddedit']/div[26]/div/div/button[1]")).click();
+			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
 
 			Thread.sleep(1000);
 			if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
@@ -298,10 +318,22 @@ public class AddBugTask extends Utilities {
 
 			// Description verification
 
-			if ((driver.findElements(By.xpath("//span[text()='Objective']")).size() > 0
-					|| driver.findElements(By.xpath("//span[text()='Steps to Recreate']")).size() > 0)
-					&& driver.findElements(By.xpath("//span[text()='References']")).size() > 0
-					&& driver.findElements(By.xpath("//span[text()='Conditions of Satisfaction']")).size() > 0) {
+			if ((driver
+					.findElements(By.xpath(
+							"//span[text()='" + GetSheetData.getData("Dev Tracker!B4").get(0).get(0).toString() + "']"))
+					.size() > 0
+					|| driver
+							.findElements(By.xpath("//span[text()='"
+									+ GetSheetData.getData("Dev Tracker!B5").get(0).get(0).toString() + "']"))
+							.size() > 0)
+					&& driver
+							.findElements(By.xpath("//span[text()='"
+									+ GetSheetData.getData("Dev Tracker!B6").get(0).get(0).toString() + "']"))
+							.size() > 0
+					&& driver
+							.findElements(By.xpath("//span[text()='"
+									+ GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString() + "']"))
+							.size() > 0) {
 				System.out.println("Description is added properly");
 			} else {
 				System.out.println("Issue in added description");
@@ -320,18 +352,29 @@ public class AddBugTask extends Utilities {
 					String[] arrSplit = dependent.getContents().split("/");
 
 					for (int i = 0; i < arrSplit.length; i++) {
-						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[1]/div")).click();
-						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[1]/div/div/input"))
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B5").get(0).get(0).toString()))
+								.click();
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B6").get(0).get(0).toString()))
 								.sendKeys(arrSplit[i]);
 						Thread.sleep(2000);
-						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[1]/div/div/input"))
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B6").get(0).get(0).toString()))
 								.sendKeys(Keys.ENTER);
 						Thread.sleep(1500);
-						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[7]/div[1]/div[2]/button")).click();
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B7").get(0).get(0).toString()))
+								.click();
 
-						if (driver.findElements(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).size() > 0) {
-							if (driver.findElement(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).getText()
-									.startsWith("Please select any ")) {
+						if (driver
+								.findElements(
+										By.xpath(GetSheetData.getData("Dev Tracker Xpath!B8").get(0).get(0).toString()))
+								.size() > 0) {
+							if (driver
+									.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B8").get(0).get(0).toString()))
+									.getText().startsWith("Please select any ")) {
 								mailSend.mail(renamedFileName, username.getContents(),
 										"Issue " + arrSplit[i] + " Dependent Predecessor task Popup text");
 								System.out.println("Some issue in Dependent task Popup text");
@@ -380,18 +423,29 @@ public class AddBugTask extends Utilities {
 					String[] arrSplit = successor.getContents().split("/");
 
 					for (int i = 0; i < arrSplit.length; i++) {
-						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[1]/div")).click();
-						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[1]/div/div/input"))
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B9").get(0).get(0).toString()))
+								.click();
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B10").get(0).get(0).toString()))
 								.sendKeys(arrSplit[i]);
 						Thread.sleep(2000);
-						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[1]/div/div/input"))
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B10").get(0).get(0).toString()))
 								.sendKeys(Keys.ENTER);
 						Thread.sleep(1500);
-						driver.findElement(By.xpath("//*[@id=\"frmaddedit\"]/div[8]/div[1]/div[2]/button")).click();
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B11").get(0).get(0).toString()))
+								.click();
 
-						if (driver.findElements(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).size() > 0) {
-							if (driver.findElement(By.xpath("/html/body/div[15]/div[2]/div/div[1]/div")).getText()
-									.startsWith("Please select any ")) {
+						if (driver
+								.findElements(By
+										.xpath(GetSheetData.getData("Dev Tracker Xpath!B12").get(0).get(0).toString()))
+								.size() > 0) {
+							if (driver
+									.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B12").get(0).get(0).toString()))
+									.getText().startsWith("Please select any ")) {
 								mailSend.mail(renamedFileName, username.getContents(),
 										"Issue " + arrSplit[i] + " Dependent Successor task Popup text");
 								System.out.println("Some issue in successor task Popup text");
@@ -515,7 +569,7 @@ public class AddBugTask extends Utilities {
 
 			now = LocalDateTime.now();
 			System.out.println(dtf.format(now));
-			driver.findElement(By.xpath("//*[@id='frmaddedit']/div[26]/div/div/button[1]")).click();
+			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
 			testcase = true;
 			checkLoader();
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
@@ -630,7 +684,7 @@ public class AddBugTask extends Utilities {
 			file.renameTo(file2);
 		}
 
-		if (DevTrackerURL.getContents().trim().equals("https://devtracker.devdigdev.com/")) {
+		if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
 
 		} else {
 			if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {

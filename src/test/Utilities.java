@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileLock;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -630,7 +631,7 @@ public class Utilities {
 		}
 	}
 
-	public void removeExtraSpace() throws InterruptedException {
+	public void removeExtraSpace() throws InterruptedException, IOException, GeneralSecurityException {
 		System.out.println("Removing Extra Space");
 		int pTag = 2;
 		int totalPTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
@@ -668,7 +669,8 @@ public class Utilities {
 									&& driver
 											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 													+ (pTag + 1) + "]"))
-											.getText().equals("Conditions of Satisfaction")) {
+											.getText()
+											.equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
 								js = (JavascriptExecutor) driver;
 								js.executeScript("arguments[0].remove()", driver.findElement(
 										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
@@ -677,12 +679,6 @@ public class Utilities {
 								pTag++;
 							}
 						}
-
-//					} else if (driver
-//							.findElements(
-//									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
-//							.size() > 0) {
-//						pTag++;
 					} else {
 						pTag++;
 					}

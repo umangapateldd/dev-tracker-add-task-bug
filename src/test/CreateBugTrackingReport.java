@@ -62,8 +62,7 @@ public class CreateBugTrackingReport extends Utilities {
 			Row newRow = worksheet.createRow(rowCount + 1);
 
 			String taskID = driver.getCurrentUrl().replace(DevTrackerURL + "track/", "");
-			System.out.println(taskID);
-
+			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			LocalDateTime now = LocalDateTime.now();
 			String taskDate = dtf.format(now);

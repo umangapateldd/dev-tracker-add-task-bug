@@ -27,7 +27,6 @@ public class mailSend {
 	String EMAIL_TO = "";
 	String EMAIL_FROM = "";
 	String CC_Email = "";
-	String version = "v1";
 
 	public void mail(String filename, String username, String processStart)
 			throws IOException, InterruptedException, GeneralSecurityException {
@@ -77,7 +76,8 @@ public class mailSend {
 
 			// Now set the actual message
 			if (processStart.equals("start")) {
-				messageBodyPart.setText("Process Start " + version);
+				messageBodyPart
+						.setText("Process Start " + GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString());
 			} else if (!processStart.equals("start") || !processStart.equals("complete")) {
 				messageBodyPart.setText(processStart);
 			}
