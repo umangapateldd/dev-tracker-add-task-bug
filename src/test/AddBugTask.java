@@ -38,12 +38,13 @@ public class AddBugTask extends Utilities {
 	Cell DevTrackerURL;
 	Cell taskType;
 	String DevTrackerStageURL;
+	String version = "v1";
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
 		GetSheetData.googleSheetConnection();
 
-		if (GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString().equals("v1")) {
+		if (GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString().equals(version)) {
 
 		} else {
 			System.out.println();
@@ -51,6 +52,8 @@ public class AddBugTask extends Utilities {
 					+ GetSheetData.getData("Dev Tracker!D2").get(0).get(0).toString());
 			driver.close();
 			driver.quit();
+			mailSend.mail(renamedFileName, username.getContents(),
+					"Version is mismatch. " + username.getContents() + " user is working on " + version + " build");
 			System.exit(0);
 		}
 
