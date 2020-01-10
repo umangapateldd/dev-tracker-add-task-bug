@@ -43,6 +43,26 @@ public class AddBugTask extends Utilities {
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
+		File file = new File("tokens/StoredCredential");
+		if (file.exists()) {
+		} else {
+			System.out.println();
+			System.out.println("StoredCredential file is not available in tokens folder.");
+			System.out.println(
+					"Please download latest build from https://drive.google.com/open?id=1dI-bVzWUoGtyLgeywZzLBii99lJYVNCG");
+			System.exit(0);
+		}
+
+		file = new File("client_secret.json");
+		if (file.exists()) {
+		} else {
+			System.out.println();
+			System.out.println("client_secret json file is not available.");
+			System.out.println(
+					"Please download latest build from https://drive.google.com/open?id=1dI-bVzWUoGtyLgeywZzLBii99lJYVNCG");
+			System.exit(0);
+		}
+
 		GetSheetData.googleSheetConnection();
 		File src = new File("Ticket.xls");
 		Workbook wb = Workbook.getWorkbook(src);
@@ -50,7 +70,6 @@ public class AddBugTask extends Utilities {
 		username = sh1.getCell(1, 1);
 
 		if (GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString().equals(version)) {
-
 		} else {
 			System.out.println();
 			System.out.println("Please download latest build from "
@@ -107,10 +126,10 @@ public class AddBugTask extends Utilities {
 		}
 		Thread.sleep(1000);
 		driver.findElement(By.name("username")).click();
-		driver.findElement(By.name("username")).clear();		
+		driver.findElement(By.name("username")).clear();
 		driver.findElement(By.name("username")).sendKeys(username.getContents());
 		driver.findElement(By.name("password")).click();
-		driver.findElement(By.name("password")).clear();		
+		driver.findElement(By.name("password")).clear();
 		driver.findElement(By.name("password")).sendKeys(password.getContents());
 		driver.findElement(By.name("password")).sendKeys(Keys.ENTER);
 
@@ -679,7 +698,7 @@ public class AddBugTask extends Utilities {
 			File file2 = new File(renamedFileName); // destination dir of your file
 			file.renameTo(file2);
 		}
-		
+
 		mailSend.mail(renamedFileName, username.getContents(), error);
 
 		Thread.sleep(2000);
