@@ -584,9 +584,9 @@ public class AddBugTask extends Utilities {
 			now = LocalDateTime.now();
 			System.out.println(dtf.format(now));
 			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
-			testcase = true;
-			error = "complete";
 			checkLoader();
+			testcase = true;
+			error = "complete";			
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
 
 			DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");

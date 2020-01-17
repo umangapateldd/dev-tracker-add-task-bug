@@ -1307,7 +1307,7 @@ public class Utilities {
 		}
 	}
 
-	public void checkLoader() {
+	public void checkLoader() throws InterruptedException {
 		int tmp = 1;
 		long t = System.currentTimeMillis();
 		long end = t + 80000;
@@ -1317,7 +1317,7 @@ public class Utilities {
 				System.out.println("timeout");
 				tmp = 1;
 			}
-
+			Thread.sleep(1000);
 			if (driver.findElements(By.id("indicator")).size() > 0
 					&& driver.findElement(By.id("indicator")).getAttribute("class").equals("indicator hide")) {
 				tmp = 0;
