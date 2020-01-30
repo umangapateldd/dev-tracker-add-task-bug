@@ -38,7 +38,7 @@ public class AddBugTask extends Utilities {
 	Cell DevTrackerURL;
 	Cell taskType;
 	String DevTrackerStageURL;
-	String version = "v1";
+	String version = "v1.1";
 	String error = "";
 	String headless = "";
 
