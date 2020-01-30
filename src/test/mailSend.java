@@ -98,7 +98,7 @@ public class mailSend {
 			}
 
 			messageBodyPart.setText(txt);
-			
+
 			if (file.exists()) {
 				messageBodyPart = new MimeBodyPart();
 				DataSource source = new FileDataSource(filename);

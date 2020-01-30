@@ -37,7 +37,7 @@ public class Utilities {
 	List paths;
 	boolean testcase = false;
 
-	public void openBrowser() throws IOException {
+	public void openBrowser(String headless) throws IOException {
 
 		DesiredCapabilities chrome = DesiredCapabilities.chrome();
 
@@ -46,6 +46,9 @@ public class Utilities {
 		options.addArguments("--disable-popup-blocking");
 		options.addArguments("--proxy-server='direct://'");
 		options.addArguments("--proxy-bypass-list=*");
+		if (headless.equals("yes")) {
+			options.addArguments("--headless");
+		}
 		options.setCapability(ChromeOptions.CAPABILITY, chrome);
 		chrome.setJavascriptEnabled(true);
 		systemName = System.getProperty("os.name").toLowerCase();

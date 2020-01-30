@@ -40,6 +40,7 @@ public class AddBugTask extends Utilities {
 	String DevTrackerStageURL;
 	String version = "v1";
 	String error = "";
+	String headless = "";
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
@@ -115,7 +116,8 @@ public class AddBugTask extends Utilities {
 		MultipleFileUpload multipleFileUpload = new MultipleFileUpload();
 		CreateBugTrackingReport createBugTrackingReport = new CreateBugTrackingReport();
 
-		openBrowser();
+		headless = sh1.getCell(3, 1).getContents();
+		openBrowser(headless);
 
 		driver.get(DevTrackerURL.getContents());
 
@@ -189,6 +191,11 @@ public class AddBugTask extends Utilities {
 						.sendKeys(project_name.getContents());
 				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
 						.sendKeys(Keys.ENTER);
+				Thread.sleep(2000);
+			}
+
+			if (driver.findElements(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).size() > 0) {
+				driver.findElement(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).click();
 				Thread.sleep(2000);
 			}
 
@@ -366,10 +373,9 @@ public class AddBugTask extends Utilities {
 			Thread.sleep(1000);
 
 			js = (JavascriptExecutor) driver;
-			js.executeScript("window.scrollBy(0,250)");
+			js.executeScript("window.scrollBy(0,350)");
 
 			// Add Dependent Predecessor
-
 			if (dependent.getContents().isEmpty()) {
 			} else {
 				try {
@@ -405,13 +411,10 @@ public class AddBugTask extends Utilities {
 								error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
 								System.out.println("Some issue in Dependent task selection");
 							}
-						} else {
-							System.out.println("Dependent task is added");
 						}
 					}
 
 					// Verify Dependent Predecessor
-
 					int dependentCount = 1;
 					arrSplit = dependent.getContents().split("/");
 					for (int i = 0; i < arrSplit.length; i++) {
@@ -419,23 +422,43 @@ public class AddBugTask extends Utilities {
 						if (driver.findElement(By.xpath(
 								"//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr[" + dependentCount + "]/td[1]/a"))
 								.getText().equals(arrSplit[i])) {
+							System.out.println("Dependent Predecessor task is added");
+							dependentCount++;
 						} else {
-							System.out.println(arrSplit[i] + " is not attached");
+							System.out.println(
+									arrSplit[i] + " Dependent Predecessor is not attached. Trying to add again.");
+
+							driver.findElement(By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
+									+ dependentCount + "]/td[4]/i[1]")).click();
+							Thread.sleep(1500);
+
+							driver.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B5").get(0).get(0).toString()))
+									.click();
+							driver.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B6").get(0).get(0).toString()))
+									.sendKeys(arrSplit[i]);
+							Thread.sleep(2000);
+							driver.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B6").get(0).get(0).toString()))
+									.sendKeys(Keys.ENTER);
+							Thread.sleep(1500);
+							driver.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B7").get(0).get(0).toString()))
+									.click();
+
 							error = "Issue " + arrSplit[i] + " Dependent Predecessor is not matched with "
 									+ driver.findElement(By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
 											+ dependentCount + "]/td[1]/a")).getText();
-							break;
 						}
-						dependentCount++;
 					}
 				} catch (ElementClickInterceptedException e) {
 					js = (JavascriptExecutor) driver;
-					js.executeScript("window.scrollBy(0,250)");
+					js.executeScript("window.scrollBy(0,350)");
 				}
 			}
 
 			// Add Dependent Successor
-
 			if (successor.getContents().isEmpty()) {
 			} else {
 				try {
@@ -471,13 +494,10 @@ public class AddBugTask extends Utilities {
 								error = "Issue " + arrSplit[i] + " Dependent Successor task selection";
 								System.out.println("Some issue in successor task selection");
 							}
-						} else {
-							System.out.println("successor task is added");
 						}
 					}
 
 					// Verify Dependent Successor
-
 					int dependentCount = 1;
 					arrSplit = successor.getContents().split("/");
 					for (int i = 0; i < arrSplit.length; i++) {
@@ -485,14 +505,35 @@ public class AddBugTask extends Utilities {
 						if (driver.findElement(By.xpath(
 								"//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr[" + dependentCount + "]/td[1]/a"))
 								.getText().equals(arrSplit[i])) {
+							System.out.println("Dependent Successor task is added");
+							dependentCount++;
 						} else {
-							System.out.println(arrSplit[i] + " is not attached");
+							System.out.println(
+									arrSplit[i] + " Dependent Successor is not attached. Trying to add again.");
+
+							driver.findElement(By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
+									+ dependentCount + "]/td[4]/i[1]")).click();
+							Thread.sleep(1500);
+
+							driver.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B9").get(0).get(0).toString()))
+									.click();
+							driver.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B10").get(0).get(0).toString()))
+									.sendKeys(arrSplit[i]);
+							Thread.sleep(2000);
+							driver.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B10").get(0).get(0).toString()))
+									.sendKeys(Keys.ENTER);
+							Thread.sleep(1500);
+							driver.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B11").get(0).get(0).toString()))
+									.click();
+
 							error = "Issue " + arrSplit[i] + " Dependent Successor is not matched with "
 									+ driver.findElement(By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
 											+ dependentCount + "]/td[1]/a")).getText();
-							break;
 						}
-						dependentCount++;
 					}
 				} catch (ElementClickInterceptedException e) {
 					js = (JavascriptExecutor) driver;
@@ -560,12 +601,14 @@ public class AddBugTask extends Utilities {
 				int tmp = 0;
 
 				do {
-					if (driver.findElement(By.xpath("//div[@role='progressbar']")).getAttribute("aria-valuenow")
-							.equals("100")) {
+					if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
+							&& driver.findElement(By.xpath("//div[@role='progressbar']")).getAttribute("aria-valuenow")
+									.equals("100")) {
 						tmp = 1;
 						System.out.println("Documents are uploaded");
-					} else if (driver.findElement(By.xpath("//div[@role='progressbar']")).getAttribute("aria-valuenow")
-							.equals("0")) {
+					} else if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
+							&& driver.findElement(By.xpath("//div[@role='progressbar']")).getAttribute("aria-valuenow")
+									.equals("0")) {
 						if (driver.findElements(By.xpath("//span[text()='Upload']")).size() > 0) {
 							System.out.println("any one or multiple documents are not attached");
 							tmp = 1;
@@ -575,6 +618,7 @@ public class AddBugTask extends Utilities {
 						}
 					} else {
 						tmp = 0;
+						System.out.println("documents are uploading");
 					}
 				} while (tmp == 0);
 				js = (JavascriptExecutor) driver;
@@ -583,10 +627,10 @@ public class AddBugTask extends Utilities {
 
 			now = LocalDateTime.now();
 			System.out.println(dtf.format(now));
-			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
+//			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
 			checkLoader();
 			testcase = true;
-			error = "complete";			
+			error = "complete";
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
 
 			DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
@@ -697,6 +741,10 @@ public class AddBugTask extends Utilities {
 			File file = new File(zipFilename); // handler to your ZIP file
 			File file2 = new File(renamedFileName); // destination dir of your file
 			file.renameTo(file2);
+		}
+
+		if (error.isEmpty()) {
+			error = "Something problem in script";
 		}
 
 		mailSend.mail(renamedFileName, username.getContents(), error);
