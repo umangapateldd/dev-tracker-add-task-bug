@@ -627,7 +627,7 @@ public class AddBugTask extends Utilities {
 
 			now = LocalDateTime.now();
 			System.out.println(dtf.format(now));
-//			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
+			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
 			checkLoader();
 			testcase = true;
 			error = "complete";
