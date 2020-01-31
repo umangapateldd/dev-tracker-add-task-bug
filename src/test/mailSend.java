@@ -114,7 +114,6 @@ public class mailSend {
 			Transport transport = session.getTransport("smtp");
 			transport.connect(SMTP_SERVER, USERNAME, PASSWORD);
 			transport.sendMessage(msg, msg.getAllRecipients());
-//			transport.close();
 			file = new File(filename);
 			if (file.exists()) {
 				file.delete();

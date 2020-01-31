@@ -288,7 +288,7 @@ public class AddBugTask extends Utilities {
 			Thread.sleep(1000);
 			if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
 				System.out.println(taskType.getContents() + " selection again");
-				error = taskType.getContents() + "selection again";
+				error = taskType.getContents() + " selection again";
 				Thread.sleep(1000);
 				task_bug_radio_button_selection();
 			}
