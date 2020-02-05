@@ -355,7 +355,7 @@ public class Utilities {
 												+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])
 												+ "' and @data-event='foreColor']")).click();
 									} else {
-										System.out.println("Start color code is not proper");
+										Frame1.appendText("Start color code is not proper");
 									}
 
 									if (alreadybold == true) {
@@ -401,7 +401,7 @@ public class Utilities {
 												+ arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4])
 												+ "' and @data-event='foreColor']")).click();
 									} else {
-										System.out.println("End color code is not proper");
+										Frame1.appendText("End color code is not proper");
 									}
 
 									if (abc + 4 < a.length) {
@@ -497,7 +497,7 @@ public class Utilities {
 											}
 										}
 									} else {
-										System.out.println("Given username is not available");
+										Frame1.appendText("Given username is not available");
 									}
 								} else {
 									driver.findElement(By.xpath(
@@ -587,7 +587,7 @@ public class Utilities {
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[2]"))
 							.click();
 				} catch (ElementClickInterceptedException e) {
-					System.out.println("catch");
+					Frame1.appendText("catch");
 					js = (JavascriptExecutor) driver;
 					js.executeScript("window.scrollBy(0,-250)");
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[2]"))
@@ -603,7 +603,7 @@ public class Utilities {
 
 				do {
 					if (System.currentTimeMillis() > end) {
-						System.out.println("image upload timeout");
+						Frame1.appendText("image upload timeout");
 						tmp = 1;
 						break;
 					}
@@ -616,7 +616,7 @@ public class Utilities {
 								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]//following::img["
 										+ attachmentCount + "]"))
 								.isDisplayed()) {
-							System.out.println("File is attached");
+							Frame1.appendText("File is attached");
 							tmp = 1;
 							if (arrSplit.length > 1) {
 								driver.findElement(By
@@ -625,7 +625,7 @@ public class Utilities {
 							}
 						}
 					} else {
-						System.out.println("File is still not attached");
+						Frame1.appendText("File is still not attached");
 						tmp = 0;
 					}
 				} while (tmp == 0);
@@ -635,7 +635,7 @@ public class Utilities {
 	}
 
 	public void removeExtraSpace() throws InterruptedException, IOException, GeneralSecurityException {
-		System.out.println("Removing Extra Space");
+		Frame1.appendText("Removing Extra Space");
 		int pTag = 2;
 		int totalPTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
 		while (pTag <= totalPTag) {
@@ -698,7 +698,7 @@ public class Utilities {
 				break;
 			}
 		}
-		System.out.println("extra space remove done");
+		Frame1.appendText("extra space remove done");
 	}
 
 	public void textFormat(String imagePath, Cell descriptionType) throws InterruptedException {
@@ -956,7 +956,7 @@ public class Utilities {
 											+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])
 											+ "' and @data-event='foreColor']")).click();
 								} else {
-									System.out.println("Start color code is not proper");
+									Frame1.appendText("Start color code is not proper");
 								}
 
 								if (alreadybold == true) {
@@ -996,7 +996,7 @@ public class Utilities {
 											+ arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4])
 											+ "' and @data-event='foreColor']")).click();
 								} else {
-									System.out.println("End color code is not proper");
+									Frame1.appendText("End color code is not proper");
 								}
 
 								if (abc + 4 < a.length) {
@@ -1056,7 +1056,7 @@ public class Utilities {
 											+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
 											+ "' and @data-event='foreColor']")).click();
 								} else {
-									System.out.println("Start color code is not proper");
+									Frame1.appendText("Start color code is not proper");
 								}
 
 								if (alreadybold == true) {
@@ -1129,7 +1129,7 @@ public class Utilities {
 												+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
 												+ "' and @data-event='foreColor']")).click();
 									} else {
-										System.out.println("End color code is not proper");
+										Frame1.appendText("End color code is not proper");
 									}
 
 									if (abc + 2 < a.length) {
@@ -1162,7 +1162,7 @@ public class Utilities {
 												+ arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3])
 												+ "' and @data-event='foreColor']")).click();
 									} else {
-										System.out.println("End color code is not proper");
+										Frame1.appendText("End color code is not proper");
 									}
 
 									if (abc + 4 < a.length) {
@@ -1210,7 +1210,7 @@ public class Utilities {
 										}
 									}
 								} else {
-									System.out.println("Given username is not available");
+									Frame1.appendText("Given username is not available");
 								}
 							} else {
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
@@ -1257,12 +1257,12 @@ public class Utilities {
 				Thread.sleep(1500);
 			} else {
 				attachmentCount++;
-				System.out.println("attachment is available");
+				Frame1.appendText("attachment is available");
 				try {
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[2]"))
 							.click();
 				} catch (ElementClickInterceptedException e) {
-					System.out.println("catch");
+					Frame1.appendText("catch");
 					js = (JavascriptExecutor) driver;
 					js.executeScript("window.scrollBy(0,-250)");
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[2]"))
@@ -1278,7 +1278,7 @@ public class Utilities {
 
 				do {
 					if (System.currentTimeMillis() > end) {
-						System.out.println("image upload timeout");
+						Frame1.appendText("image upload timeout");
 						tmp = 1;
 						break;
 					}
@@ -1291,7 +1291,7 @@ public class Utilities {
 								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]//following::img["
 										+ attachmentCount + "]"))
 								.isDisplayed()) {
-							System.out.println("File is attached");
+							Frame1.appendText("File is attached");
 							tmp = 1;
 							if (arrSplit.length > 1) {
 								driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
@@ -1299,7 +1299,7 @@ public class Utilities {
 							}
 						}
 					} else {
-						System.out.println("File is still not attached");
+						Frame1.appendText("File is still not attached");
 						tmp = 0;
 					}
 				} while (tmp == 0);
@@ -1317,7 +1317,7 @@ public class Utilities {
 
 		do {
 			if (System.currentTimeMillis() > end) {
-				System.out.println("timeout");
+				Frame1.appendText("timeout");
 				tmp = 1;
 			}
 			Thread.sleep(1000);
@@ -1338,7 +1338,7 @@ public class Utilities {
 
 		do {
 			if (System.currentTimeMillis() > end) {
-				System.out.println("timeout");
+				Frame1.appendText("timeout");
 				tmp = 1;
 			}
 

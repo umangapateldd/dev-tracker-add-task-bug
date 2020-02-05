@@ -18,7 +18,7 @@ public class MultipleFileUpload extends Utilities {
 		for (int ar = 0; ar < stringSplit.length; ar++) {
 			boolean fileExists = false;
 			File filePath = new File(globalPath + stringSplit[ar]);
-			System.out.println("tempFile = " + filePath);
+			Frame1.appendText("tempFile = " + filePath);
 			String fileURL = "";
 			if (stringSplit[ar].isEmpty()) {
 				fileURL = stringSplit[ar];
@@ -29,7 +29,6 @@ public class MultipleFileUpload extends Utilities {
 
 			if (fileExists != true) {
 			} else {
-				System.out.println("driver = " + driver);
 				driver.findElement(By.xpath("// *[@id=\"basic-uploader\"]/div[1]/div[1]/span[1]/input"))
 						.sendKeys(fileURL);
 

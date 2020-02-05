@@ -42,38 +42,39 @@ public class AddBugTask extends Utilities {
 	String error = "";
 	String headless = "";
 
-	@org.testng.annotations.Test
-	public void add_bug_task() throws Exception {
+	public void add_bug_task(String filePath, String imageDirPath) throws Exception {
 		File file = new File("tokens/StoredCredential");
 		if (file.exists()) {
 		} else {
-			System.out.println();
-			System.out.println("StoredCredential file is not available in tokens folder.");
-			System.out.println(
+//			System.out.println();
+			Frame1.appendText("StoredCredential file is not available in tokens folder.");
+			Frame1.appendText(
 					"Please download latest build from https://drive.google.com/open?id=1dI-bVzWUoGtyLgeywZzLBii99lJYVNCG");
 			System.exit(0);
 		}
+		
+		Thread.sleep(10000);
 
 		file = new File("client_secret.json");
 		if (file.exists()) {
 		} else {
-			System.out.println();
-			System.out.println("client_secret json file is not available.");
-			System.out.println(
+//			System.out.println();
+			Frame1.appendText("client_secret json file is not available.");
+			Frame1.appendText(
 					"Please download latest build from https://drive.google.com/open?id=1dI-bVzWUoGtyLgeywZzLBii99lJYVNCG");
 			System.exit(0);
 		}
 
 		GetSheetData.googleSheetConnection();
-		File src = new File("Ticket.xls");
+		File src = new File(filePath);
 		Workbook wb = Workbook.getWorkbook(src);
 		Sheet sh1 = wb.getSheet(0);
 		username = sh1.getCell(1, 1);
 
 		if (GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString().equals(version)) {
 		} else {
-			System.out.println();
-			System.out.println("Please download latest build from "
+//			System.out.println();
+			Frame1.appendText("Please download latest build from "
 					+ GetSheetData.getData("Dev Tracker!D2").get(0).get(0).toString());
 			mailSend.mail(renamedFileName, username.getContents(),
 					"Version is mismatch. " + username.getContents() + " user is working on " + version + " build");
@@ -82,7 +83,7 @@ public class AddBugTask extends Utilities {
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
-		System.out.println(dtf.format(now));
+		Frame1.appendText(dtf.format(now));
 
 		String[] sheetNames = wb.getSheetNames();
 		for (int i = 0; i < sheetNames.length; i++) {
@@ -100,7 +101,8 @@ public class AddBugTask extends Utilities {
 		DevTrackerURL = sh1.getCell(1, 0);
 
 		Cell password = sh1.getCell(1, 2);
-		String imagePath = sh1.getCell(1, 3).getContents();
+//		String imagePath = sh1.getCell(1, 3).getContents();
+		String imagePath = imageDirPath + "\\";
 		String bug_tracking_sheet = sh1.getCell(3, 0).getContents();
 
 		if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
@@ -109,7 +111,7 @@ public class AddBugTask extends Utilities {
 			if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
 				mailSend.mail(renamedFileName, username.getContents(), "start");
 			} else {
-				System.out.println("no option for mail on start");
+				Frame1.appendText("no option for mail on start");
 			}
 		}
 
@@ -159,23 +161,24 @@ public class AddBugTask extends Utilities {
 			Cell originator = sh1.getCell(15, row);
 
 			if (project_name.getContents().isEmpty()) {
-				System.out.println("Data are completed");
+				Frame1.appendText("Data are completed");
 				break;
 			}
 
 			if (milestone.getContents().isEmpty() || taskcategory.getContents().isEmpty()
 					|| taskType.getContents().isEmpty() || taskTitle.getContents().isEmpty()
 					|| objective.getContents().isEmpty() || priority.getContents().isEmpty()) {
-				System.out.println(
+				Frame1.appendText(
 						"Milestone / Task Category / Task Type / Task Title / Objective / Priority data are not added in "
 								+ (row + 1) + " row");
 				driver.close();
 				driver.quit();
-				System.exit(1);
+//				System.exit(1);
+				break;
 			}
 			BranchMilestone = milestone.getContents();
-			System.out.println(taskType.getContents() + " is adding");
-			System.out.println("Title is = " + taskTitle.getContents());
+			Frame1.appendText(taskType.getContents() + " is adding");
+			Frame1.appendText("Title is = " + taskTitle.getContents());
 			testcase = false;
 
 			if (project_name.getContents().matches("[0-9]+")) {
@@ -287,7 +290,7 @@ public class AddBugTask extends Utilities {
 
 			Thread.sleep(1000);
 			if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
-				System.out.println(taskType.getContents() + " selection again");
+				Frame1.appendText(taskType.getContents() + " selection again");
 				error = taskType.getContents() + " selection again";
 				Thread.sleep(1000);
 				task_bug_radio_button_selection();
@@ -365,9 +368,9 @@ public class AddBugTask extends Utilities {
 							.findElements(By.xpath("//span[text()='"
 									+ GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString() + "']"))
 							.size() > 0) {
-				System.out.println("Description is added properly");
+				Frame1.appendText("Description is added properly");
 			} else {
-				System.out.println("Issue in added description");
+				Frame1.appendText("Issue in added description");
 			}
 
 			Thread.sleep(1000);
@@ -406,10 +409,10 @@ public class AddBugTask extends Utilities {
 											GetSheetData.getData("Dev Tracker Xpath!B8").get(0).get(0).toString()))
 									.getText().startsWith("Please select any ")) {
 								error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
-								System.out.println("Some issue in Dependent task Popup text");
+								Frame1.appendText("Some issue in Dependent task Popup text");
 							} else {
 								error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
-								System.out.println("Some issue in Dependent task selection");
+								Frame1.appendText("Some issue in Dependent task selection");
 							}
 						}
 					}
@@ -422,10 +425,10 @@ public class AddBugTask extends Utilities {
 						if (driver.findElement(By.xpath(
 								"//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr[" + dependentCount + "]/td[1]/a"))
 								.getText().equals(arrSplit[i])) {
-							System.out.println("Dependent Predecessor task is added");
+							Frame1.appendText("Dependent Predecessor task is added");
 							dependentCount++;
 						} else {
-							System.out.println(
+							Frame1.appendText(
 									arrSplit[i] + " Dependent Predecessor is not attached. Trying to add again.");
 
 							driver.findElement(By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
@@ -489,10 +492,10 @@ public class AddBugTask extends Utilities {
 											GetSheetData.getData("Dev Tracker Xpath!B12").get(0).get(0).toString()))
 									.getText().startsWith("Please select any ")) {
 								error = "Issue " + arrSplit[i] + " Dependent Successor task Popup text";
-								System.out.println("Some issue in successor task Popup text");
+								Frame1.appendText("Some issue in successor task Popup text");
 							} else {
 								error = "Issue " + arrSplit[i] + " Dependent Successor task selection";
-								System.out.println("Some issue in successor task selection");
+								Frame1.appendText("Some issue in successor task selection");
 							}
 						}
 					}
@@ -505,10 +508,10 @@ public class AddBugTask extends Utilities {
 						if (driver.findElement(By.xpath(
 								"//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr[" + dependentCount + "]/td[1]/a"))
 								.getText().equals(arrSplit[i])) {
-							System.out.println("Dependent Successor task is added");
+							Frame1.appendText("Dependent Successor task is added");
 							dependentCount++;
 						} else {
-							System.out.println(
+							Frame1.appendText(
 									arrSplit[i] + " Dependent Successor is not attached. Trying to add again.");
 
 							driver.findElement(By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
@@ -542,7 +545,7 @@ public class AddBugTask extends Utilities {
 			}
 
 			if (priority.getContents().isEmpty()) {
-				System.out.println("Priority should be required");
+				Frame1.appendText("Priority should be required");
 				driver.close();
 				driver.quit();
 				System.exit(1);
@@ -552,7 +555,7 @@ public class AddBugTask extends Utilities {
 			}
 
 			if (taskStatus.getContents().isEmpty()) {
-				System.out.println("Status is not available so set as default");
+				Frame1.appendText("Status is not available so set as default");
 			} else {
 				Thread.sleep(1500);
 				List<WebElement> options = driver.findElements(By.xpath("//select[@id='status']/option"));
@@ -566,7 +569,7 @@ public class AddBugTask extends Utilities {
 			}
 
 			if (assignee.getContents().isEmpty()) {
-				System.out.println("Assignee user is not available in excel sheet");
+				Frame1.appendText("Assignee user is not available in excel sheet");
 			} else {
 				Thread.sleep(1500);
 				List<WebElement> options = driver.findElements(By.xpath("//select[@id='assign_user_id']/option"));
@@ -579,7 +582,7 @@ public class AddBugTask extends Utilities {
 			}
 
 			if (reporter.getContents().isEmpty()) {
-				System.out.println("Reporter user is not available in excel sheet");
+				Frame1.appendText("Reporter user is not available in excel sheet");
 			} else {
 				List<WebElement> options = driver.findElements(By.xpath("//select[@id='report_to']/option"));
 
@@ -592,7 +595,7 @@ public class AddBugTask extends Utilities {
 			}
 
 			if (uploadDocuments.getContents().isEmpty()) {
-				System.out.println("Documents are not available in excel sheet");
+				Frame1.appendText("Documents are not available in excel sheet");
 			} else {
 				multipleFileUpload.fileUpload(driver, imagePath, uploadDocuments);
 				driver.findElement(By.id("startall")).click();
@@ -605,20 +608,20 @@ public class AddBugTask extends Utilities {
 							&& driver.findElement(By.xpath("//div[@role='progressbar']")).getAttribute("aria-valuenow")
 									.equals("100")) {
 						tmp = 1;
-						System.out.println("Documents are uploaded");
+						Frame1.appendText("Documents are uploaded");
 					} else if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
 							&& driver.findElement(By.xpath("//div[@role='progressbar']")).getAttribute("aria-valuenow")
 									.equals("0")) {
 						if (driver.findElements(By.xpath("//span[text()='Upload']")).size() > 0) {
-							System.out.println("any one or multiple documents are not attached");
+							Frame1.appendText("any one or multiple documents are not attached");
 							tmp = 1;
 						} else {
-							System.out.println("documents are attached");
+							Frame1.appendText("documents are attached");
 							tmp = 1;
 						}
 					} else {
 						tmp = 0;
-						System.out.println("documents are uploading");
+						Frame1.appendText("documents are uploading");
 					}
 				} while (tmp == 0);
 				js = (JavascriptExecutor) driver;
@@ -626,15 +629,15 @@ public class AddBugTask extends Utilities {
 			}
 
 			now = LocalDateTime.now();
-			System.out.println(dtf.format(now));
-			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
+			Frame1.appendText(dtf.format(now));
+//			driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString())).click();
 			checkLoader();
 			testcase = true;
 			error = "complete";
 			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
 
 			DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-			System.out.println(DevTrackerNumber);
+			Frame1.appendText(DevTrackerNumber);
 
 			if (bug_tracking_sheet.toLowerCase().equals("yes")) {
 				createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(), taskTitle.getContents(),
@@ -644,7 +647,7 @@ public class AddBugTask extends Utilities {
 			row++;
 		}
 		now = LocalDateTime.now();
-		System.out.println(dtf.format(now));
+		Frame1.appendText(dtf.format(now));
 
 		if (BranchCreateSheet == true) {
 
