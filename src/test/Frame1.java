@@ -13,6 +13,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
@@ -37,7 +39,7 @@ public class Frame1 {
 					Frame1 window = new Frame1();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					alertMessage(e.toString());
 				}
 			}
 		});
@@ -57,11 +59,13 @@ public class Frame1 {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 731, 422);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel jp = new JPanel();
 		frame.getContentPane().setLayout(null);
 
 		JTextField txtFileUpload = new JTextField();
 		JTextField txtSetImageFolder = new JTextField();
 		JButton btnNewButton = new JButton("Execute Script");
+		JButton btnStopExecution = new JButton("Stop Execution");
 		btnNewButton.setEnabled(false);
 		JButton btnFileUpload = new JButton("Upload file");
 		JButton btnSetImageFolder = new JButton("Select image path");
@@ -71,6 +75,7 @@ public class Frame1 {
 		JLabel orlabel2 = new JLabel("OR");
 
 		textArea = new JTextArea();
+
 		jfile = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		jdir = new JFileChooser();
 		jdir.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -79,6 +84,7 @@ public class Frame1 {
 		btnSetImageFolder.setBounds(10, 58, 117, 41);
 		imageFolderLabel.setBounds(496, 50, 209, 28);
 		btnNewButton.setBounds(10, 106, 117, 41);
+		btnStopExecution.setBounds(193, 101, 117, 46);
 		txtFileUpload.setBounds(193, 17, 260, 28);
 		txtSetImageFolder.setBounds(193, 64, 260, 28);
 		orlabel1.setBounds(153, 17, 30, 28);
@@ -90,6 +96,7 @@ public class Frame1 {
 		frame.getContentPane().add(textArea);
 
 		frame.getContentPane().add(btnNewButton);
+		frame.getContentPane().add(btnStopExecution);
 		frame.getContentPane().add(fileUploadLabel);
 		frame.getContentPane().add(btnFileUpload);
 		frame.getContentPane().add(btnSetImageFolder);
@@ -98,6 +105,12 @@ public class Frame1 {
 		frame.getContentPane().add(txtSetImageFolder);
 		frame.getContentPane().add(orlabel1);
 		frame.getContentPane().add(orlabel2);
+		JScrollPane sampleScrollPane = new JScrollPane(textArea);
+		sampleScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		sampleScrollPane.setBounds(10, 158, 443, 214);
+		frame.getContentPane().add(sampleScrollPane);
+
+//		frame.getContentPane().add(textArea);
 
 		AddBugTask test = new AddBugTask();
 		btnNewButton.addActionListener(new ActionListener() {
@@ -109,6 +122,8 @@ public class Frame1 {
 						try {
 							if (filePath.isEmpty()) {
 								JOptionPane.showMessageDialog(null, "Please select excel file");
+							} else if (imageFolderLabel.getText().isEmpty()) {
+								JOptionPane.showMessageDialog(null, "Please select appropriate folder");
 							} else {
 								test.add_bug_task(filePath, imageDirPath);
 //								frame.dispose();
@@ -116,11 +131,28 @@ public class Frame1 {
 
 						} catch (IOException | InterruptedException e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							alertMessage(e.toString());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							alertMessage(e.toString());
 						}
+					}
+				}).start();
+
+			}
+		});
+
+		btnStopExecution.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+//						if (test.driver != null) {
+							System.exit(0);
+//						} else {
+//							alertMessage("script does not start to execute");
+//						}
 					}
 				}).start();
 
@@ -149,6 +181,7 @@ public class Frame1 {
 								}
 							} else {
 								filePath = "";
+								fileUploadLabel.setText("");
 								alertMessage("Please select only xls file");
 							}
 						}
@@ -251,6 +284,25 @@ public class Frame1 {
 						}
 					} else {
 						alertMessage("Please enter only xls file");
+					}
+				}
+			}
+		});
+
+		txtSetImageFolder.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if (!txtSetImageFolder.getText().isEmpty()) {
+					String path = txtSetImageFolder.getText();
+					File ext = new File(path);
+					if (ext.exists()) {
+						imageFolderLabel.setText(path);
+						if (!fileUploadLabel.getText().isEmpty()) {
+							btnNewButton.setEnabled(true);
+						}
+					} else {
+						imageFolderLabel.setText("");
+						alertMessage("Please select appropriate folder");
 					}
 				}
 			}

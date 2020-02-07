@@ -634,15 +634,15 @@ public class AddBugTask extends Utilities {
 			checkLoader();
 			testcase = true;
 			error = "complete";
-			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-
-			DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-			Frame1.appendText(DevTrackerNumber);
-
-			if (bug_tracking_sheet.toLowerCase().equals("yes")) {
-				createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(), taskTitle.getContents(),
-						projectName, originator.getContents(), reporter.getContents(), taskType.getContents());
-			}
+//			driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+//
+//			DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+//			Frame1.appendText(DevTrackerNumber);
+//
+//			if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+//				createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(), taskTitle.getContents(),
+//						projectName, originator.getContents(), reporter.getContents(), taskType.getContents());
+//			}
 
 			row++;
 		}
