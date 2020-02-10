@@ -46,7 +46,7 @@ public class Utilities {
 		options.addArguments("--disable-popup-blocking");
 		options.addArguments("--proxy-server='direct://'");
 		options.addArguments("--proxy-bypass-list=*");
-		if (headless.equals("yes")) {
+		if (headless.equals("No")) {
 			options.addArguments("--headless");
 		}
 		options.setCapability(ChromeOptions.CAPABILITY, chrome);
@@ -59,8 +59,14 @@ public class Utilities {
 		}
 
 		driver = new ChromeDriver(options);
+		Frame1.driverFrame = driver;
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+	}
+
+	public void closeBrowser() {
+		driver.close();
+		driver.quit();
 	}
 
 	public static List<String> extractUrls(String text) {

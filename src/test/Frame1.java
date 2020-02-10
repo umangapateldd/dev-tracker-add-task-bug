@@ -6,28 +6,34 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
-import java.io.IOException;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
-public class Frame1 {
+import org.openqa.selenium.WebDriver;
+import org.testng.TestNG;
+
+public class Frame1 extends Utilities {
 
 	private JFrame frame;
 	static JTextArea textArea;
 	JFileChooser jfile;
 	JFileChooser jdir;
-	String filePath = "";
-	String imageDirPath = "";
+	static String filePath = "";
+	static String imageDirPath = "";
 	File dirPath = null;
+	static WebDriver driverFrame;
+	static String rdbVal;
 
 	/**
 	 * Launch the application.
@@ -64,38 +70,52 @@ public class Frame1 {
 
 		JTextField txtFileUpload = new JTextField();
 		JTextField txtSetImageFolder = new JTextField();
-		JButton btnNewButton = new JButton("Execute Script");
+		JButton btnExecuteScript = new JButton("Execute Script");
 		JButton btnStopExecution = new JButton("Stop Execution");
-		btnNewButton.setEnabled(false);
+		btnExecuteScript.setEnabled(false);
 		JButton btnFileUpload = new JButton("Upload file");
 		JButton btnSetImageFolder = new JButton("Select image path");
 		JLabel fileUploadLabel = new JLabel();
 		JLabel imageFolderLabel = new JLabel();
 		JLabel orlabel1 = new JLabel("OR");
 		JLabel orlabel2 = new JLabel("OR");
+		JLabel lblBrowserDisplay = new JLabel("Browser Display ?");
+		JRadioButton rdbChromeYes = new JRadioButton();
+		JRadioButton rdbChromeNo = new JRadioButton();
+		ButtonGroup G1 = new ButtonGroup();
 
 		textArea = new JTextArea();
 
 		jfile = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		jdir = new JFileChooser();
 		jdir.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		btnFileUpload.setBounds(10, 11, 117, 41);
-		fileUploadLabel.setBounds(496, 11, 209, 28);
-		btnSetImageFolder.setBounds(10, 58, 117, 41);
-		imageFolderLabel.setBounds(496, 50, 209, 28);
-		btnNewButton.setBounds(10, 106, 117, 41);
-		btnStopExecution.setBounds(193, 101, 117, 46);
+		// x,y,width,height
+		btnFileUpload.setBounds(10, 11, 140, 41);
+
+		fileUploadLabel.setBounds(460, 15, 209, 28);
+		imageFolderLabel.setBounds(460, 65, 209, 28);
+
+		btnSetImageFolder.setBounds(10, 58, 140, 41);
+		btnExecuteScript.setBounds(10, 106, 140, 41);
+		btnStopExecution.setBounds(193, 101, 125, 46);
+
 		txtFileUpload.setBounds(193, 17, 260, 28);
 		txtSetImageFolder.setBounds(193, 64, 260, 28);
-		orlabel1.setBounds(153, 17, 30, 28);
-		orlabel2.setBounds(153, 64, 30, 28);
+
+		orlabel1.setBounds(163, 17, 30, 28);
+		orlabel2.setBounds(163, 64, 30, 28);
+
+		rdbChromeYes.setBounds(550, 112, 52, 28);
+		rdbChromeNo.setBounds(617, 112, 52, 28);
+
+		lblBrowserDisplay.setBounds(434, 112, 110, 28);
 
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
 		textArea.setBounds(10, 158, 443, 214);
 		frame.getContentPane().add(textArea);
 
-		frame.getContentPane().add(btnNewButton);
+		frame.getContentPane().add(btnExecuteScript);
 		frame.getContentPane().add(btnStopExecution);
 		frame.getContentPane().add(fileUploadLabel);
 		frame.getContentPane().add(btnFileUpload);
@@ -105,15 +125,24 @@ public class Frame1 {
 		frame.getContentPane().add(txtSetImageFolder);
 		frame.getContentPane().add(orlabel1);
 		frame.getContentPane().add(orlabel2);
+		frame.getContentPane().add(rdbChromeYes);
+		frame.getContentPane().add(rdbChromeNo);
+		frame.getContentPane().add(lblBrowserDisplay);
+
+		rdbChromeYes.setText("Yes");
+		rdbChromeNo.setText("No");
+		rdbChromeNo.setSelected(true);
+
+		G1.add(rdbChromeYes);
+		G1.add(rdbChromeNo);
+
 		JScrollPane sampleScrollPane = new JScrollPane(textArea);
 		sampleScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		sampleScrollPane.setBounds(10, 158, 443, 214);
 		frame.getContentPane().add(sampleScrollPane);
 
-//		frame.getContentPane().add(textArea);
-
 		AddBugTask test = new AddBugTask();
-		btnNewButton.addActionListener(new ActionListener() {
+		btnExecuteScript.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(new Runnable() {
@@ -125,15 +154,24 @@ public class Frame1 {
 							} else if (imageFolderLabel.getText().isEmpty()) {
 								JOptionPane.showMessageDialog(null, "Please select appropriate folder");
 							} else {
-								test.add_bug_task(filePath, imageDirPath);
+								if (test.checkFiles() == true) {
+									if (test.checkVersion() == true) {
+										if (rdbChromeNo.isSelected() == true) {
+											rdbVal = rdbChromeNo.getText();
+										} else if (rdbChromeYes.isSelected() == true) {
+											rdbVal = rdbChromeYes.getText();
+										}
+
+										System.out.println(rdbVal);
+										Frame1.appendText("Execution Start");
+										TestNG testSuite = new TestNG();
+										testSuite.setTestClasses(new Class[] { AddBugTask.class });
+										testSuite.run();
+									}
+								}
 //								frame.dispose();
 							}
-
-						} catch (IOException | InterruptedException e) {
-							// TODO Auto-generated catch block
-							alertMessage(e.toString());
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							alertMessage(e.toString());
 						}
 					}
@@ -148,14 +186,14 @@ public class Frame1 {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-//						if (test.driver != null) {
-							System.exit(0);
-//						} else {
-//							alertMessage("script does not start to execute");
-//						}
+						try {
+							Frame1.driverFrame.close();
+							Frame1.driverFrame.quit();
+						} catch (Exception e) {
+							alertMessage("Script is stopped 1");
+						}
 					}
 				}).start();
-
 			}
 		});
 
@@ -177,7 +215,7 @@ public class Frame1 {
 							if (getExtension(ext).equals("xls")) {
 								fileUploadLabel.setText(jfile.getSelectedFile().getName());
 								if (!imageFolderLabel.getText().isEmpty()) {
-									btnNewButton.setEnabled(true);
+									btnExecuteScript.setEnabled(true);
 								}
 							} else {
 								filePath = "";
@@ -254,7 +292,7 @@ public class Frame1 {
 							imageDirPath = dirPath.getAbsolutePath();
 							imageFolderLabel.setText(dirPath.getAbsolutePath());
 							if (!fileUploadLabel.getText().isEmpty()) {
-								btnNewButton.setEnabled(true);
+								btnExecuteScript.setEnabled(true);
 							}
 						}
 						// if the user cancelled the operation
@@ -273,10 +311,13 @@ public class Frame1 {
 					filePath = txtFileUpload.getText();
 					File ext = new File(filePath);
 					if (ext.exists()) {
-						if (getExtension(ext).equals("xls")) {
+						if (getExtension(ext) == null) {
+							filePath = "";
+							alertMessage("Please enter only xls file");
+						} else if (getExtension(ext).equals("xls")) {
 							fileUploadLabel.setText(ext.getName());
 							if (!imageFolderLabel.getText().isEmpty()) {
-								btnNewButton.setEnabled(true);
+								btnExecuteScript.setEnabled(true);
 							}
 						} else {
 							filePath = "";
@@ -294,11 +335,17 @@ public class Frame1 {
 			public void focusLost(FocusEvent arg0) {
 				if (!txtSetImageFolder.getText().isEmpty()) {
 					String path = txtSetImageFolder.getText();
+					char last_char = path.charAt(path.length() - 1);
+					if (last_char == '\\') {
+					} else {
+						path = path + "\\";
+					}
 					File ext = new File(path);
+					imageDirPath = path;
 					if (ext.exists()) {
 						imageFolderLabel.setText(path);
 						if (!fileUploadLabel.getText().isEmpty()) {
-							btnNewButton.setEnabled(true);
+							btnExecuteScript.setEnabled(true);
 						}
 					} else {
 						imageFolderLabel.setText("");
