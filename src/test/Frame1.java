@@ -21,9 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.testng.SkipException;
 import org.testng.TestNG;
 
@@ -73,12 +71,12 @@ public class Frame1 extends Utilities {
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
 
-		JTextField txtFileUpload = new JTextField();
-		JTextField txtSetImageFolder = new JTextField();
+		JTextField txtFileUpload = new JTextField("Please enter xls file path");
+		JTextField txtSetImageFolder = new JTextField("Please enter appropriate folder");
 		JButton btnExecuteScript = new JButton("Execute Script");
 		JButton btnStopExecution = new JButton("Stop Execution");
 		btnExecuteScript.setEnabled(false);
-		JButton btnFileUpload = new JButton("Upload file");
+		JButton btnFileUpload = new JButton("Upload xls file");
 		JButton btnSetImageFolder = new JButton("Select image path");
 		JLabel lblfileUpload = new JLabel();
 		JLabel lblImageFolder = new JLabel();
@@ -139,7 +137,7 @@ public class Frame1 extends Utilities {
 
 		G1.add(rdbChromeYes);
 		G1.add(rdbChromeNo);
-
+		
 		JScrollPane sampleScrollPane = new JScrollPane(textArea);
 		sampleScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		sampleScrollPane.setBounds(10, 209, 443, 214);
@@ -240,6 +238,7 @@ public class Frame1 extends Utilities {
 							File ext = new File(filePath);
 							if (getExtension(ext).equals("xls")) {
 								lblfileUpload.setText(jfile.getSelectedFile().getName());
+								txtFileUpload.setText(filePath);
 								if (!lblImageFolder.getText().isEmpty()) {
 									btnExecuteScript.setEnabled(true);
 								} else if (rdbattachmentFolderFromExcelYes.isSelected()) {
@@ -327,6 +326,7 @@ public class Frame1 extends Utilities {
 							}
 							imageDirPath = path;
 							lblImageFolder.setText(imageDirPath);
+							txtSetImageFolder.setText(imageDirPath);
 							if (!lblfileUpload.getText().isEmpty()) {
 								btnExecuteScript.setEnabled(true);
 							}
@@ -359,11 +359,26 @@ public class Frame1 extends Utilities {
 							}
 						} else {
 							filePath = "";
+							btnExecuteScript.setEnabled(false);
 							alertMessage("Please enter only xls file");
 						}
 					} else {
+						lblfileUpload.setText("");
+						btnExecuteScript.setEnabled(false);
+						txtFileUpload.setText("Please enter xls file path");
 						alertMessage("Please enter only xls file");
 					}
+				} else {
+					lblfileUpload.setText("");
+					btnExecuteScript.setEnabled(false);
+					txtFileUpload.setText("Please enter xls file path");
+				}
+			}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				if (txtFileUpload.getText().equals("Please enter xls file path")) {
+					txtFileUpload.setText("");
 				}
 			}
 		});
@@ -387,8 +402,21 @@ public class Frame1 extends Utilities {
 						}
 					} else {
 						lblImageFolder.setText("");
+						txtSetImageFolder.setText("Please enter appropriate folder");
+						btnExecuteScript.setEnabled(false);
 						alertMessage("Please select appropriate folder");
 					}
+				} else {
+					lblImageFolder.setText("");
+					btnExecuteScript.setEnabled(false);
+					txtSetImageFolder.setText("Please enter appropriate folder");
+				}
+			}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				if (txtSetImageFolder.getText().equals("Please enter appropriate folder")) {
+					txtSetImageFolder.setText("");
 				}
 			}
 		});
