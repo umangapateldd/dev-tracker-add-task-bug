@@ -109,8 +109,15 @@ public class AddBugTask extends Utilities {
 			DevTrackerURL = sh1.getCell(1, 0);
 
 			Cell password = sh1.getCell(1, 2);
-//			String imagePath = sh1.getCell(1, 3).getContents();
-			String imagePath = Frame1.imageDirPath;
+			String imagePath;
+			if (Frame1.imageDirPath.isEmpty()) {
+				imagePath = sh1.getCell(1, 3).getContents();
+			} else {
+				imagePath = Frame1.imageDirPath;
+			}
+
+			Frame1.appendText("image path = " + imagePath);
+
 			String bug_tracking_sheet = sh1.getCell(3, 0).getContents();
 
 			if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
