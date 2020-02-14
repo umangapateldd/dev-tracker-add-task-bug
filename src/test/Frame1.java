@@ -22,7 +22,6 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.testng.SkipException;
 import org.testng.TestNG;
 
 public class Frame1 extends Utilities {
@@ -36,6 +35,17 @@ public class Frame1 extends Utilities {
 	File dirPath = null;
 	static WebDriver driverFrame;
 	static String rdbVal;
+	static boolean stop = false;
+	static JButton btnFileUpload;
+	static JButton btnSetImageFolder;
+	static JTextField txtFileUpload;
+	static JTextField txtSetImageFolder;
+	static JButton btnExecuteScript;
+	static JButton btnStopExecution;
+	static JRadioButton rdbChromeYes;
+	static JRadioButton rdbChromeNo;
+	static JRadioButton rdbattachmentFolderFromExcelYes;
+	static JRadioButton rdbattachmentFolderFromExcelNo;
 
 	/**
 	 * Launch the application.
@@ -71,20 +81,20 @@ public class Frame1 extends Utilities {
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
 
-		JTextField txtFileUpload = new JTextField("Please enter xls file path");
-		JTextField txtSetImageFolder = new JTextField("Please enter appropriate folder");
-		JButton btnExecuteScript = new JButton("Execute Script");
-		JButton btnStopExecution = new JButton("Stop Execution");
+		txtFileUpload = new JTextField("Please enter xls file path");
+		txtSetImageFolder = new JTextField("Please enter appropriate folder");
+		btnExecuteScript = new JButton("Execute Script");
+		btnStopExecution = new JButton("Stop Execution");
 		btnExecuteScript.setEnabled(false);
-		JButton btnFileUpload = new JButton("Upload xls file");
-		JButton btnSetImageFolder = new JButton("Select image path");
+		btnFileUpload = new JButton("Upload xls file");
+		btnSetImageFolder = new JButton("Select image path");
 		JLabel lblfileUpload = new JLabel();
 		JLabel lblImageFolder = new JLabel();
 		JLabel orlabel1 = new JLabel("OR");
 		JLabel orlabel2 = new JLabel("OR");
 		JLabel lblBrowserDisplay = new JLabel("Browser Display ?");
-		JRadioButton rdbChromeYes = new JRadioButton();
-		JRadioButton rdbChromeNo = new JRadioButton();
+		rdbChromeYes = new JRadioButton();
+		rdbChromeNo = new JRadioButton();
 		ButtonGroup G1 = new ButtonGroup();
 		ButtonGroup G2 = new ButtonGroup();
 
@@ -137,7 +147,7 @@ public class Frame1 extends Utilities {
 
 		G1.add(rdbChromeYes);
 		G1.add(rdbChromeNo);
-		
+
 		JScrollPane sampleScrollPane = new JScrollPane(textArea);
 		sampleScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		sampleScrollPane.setBounds(10, 209, 443, 214);
@@ -147,12 +157,12 @@ public class Frame1 extends Utilities {
 		attachmentFolderFromExcel.setBounds(10, 70, 200, 28);
 		frame.getContentPane().add(attachmentFolderFromExcel);
 
-		JRadioButton rdbattachmentFolderFromExcelYes = new JRadioButton();
+		rdbattachmentFolderFromExcelYes = new JRadioButton();
 		rdbattachmentFolderFromExcelYes.setText("Yes");
 		rdbattachmentFolderFromExcelYes.setBounds(216, 70, 52, 28);
 		frame.getContentPane().add(rdbattachmentFolderFromExcelYes);
 
-		JRadioButton rdbattachmentFolderFromExcelNo = new JRadioButton();
+		rdbattachmentFolderFromExcelNo = new JRadioButton();
 		rdbattachmentFolderFromExcelNo.setText("No");
 		rdbattachmentFolderFromExcelNo.setSelected(true);
 		rdbattachmentFolderFromExcelNo.setBounds(283, 70, 52, 28);
@@ -184,6 +194,20 @@ public class Frame1 extends Utilities {
 										}
 
 										Frame1.appendText("Execution Start");
+
+										// Fields enable - disable
+
+										btnFileUpload.setEnabled(false);
+										txtFileUpload.setEnabled(false);
+										btnExecuteScript.setEnabled(false);
+										btnSetImageFolder.setEnabled(false);
+										txtSetImageFolder.setEnabled(false);
+										rdbChromeYes.setEnabled(false);
+										rdbChromeNo.setEnabled(false);
+										rdbattachmentFolderFromExcelYes.setEnabled(false);
+										rdbattachmentFolderFromExcelNo.setEnabled(false);
+										btnStopExecution.setEnabled(true);
+
 										TestNG testSuite = new TestNG();
 										testSuite.setTestClasses(new Class[] { AddBugTask.class });
 										testSuite.run();
@@ -209,13 +233,25 @@ public class Frame1 extends Utilities {
 						try {
 							JavascriptExecutor js = (JavascriptExecutor) Frame1.driverFrame;
 							js.executeScript("return window.stop");
-							Frame1.driverFrame.close();
-							Frame1.driverFrame.quit();
-							throw new SkipException("test");
+							stop = true;
+
+							test.mailSend.mail("abc.txt", test.username.getContents(), "Execution is stopped manually");
 						} catch (Exception e) {
 							System.out.println(e);
 							alertMessage("Script is stopped 1");
 						}
+						Frame1.driverFrame.close();
+						Frame1.driverFrame.quit();
+
+						btnFileUpload.setEnabled(true);
+						txtFileUpload.setEnabled(true);
+						btnExecuteScript.setEnabled(false);
+						btnSetImageFolder.setEnabled(true);
+						txtSetImageFolder.setEnabled(true);
+						rdbChromeYes.setEnabled(true);
+						rdbChromeNo.setEnabled(true);
+						rdbattachmentFolderFromExcelYes.setEnabled(true);
+						rdbattachmentFolderFromExcelNo.setEnabled(true);
 					}
 				}).start();
 			}
@@ -445,8 +481,12 @@ public class Frame1 extends Utilities {
 	}
 
 	public static void appendText(String text) {
-		textArea.append(text);
-		textArea.append("\n");
+		if (textArea == null) {
+			System.out.println(text);
+		} else {
+			textArea.append(text);
+			textArea.append("\n");
+		}
 	}
 
 	public static void alertMessage(String text) {

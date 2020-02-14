@@ -70,7 +70,13 @@ public class AddBugTask extends Utilities {
 
 	public boolean checkVersion() throws GeneralSecurityException, IOException, BiffException, InterruptedException {
 		GetSheetData.googleSheetConnection();
-		File src = new File(Frame1.filePath);
+		File src;
+		if (Frame1.filePath.equals("")) {
+			src = new File("Ticket.xls");
+		} else {
+			src = new File(Frame1.filePath);
+		}
+
 		wb = Workbook.getWorkbook(src);
 		sh1 = wb.getSheet(0);
 		username = sh1.getCell(1, 1);
@@ -110,7 +116,7 @@ public class AddBugTask extends Utilities {
 
 			Cell password = sh1.getCell(1, 2);
 			String imagePath;
-			if (Frame1.imageDirPath.isEmpty()) {
+			if (Frame1.imageDirPath == null || Frame1.imageDirPath.isEmpty()) {
 				imagePath = sh1.getCell(1, 3).getContents();
 			} else {
 				imagePath = Frame1.imageDirPath;
@@ -133,9 +139,13 @@ public class AddBugTask extends Utilities {
 			MultipleFileUpload multipleFileUpload = new MultipleFileUpload();
 			CreateBugTrackingReport createBugTrackingReport = new CreateBugTrackingReport();
 
-			headless = Frame1.rdbVal;
-			openBrowser(headless);
+			if (Frame1.rdbVal == null) {
+				headless = "Yes";
+			} else {
+				headless = Frame1.rdbVal;
+			}
 
+			openBrowser(headless);
 			driver.get(DevTrackerURL.getContents());
 
 			if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
@@ -752,7 +762,18 @@ public class AddBugTask extends Utilities {
 		try {
 			Assert.assertTrue(testcase);
 
-			Frame1.alertMessage("Script is done");
+			Frame1.btnFileUpload.setEnabled(true);
+			Frame1.txtFileUpload.setEnabled(true);
+			Frame1.btnExecuteScript.setEnabled(false);
+			Frame1.btnSetImageFolder.setEnabled(true);
+			Frame1.txtSetImageFolder.setEnabled(true);
+			Frame1.rdbChromeYes.setEnabled(true);
+			Frame1.rdbChromeNo.setEnabled(true);
+			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
+			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
+
+			testcase = true;
+
 		} catch (AssertionError e) {
 			File f = new File(outputFolderName);
 			if (f.exists() && f.isDirectory()) {
@@ -766,23 +787,34 @@ public class AddBugTask extends Utilities {
 			File file = new File(zipFilename); // handler to your ZIP file
 			File file2 = new File(renamedFileName); // destination dir of your file
 			file.renameTo(file2);
-			Frame1.alertMessage("Script is stopped 2");
 		}
 
 		if (error.isEmpty()) {
 			error = "Something problem in script";
 		}
 
-		mailSend.mail(renamedFileName, username.getContents(), error);
+		if (Frame1.stop == true) {
+		} else {
+			mailSend.mail(renamedFileName, username.getContents(), error);
+		}
 
 		Thread.sleep(2000);
-
 		File file = new File(renamedFileName);
 		if (file.exists()) {
 			file.delete();
 		}
-		driver.close();
-		driver.quit();
+
+		if (Frame1.stop == true) {
+		} else {
+			driver.close();
+			driver.quit();
+		}
+
+		if (testcase == true) {
+			Frame1.alertMessage("Script is done");
+		} else {
+			Frame1.alertMessage("Script is stopped 2");
+		}
 	}
 
 	public void zipDirectory(File dir, String zipDirName) throws Exception {
