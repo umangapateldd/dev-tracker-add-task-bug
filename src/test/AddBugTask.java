@@ -333,7 +333,7 @@ public class AddBugTask extends Utilities {
 				// reference
 				if (references.getContents().isEmpty()) {
 				} else {
-					macTextFormat(imagePath, references, "p[4]");
+					macTextFormat(imagePath, references, "p[4]", sh1, row);
 //					if (systemName.contains("mac")) {
 //						macTextFormat(imagePath, references, "p[4]");
 //					} else {
@@ -356,13 +356,13 @@ public class AddBugTask extends Utilities {
 //					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(Keys.DELETE);
 //				}
 
-				macTextFormat(imagePath, objective, "p[2]");
+				macTextFormat(imagePath, objective, "p[2]", sh1, row);
 
 				// COS
 
 //				action = new Actions(driver);
 
-				macTextFormat(imagePath, cos, "xyz");
+				macTextFormat(imagePath, cos, "xyz", sh1, row);
 //				if (systemName.contains("mac")) {
 //					macTextFormat(imagePath, cos, "xyz");
 //				} else {
