@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileLock;
 import java.security.GeneralSecurityException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -112,7 +110,7 @@ public class Utilities {
 		boolean exists = false;
 		boolean alreadybold = false;
 		for (int ar = 0; ar < arrSplit.length; ar++) {
-			if (arrSplit[ar].toLowerCase().contains("{numberlist}")) {
+			if (arrSplit[ar].toLowerCase().contains("{number}")) {
 				driver.findElement(
 						By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"))
 						.click();
@@ -122,7 +120,7 @@ public class Utilities {
 			}
 
 			exists = false;
-			arrSplit[ar] = arrSplit[ar].replace("{numberlist}", "");
+			arrSplit[ar] = arrSplit[ar].replace("{number}", "");
 			File tempFile = new File(imagePath + arrSplit[ar]);
 			String imageURL = "";
 			if (arrSplit[ar].isEmpty()) {
@@ -1146,6 +1144,7 @@ public class Utilities {
 				countTag++;
 			}
 		}
+
 		if (orderlist.equals("start")) {
 			driver.findElement(
 					By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']")).click();
@@ -1153,12 +1152,18 @@ public class Utilities {
 					.sendKeys(Keys.ENTER);
 			orderlist = "stop";
 		}
+
 		if (acceptanceCriteria == true) {
 			col++;
-			if (sh1.getCell(col, row).getContents().equals("")) {
-				acceptanceCriteria = false;
+			if (sh1.getColumns() > 16) {
+				if (sh1.getCell(col, row).getContents().isEmpty()) {
+					col = 15;
+					acceptanceCriteria = false;
+				} else {
+					macTextFormat(imagePath, sh1.getCell(col, row), "abc", sh1, row);
+				}
 			} else {
-				macTextFormat(imagePath, sh1.getCell(col, row), "abc", sh1, row);
+				System.out.println("456");
 			}
 		}
 	}

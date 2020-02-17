@@ -47,9 +47,6 @@ public class Frame1 extends Utilities {
 	static JRadioButton rdbattachmentFolderFromExcelYes;
 	static JRadioButton rdbattachmentFolderFromExcelNo;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

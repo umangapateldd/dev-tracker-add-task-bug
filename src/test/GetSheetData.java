@@ -70,6 +70,7 @@ public class GetSheetData {
 	}
 
 	public static List<List<Object>> getData(String range) throws IOException, GeneralSecurityException {
+		GetSheetData.googleSheetConnection();
 		// Build a new authorized API client service.
 		ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
 		List<List<Object>> values = response.getValues();

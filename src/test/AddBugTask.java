@@ -32,6 +32,7 @@ public class AddBugTask extends Utilities {
 
 	mailSend mailSend = new mailSend();
 	Cell username;
+	String uname;
 	String zipFilename = "test-output.zip";
 	String outputFolderName = "test-output";
 	String renamedFileName = "testoutput.txt";
@@ -80,14 +81,15 @@ public class AddBugTask extends Utilities {
 		wb = Workbook.getWorkbook(src);
 		sh1 = wb.getSheet(0);
 		username = sh1.getCell(1, 1);
+		uname = username.getContents();
 
 		if (GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString().equals(version)) {
 			return true;
 		} else {
 			Frame1.appendText("Please download latest build from "
 					+ GetSheetData.getData("Dev Tracker!D2").get(0).get(0).toString());
-			mailSend.mail(renamedFileName, username.getContents(),
-					"Version is mismatch. " + username.getContents() + " user is working on " + version + " build");
+			mailSend.mail(renamedFileName, uname,
+					"Version is mismatch. " + uname + " user is working on " + version + " build");
 			return false;
 		}
 	}
@@ -130,7 +132,7 @@ public class AddBugTask extends Utilities {
 
 			} else {
 				if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
-					mailSend.mail(renamedFileName, username.getContents(), "start");
+					mailSend.mail(renamedFileName, uname, "start");
 				} else {
 					Frame1.appendText("no option for mail on start");
 				}
@@ -156,7 +158,7 @@ public class AddBugTask extends Utilities {
 			Thread.sleep(1000);
 			driver.findElement(By.name("username")).click();
 			driver.findElement(By.name("username")).clear();
-			driver.findElement(By.name("username")).sendKeys(username.getContents());
+			driver.findElement(By.name("username")).sendKeys(uname);
 			driver.findElement(By.name("password")).click();
 			driver.findElement(By.name("password")).clear();
 			driver.findElement(By.name("password")).sendKeys(password.getContents());
@@ -480,7 +482,7 @@ public class AddBugTask extends Utilities {
 												By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
 														+ dependentCount + "]/td[1]/a"))
 												.getText();
-								mailSend.mail(renamedFileName, username.getContents(), error);
+								mailSend.mail(renamedFileName, uname, error);
 							}
 						}
 					} catch (ElementClickInterceptedException e) {
@@ -565,7 +567,7 @@ public class AddBugTask extends Utilities {
 												By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
 														+ dependentCount + "]/td[1]/a"))
 												.getText();
-								mailSend.mail(renamedFileName, username.getContents(), error);
+								mailSend.mail(renamedFileName, uname, error);
 							}
 						}
 					} catch (ElementClickInterceptedException e) {
@@ -660,21 +662,21 @@ public class AddBugTask extends Utilities {
 
 				now = LocalDateTime.now();
 				Frame1.appendText(dtf.format(now));
-				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-						.click();
-				checkLoader();
-				testcase = true;
-				error = "complete";
-				driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-
-				DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-				Frame1.appendText(DevTrackerNumber);
-
-				if (bug_tracking_sheet.toLowerCase().equals("yes")) {
-					createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
-							taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
-							taskType.getContents());
-				}
+//				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+//						.click();
+//				checkLoader();
+//				testcase = true;
+//				error = "complete";
+//				driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+//
+//				DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+//				Frame1.appendText(DevTrackerNumber);
+//
+//				if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+//					createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
+//							taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
+//							taskType.getContents());
+//				}
 
 				row++;
 			}
@@ -760,8 +762,7 @@ public class AddBugTask extends Utilities {
 	@AfterSuite
 	public void bugadd_fun_verify() throws Exception, InterruptedException {
 		try {
-			Assert.assertTrue(testcase);
-
+			
 			Frame1.btnFileUpload.setEnabled(true);
 			Frame1.txtFileUpload.setEnabled(true);
 			Frame1.btnExecuteScript.setEnabled(false);
@@ -771,10 +772,22 @@ public class AddBugTask extends Utilities {
 			Frame1.rdbChromeNo.setEnabled(true);
 			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
 			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
+			
+			Assert.assertTrue(testcase);
 
 			testcase = true;
 
 		} catch (AssertionError e) {
+			Frame1.btnFileUpload.setEnabled(false);
+			Frame1.txtFileUpload.setEnabled(false);
+			Frame1.btnExecuteScript.setEnabled(true);
+			Frame1.btnSetImageFolder.setEnabled(false);
+			Frame1.txtSetImageFolder.setEnabled(false);
+			Frame1.rdbChromeYes.setEnabled(false);
+			Frame1.rdbChromeNo.setEnabled(false);
+			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
+			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
+			
 			File f = new File(outputFolderName);
 			if (f.exists() && f.isDirectory()) {
 				File dir = new File(outputFolderName);
@@ -795,7 +808,7 @@ public class AddBugTask extends Utilities {
 
 		if (Frame1.stop == true) {
 		} else {
-			mailSend.mail(renamedFileName, username.getContents(), error);
+			mailSend.mail(renamedFileName, uname, error);
 		}
 
 		Thread.sleep(2000);
@@ -815,6 +828,16 @@ public class AddBugTask extends Utilities {
 		} else {
 			Frame1.alertMessage("Script is stopped 2");
 		}
+		
+		Frame1.btnFileUpload.setEnabled(true);
+		Frame1.txtFileUpload.setEnabled(true);
+		Frame1.btnExecuteScript.setEnabled(false);
+		Frame1.btnSetImageFolder.setEnabled(true);
+		Frame1.txtSetImageFolder.setEnabled(true);
+		Frame1.rdbChromeYes.setEnabled(true);
+		Frame1.rdbChromeNo.setEnabled(true);
+		Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
+		Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
 	}
 
 	public void zipDirectory(File dir, String zipDirName) throws Exception {
