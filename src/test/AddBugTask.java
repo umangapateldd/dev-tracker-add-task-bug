@@ -35,7 +35,7 @@ public class AddBugTask extends Utilities {
 	String uname;
 	String zipFilename = "test-output.zip";
 	String outputFolderName = "test-output";
-	String renamedFileName = "testoutput.txt";
+	String renamedFileName = "testoutput.pdf";
 	String DevTrackerNumber = "";
 	boolean BranchCreateSheet = false;
 	String BranchMilestone = "baseproject";
@@ -762,7 +762,7 @@ public class AddBugTask extends Utilities {
 	@AfterSuite
 	public void bugadd_fun_verify() throws Exception, InterruptedException {
 		try {
-			
+
 			Frame1.btnFileUpload.setEnabled(true);
 			Frame1.txtFileUpload.setEnabled(true);
 			Frame1.btnExecuteScript.setEnabled(false);
@@ -772,7 +772,7 @@ public class AddBugTask extends Utilities {
 			Frame1.rdbChromeNo.setEnabled(true);
 			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
 			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
-			
+
 			Assert.assertTrue(testcase);
 
 			testcase = true;
@@ -787,7 +787,8 @@ public class AddBugTask extends Utilities {
 			Frame1.rdbChromeNo.setEnabled(false);
 			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
 			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
-			
+
+			System.out.println("Script is failed");
 			File f = new File(outputFolderName);
 			if (f.exists() && f.isDirectory()) {
 				File dir = new File(outputFolderName);
@@ -828,7 +829,7 @@ public class AddBugTask extends Utilities {
 		} else {
 			Frame1.alertMessage("Script is stopped 2");
 		}
-		
+
 		Frame1.btnFileUpload.setEnabled(true);
 		Frame1.txtFileUpload.setEnabled(true);
 		Frame1.btnExecuteScript.setEnabled(false);

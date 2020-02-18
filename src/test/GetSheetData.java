@@ -23,7 +23,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
-public class GetSheetData {
+public class GetSheetData extends Utilities {
 	private static final String APPLICATION_NAME = "Google Sheets API for Selenium";
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	private static final String TOKENS_DIRECTORY_PATH = "tokens";
@@ -70,9 +70,13 @@ public class GetSheetData {
 	}
 
 	public static List<List<Object>> getData(String range) throws IOException, GeneralSecurityException {
-		GetSheetData.googleSheetConnection();
-		// Build a new authorized API client service.
+		if (HTTP_TRANSPORT == null || service == null) {
+			GetSheetData.googleSheetConnection();
+		}
 		ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
+
+		// Build a new authorized API client service.
+
 		List<List<Object>> values = response.getValues();
 		if (values == null || values.isEmpty()) {
 			System.out.println("No data found.");

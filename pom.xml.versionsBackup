@@ -7,7 +7,7 @@
 
 	<groupId>DevDigital</groupId>
 	<artifactId>dev-tracker-add-task-bug</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 
 	<name>dev-tracker-add-task-bug</name>
 	<!-- FIXME change it to the project's website -->
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
-			<version>1.10.8</version>
+			<version>1.8.15</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
@@ -39,21 +39,21 @@
 		<dependency>
 			<groupId>com.google.api-client</groupId>
 			<artifactId>google-api-client</artifactId>
-			<version>1.30.8</version>
+			<version>1.30.7</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client-jetty</artifactId>
-			<version>1.30.5</version>
+			<version>1.22.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-sheets -->
 		<dependency>
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-sheets</artifactId>
-			<version>v4-rev20200131-1.30.8</version>
+			<version>v4-rev456-1.22.0</version>
 		</dependency>
 
 		<!-- Selenium Dependencies -->
@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>4.0.0-alpha-4</version>
+			<version>3.141.59</version>
 		</dependency>
 
 		<!-- TestNG Dependencies -->
@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
-			<version>7.1.0</version>
+			<version>6.14.3</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -87,19 +87,19 @@
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-java</artifactId>
-			<version>1.2.6</version>
+			<version>1.2.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-core</artifactId>
-			<version>1.2.6</version>
+			<version>1.2.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-picocontainer</artifactId>
-			<version>1.2.6</version>
+			<version>1.2.5</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -113,13 +113,13 @@
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-testng</artifactId>
-			<version>1.2.6</version>
+			<version>1.2.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-junit</artifactId>
-			<version>1.2.6</version>
+			<version>1.2.5</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -161,7 +161,7 @@
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			<version>1.5.0-b01</version>
+			<version>1.4.7</version>
 		</dependency>
 
 
@@ -170,25 +170,25 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>4.1.2</version>
+			<version>4.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>4.1.2</version>
+			<version>4.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
-			<version>4.1.2</version>
+			<version>4.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
-			<version>4.1.2</version>
+			<version>4.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -208,7 +208,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>28.2-jre</version>
+			<version>23.0</version>
 		</dependency>
 
 		<!-- Log4j Dependencies -->
@@ -221,57 +221,55 @@
 	</dependencies>
 	<!-- add for this maven command line run -->
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.22.1</version>
-					<configuration>
-						<includes>com.runners.RunnerClass.java</includes>
-						<testFailureIgnore>true</testFailureIgnore>
-					</configuration>
-				</plugin>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.1</version>
+				<configuration>
+					<includes>com.runners.RunnerClass.java</includes>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
 
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.1</version>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-					</configuration>
-				</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
 
-				<plugin>
-					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>3.0.0</version>
-				</plugin>
+			<plugin>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.0.0</version>
+			</plugin>
 
-				<plugin>
-					<groupId>net.masterthought</groupId>
-					<artifactId>maven-cucumber-reporting</artifactId>
-					<version>3.13.0</version>
-					<executions>
-						<execution>
-							<id>execution</id>
-							<phase>verify</phase>
-							<goals>
-								<goal>generate</goal>
-							</goals>
-							<configuration>
-								<projectName>dev-tracker-add-task-bug</projectName>
-								<outputDirectory>${project.build.directory}/cucumber-report-html</outputDirectory>
-								<cucumberOutput>${project.build.directory}/cucumber.json</cucumberOutput>
-								<!-- <jsonFiles> -->
-								<!-- <param>${project.build.directory}/cucumber.json</param> -->
-								<!-- </jsonFiles> -->
-								<skippedFails>false</skippedFails>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+			<plugin>
+				<groupId>net.masterthought</groupId>
+				<artifactId>maven-cucumber-reporting</artifactId>
+				<version>3.13.0</version>
+				<executions>
+					<execution>
+						<id>execution</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<projectName>dev-tracker-add-task-bug</projectName>
+							<outputDirectory>${project.build.directory}/cucumber-report-html</outputDirectory>
+							<cucumberOutput>${project.build.directory}/cucumber.json</cucumberOutput>
+							<!-- <jsonFiles> -->
+							<!-- <param>${project.build.directory}/cucumber.json</param> -->
+							<!-- </jsonFiles> -->
+							<skippedFails>false</skippedFails>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>

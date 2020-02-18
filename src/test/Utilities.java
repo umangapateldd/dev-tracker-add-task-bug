@@ -45,7 +45,7 @@ public class Utilities {
 
 	public void openBrowser(String headless) throws IOException {
 
-		DesiredCapabilities chrome = DesiredCapabilities.chrome();
+		DesiredCapabilities chrome = new DesiredCapabilities();
 
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--test-type");

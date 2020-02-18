@@ -19,7 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-public class mailSend {
+public class mailSend extends Utilities {
 	// for example, smtp.mailgun.org
 	String SMTP_SERVER = "smtp.gmail.com";
 	String USERNAME = "vivekbhatt.devdigital@gmail.com";
