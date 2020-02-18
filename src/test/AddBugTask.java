@@ -662,21 +662,21 @@ public class AddBugTask extends Utilities {
 
 				now = LocalDateTime.now();
 				Frame1.appendText(dtf.format(now));
-//				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-//						.click();
-//				checkLoader();
-//				testcase = true;
-//				error = "complete";
-//				driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-//
-//				DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-//				Frame1.appendText(DevTrackerNumber);
-//
-//				if (bug_tracking_sheet.toLowerCase().equals("yes")) {
-//					createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
-//							taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
-//							taskType.getContents());
-//				}
+				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+						.click();
+				checkLoader();
+				testcase = true;
+				error = "complete";
+				driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+
+				DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+				Frame1.appendText(DevTrackerNumber);
+
+				if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+					createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
+							taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
+							taskType.getContents());
+				}
 
 				row++;
 			}
@@ -807,6 +807,7 @@ public class AddBugTask extends Utilities {
 			error = "Something problem in script";
 		}
 
+		Thread.sleep(1000);
 		if (Frame1.stop == true) {
 		} else {
 			mailSend.mail(renamedFileName, uname, error);
@@ -818,6 +819,7 @@ public class AddBugTask extends Utilities {
 			file.delete();
 		}
 
+		Thread.sleep(1000);
 		if (Frame1.stop == true) {
 		} else {
 			driver.close();
