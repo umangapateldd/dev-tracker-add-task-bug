@@ -20,7 +20,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.testng.TestNG;
 
@@ -51,7 +50,7 @@ public class Frame1 extends Utilities {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Frame1 window = new Frame1();
+					test.Frame1 window = new test.Frame1();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					alertMessage(e.toString());
@@ -228,16 +227,17 @@ public class Frame1 extends Utilities {
 					@Override
 					public void run() {
 						try {
-							JavascriptExecutor js = (JavascriptExecutor) Frame1.driverFrame;
-							js.executeScript("return window.stop");
+//							JavascriptExecutor js = (JavascriptExecutor) Frame1.driverFrame;
+//							js.executeScript("return window.stop");
+//							stop = true;
+							System.out.println("driver = " + Frame1.driverFrame);
+							Frame1.driverFrame.close();
 							stop = true;
-
 							test.mailSend.mail("abc.txt", test.username.getContents(), "Execution is stopped manually");
 						} catch (Exception e) {
 							System.out.println(e);
 							alertMessage("Script is stopped 1");
 						}
-						Frame1.driverFrame.close();
 						Frame1.driverFrame.quit();
 
 						btnFileUpload.setEnabled(true);

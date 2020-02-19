@@ -659,7 +659,7 @@ public class AddBugTask extends Utilities {
 					js = (JavascriptExecutor) driver;
 					js.executeScript("window.scrollBy(0,250)");
 				}
-
+				
 				now = LocalDateTime.now();
 				Frame1.appendText(dtf.format(now));
 				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))

@@ -26,7 +26,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import jxl.Cell;
 import jxl.Sheet;
 
-public class Utilities {
+public class Utilities2 {
 	WebDriver driver;
 	JavascriptExecutor js;
 	String systemName;
@@ -37,6 +37,7 @@ public class Utilities {
 	static FileLock lock;
 	List paths;
 	boolean testcase = false;
+	boolean acceptanceCriteria = false;
 	int col = 15;
 	String orderlist = "stop";
 	int listVal;
@@ -97,6 +98,7 @@ public class Utilities {
 		} else {
 			// cos
 			countTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
+			acceptanceCriteria = true;
 		}
 
 		String cosString = descriptionType.getContents();
@@ -115,19 +117,10 @@ public class Utilities {
 				orderlist = "start";
 				listVal = 1;
 				orderListNumber++;
-				if (arrSplit[ar].toLowerCase().contains("{/number}")) {
-					System.out.println("3333333333333333");
-					orderlist = "end";
-				}
-			} else if (arrSplit[ar].toLowerCase().contains("{/number}")) {
-				System.out.println("4444444444");
-				orderlist = "end";
 			}
 
 			exists = false;
 			arrSplit[ar] = arrSplit[ar].replace("{number}", "");
-			arrSplit[ar] = arrSplit[ar].replace("{/number}", "");
-			System.out.println("content = " + arrSplit[ar]);
 			File tempFile = new File(imagePath + arrSplit[ar]);
 			String imageURL = "";
 			if (arrSplit[ar].isEmpty()) {
@@ -1145,30 +1138,36 @@ public class Utilities {
 				} while (tmp == 0);
 			}
 
-			if (orderlist.equals("start") || orderlist.equals("end")) {
+			if (orderlist.equals("start")) {
 				listVal++;
 			} else {
 				countTag++;
 			}
-
-			if (orderlist.equals("end")) {
-				System.out.println("222222222222222");
-				driver.findElement(
-						By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"))
-						.click();
-//				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-//						.sendKeys(Keys.ENTER);
-				orderlist = "stop";
-			}
 		}
 
 		if (orderlist.equals("start")) {
-			System.out.println("1111111111111");
 			driver.findElement(
 					By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']")).click();
 			driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 					.sendKeys(Keys.ENTER);
 			orderlist = "stop";
+		}
+
+		if (acceptanceCriteria == true) {
+			col++;
+			System.out.println("sh1.getColumns() = " + sh1.getColumns());
+			System.out.println("col = " + col);
+			if (sh1.getColumns() > 16) {
+				if (sh1.getCell(col, row).getContents().isEmpty()) {
+					col = 15;
+					orderListNumber = 0;
+					acceptanceCriteria = false;
+				} else {
+					macTextFormat(imagePath, sh1.getCell(col, row), "abc", sh1, row);
+				}
+			} else {
+				col = 15;
+			}
 		}
 	}
 
