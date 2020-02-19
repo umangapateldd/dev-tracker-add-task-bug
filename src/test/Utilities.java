@@ -1158,12 +1158,13 @@ public class Utilities {
 			if (sh1.getColumns() > 16) {
 				if (sh1.getCell(col, row).getContents().isEmpty()) {
 					col = 15;
+					orderListNumber = 0;
 					acceptanceCriteria = false;
 				} else {
 					macTextFormat(imagePath, sh1.getCell(col, row), "abc", sh1, row);
 				}
 			} else {
-				System.out.println("456");
+				col = 15;
 			}
 		}
 	}
