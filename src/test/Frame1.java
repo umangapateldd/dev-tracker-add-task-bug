@@ -229,7 +229,6 @@ public class Frame1 extends Utilities {
 						try {
 //							JavascriptExecutor js = (JavascriptExecutor) Frame1.driverFrame;
 //							js.executeScript("return window.stop");
-//							stop = true;
 							System.out.println("driver = " + Frame1.driverFrame);
 							Frame1.driverFrame.close();
 							stop = true;

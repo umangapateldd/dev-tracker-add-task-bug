@@ -188,10 +188,11 @@ public class AddBugTask extends Utilities {
 				Cell originator = sh1.getCell(15, row);
 
 				if (project_name.getContents().isEmpty()) {
+					Thread.sleep(1500);
 					Frame1.appendText("Data are completed");
 					break;
 				}
-
+				
 				if (milestone.getContents().isEmpty() || taskcategory.getContents().isEmpty()
 						|| taskType.getContents().isEmpty() || taskTitle.getContents().isEmpty()
 						|| objective.getContents().isEmpty() || priority.getContents().isEmpty()) {
@@ -659,24 +660,24 @@ public class AddBugTask extends Utilities {
 					js = (JavascriptExecutor) driver;
 					js.executeScript("window.scrollBy(0,250)");
 				}
-				
+
 				now = LocalDateTime.now();
 				Frame1.appendText(dtf.format(now));
-				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-						.click();
-				checkLoader();
-				testcase = true;
-				error = "complete";
-				driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-
-				DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-				Frame1.appendText(DevTrackerNumber);
-
-				if (bug_tracking_sheet.toLowerCase().equals("yes")) {
-					createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
-							taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
-							taskType.getContents());
-				}
+//				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+//						.click();
+//				checkLoader();
+//				testcase = true;
+//				error = "complete";
+//				driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+//
+//				DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+//				Frame1.appendText(DevTrackerNumber);
+//
+//				if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+//					createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
+//							taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
+//							taskType.getContents());
+//				}
 
 				row++;
 			}
@@ -776,7 +777,7 @@ public class AddBugTask extends Utilities {
 			Assert.assertTrue(testcase);
 
 			testcase = true;
-
+			mailSend.mail(renamedFileName, uname, error);
 		} catch (AssertionError e) {
 			Frame1.btnFileUpload.setEnabled(false);
 			Frame1.txtFileUpload.setEnabled(false);
@@ -810,7 +811,8 @@ public class AddBugTask extends Utilities {
 		Thread.sleep(1000);
 		if (Frame1.stop == true) {
 		} else {
-			mailSend.mail(renamedFileName, uname, error);
+			mailSend mailSend1 = new mailSend();
+			mailSend1.mail(renamedFileName, uname, error);
 		}
 
 		Thread.sleep(2000);
