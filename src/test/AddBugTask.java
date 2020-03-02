@@ -32,6 +32,20 @@ public class AddBugTask extends Utilities {
 
 	mailSend mailSend = new mailSend();
 	Cell username;
+	Cell milestone;
+	Cell taskcategory;
+	Cell taskTitle;
+	Cell objective;
+	Cell references;
+	Cell cos;
+	Cell dependent;
+	Cell successor;
+	Cell priority;
+	Cell taskStatus;
+	Cell assignee;
+	Cell reporter;
+	Cell uploadDocuments;
+	Cell originator;
 	String uname;
 	String zipFilename = "test-output.zip";
 	String outputFolderName = "test-output";
@@ -48,6 +62,11 @@ public class AddBugTask extends Utilities {
 	File file;
 	Sheet sh1;
 	Workbook wb;
+	String acceptanceCriteria = "false";
+	String acceptanceCriteria_nextRow = "false";
+	String projectName;
+	String bug_tracking_sheet;
+	CreateBugTrackingReport createBugTrackingReport;
 
 	public boolean checkFiles() {
 		File file = new File("tokens/StoredCredential");
@@ -126,7 +145,7 @@ public class AddBugTask extends Utilities {
 
 			Frame1.appendText("image path = " + imagePath);
 
-			String bug_tracking_sheet = sh1.getCell(3, 0).getContents();
+			bug_tracking_sheet = sh1.getCell(3, 0).getContents();
 
 			if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
 
@@ -139,7 +158,7 @@ public class AddBugTask extends Utilities {
 			}
 
 			MultipleFileUpload multipleFileUpload = new MultipleFileUpload();
-			CreateBugTrackingReport createBugTrackingReport = new CreateBugTrackingReport();
+			createBugTrackingReport = new CreateBugTrackingReport();
 
 			if (Frame1.rdbVal == null) {
 				headless = "Yes";
@@ -171,301 +190,260 @@ public class AddBugTask extends Utilities {
 			while (row < sh1.getRows()) {
 				// column, row
 				Cell project_name = sh1.getCell(0, row);
-				Cell milestone = sh1.getCell(1, row);
-				Cell taskcategory = sh1.getCell(2, row);
-				taskType = sh1.getCell(3, row);
-				Cell taskTitle = sh1.getCell(4, row);
-				Cell objective = sh1.getCell(5, row);
-				Cell references = sh1.getCell(6, row);
-				Cell cos = sh1.getCell(7, row);
-				Cell dependent = sh1.getCell(8, row);
-				Cell successor = sh1.getCell(9, row);
-				Cell priority = sh1.getCell(10, row);
-				Cell taskStatus = sh1.getCell(11, row);
-				Cell assignee = sh1.getCell(12, row);
-				Cell reporter = sh1.getCell(13, row);
-				Cell uploadDocuments = sh1.getCell(14, row);
-				Cell originator = sh1.getCell(15, row);
+				Cell project_name_next_row_acceptance_criteria = sh1.getCell(0, row + 1);
+				System.out.println(
+						"project_name_next_row_acceptance_criteria = " + project_name_next_row_acceptance_criteria);
 
 				if (project_name.getContents().isEmpty()) {
 					Thread.sleep(1500);
 					Frame1.appendText("Data are completed");
 					break;
 				}
-				
-				if (milestone.getContents().isEmpty() || taskcategory.getContents().isEmpty()
-						|| taskType.getContents().isEmpty() || taskTitle.getContents().isEmpty()
-						|| objective.getContents().isEmpty() || priority.getContents().isEmpty()) {
-					Frame1.appendText(
-							"Milestone / Task Category / Task Type / Task Title / Objective / Priority data are not added in "
-									+ (row + 1) + " row");
-					driver.close();
-					driver.quit();
-//					System.exit(1);
-					break;
-				}
-				BranchMilestone = milestone.getContents();
-				Frame1.appendText(taskType.getContents() + " is adding");
-				Frame1.appendText("Title is = " + taskTitle.getContents());
-				testcase = false;
 
-				if (project_name.getContents().matches("[0-9]+")) {
-					driver.get(DevTrackerURL.getContents() + "index.php?route=common/task/loadDetailForm&project_id="
-							+ project_name.getContents());
-					Thread.sleep(2000);
+				if (project_name_next_row_acceptance_criteria.getContents().isEmpty()) {
+					System.out.println("don't check next row");
+					acceptanceCriteria_nextRow = "false";
+				}
+
+				if (project_name.getContents()
+						.equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
+					System.out.println("acceptanceCriteria = true");
+
+					acceptanceCriteria = "true";
 				} else {
-					driver.get(DevTrackerURL.getContents() + "index.php?route=common/task/loadDetailForm&project_id=0");
-					Thread.sleep(2000);
-					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B1").get(0).get(0).toString()))
-							.click();
-					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
-							.sendKeys(project_name.getContents());
-					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
-							.sendKeys(Keys.ENTER);
-					Thread.sleep(2000);
-				}
+					System.out.println("acceptanceCriteria = false");
 
-				if (driver.findElements(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).size() > 0) {
-					driver.findElement(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).click();
-					Thread.sleep(2000);
-				}
+					if (project_name_next_row_acceptance_criteria.getContents()
+							.equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
+						System.out.println("acceptanceCriteria_nextRow = true");
+						acceptanceCriteria_nextRow = "true";
+					} else {
+						System.out.println("acceptanceCriteria_nextRow = false");
+						acceptanceCriteria_nextRow = "false";
+					}
 
-				String projectName = driver
-						.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B3").get(0).get(0).toString()))
-						.getText();
+					acceptanceCriteria = "false";
+					milestone = sh1.getCell(1, row);
+					taskcategory = sh1.getCell(2, row);
+					taskType = sh1.getCell(3, row);
+					taskTitle = sh1.getCell(4, row);
+					objective = sh1.getCell(5, row);
+					references = sh1.getCell(6, row);
+					cos = sh1.getCell(7, row);
+					dependent = sh1.getCell(8, row);
+					successor = sh1.getCell(9, row);
+					priority = sh1.getCell(10, row);
+					taskStatus = sh1.getCell(11, row);
+					assignee = sh1.getCell(12, row);
+					reporter = sh1.getCell(13, row);
+					uploadDocuments = sh1.getCell(14, row);
+					originator = sh1.getCell(15, row);
 
-				Select selec = new Select(driver.findElement(By.id("milestone_id")));
-
-				Boolean found = false;
-				List<WebElement> allOptions = selec.getOptions();
-				Thread.sleep(1000);
-				for (WebElement we : allOptions) {
-					if (we.getText().equals(milestone.getContents())) {
-						found = true;
-						Thread.sleep(1000);
+					if (milestone.getContents().isEmpty() || taskcategory.getContents().isEmpty()
+							|| taskType.getContents().isEmpty() || taskTitle.getContents().isEmpty()
+							|| objective.getContents().isEmpty() || priority.getContents().isEmpty()) {
+						Frame1.appendText(
+								"Milestone / Task Category / Task Type / Task Title / Objective / Priority data are not added in "
+										+ (row + 1) + " row");
+						driver.close();
+						driver.quit();
+//					System.exit(1);
+						break;
 					}
 				}
-				if (found == true) {
-					selec.selectByVisibleText(milestone.getContents());
-				} else {
-					// Create new milestone
-					driver.findElement(By.id("addmilestone")).click();
-					driver.findElement(By.id("milestone_name")).sendKeys(milestone.getContents());
-					((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('readonly','readonly')",
-							driver.findElement(By.id("milestone_startdate")));
-					driver.findElement(By.id("milestone_startdate")).sendKeys("abc");
-					driver.findElement(By.id("milestone_startdate")).sendKeys(Keys.TAB);
 
-					((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('readonly','readonly')",
-							driver.findElement(By.id("milestone_enddate")));
-					driver.findElement(By.id("milestone_enddate")).sendKeys("abc");
-					driver.findElement(By.id("milestone_enddate")).sendKeys(Keys.TAB);
+				if (acceptanceCriteria.equals("false")) {
+					BranchMilestone = milestone.getContents();
+					Frame1.appendText(taskType.getContents() + " is adding");
+					Frame1.appendText("Title is = " + taskTitle.getContents());
+					testcase = false;
 
-					driver.findElement(By.id("savemilestone")).click();
-				}
+					if (project_name.getContents().matches("[0-9]+")) {
+						driver.get(
+								DevTrackerURL.getContents() + "index.php?route=common/task/loadDetailForm&project_id="
+										+ project_name.getContents());
+						Thread.sleep(2000);
+					} else {
+						driver.get(DevTrackerURL.getContents()
+								+ "index.php?route=common/task/loadDetailForm&project_id=0");
+						Thread.sleep(2000);
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B1").get(0).get(0).toString()))
+								.click();
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
+								.sendKeys(project_name.getContents());
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
+								.sendKeys(Keys.ENTER);
+						Thread.sleep(2000);
+					}
 
-				Thread.sleep(1000);
-				try {
-					Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
+					if (driver.findElements(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).size() > 0) {
+						driver.findElement(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).click();
+						Thread.sleep(2000);
+					}
 
-					found = false;
-					List<WebElement> allOptions1 = selec1.getOptions();
+					projectName = driver
+							.findElement(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B3").get(0).get(0).toString()))
+							.getText();
+
+					Select selec = new Select(driver.findElement(By.id("milestone_id")));
+
+					Boolean found = false;
+					List<WebElement> allOptions = selec.getOptions();
 					Thread.sleep(1000);
-					for (WebElement we : allOptions1) {
-						if (we.getText().equals(taskcategory.getContents())) {
+					for (WebElement we : allOptions) {
+						if (we.getText().equals(milestone.getContents())) {
 							found = true;
 							Thread.sleep(1000);
 						}
 					}
-
 					if (found == true) {
-						selec1.selectByVisibleText(taskcategory.getContents());
+						selec.selectByVisibleText(milestone.getContents());
 					} else {
-						// Create new taskcategory
-						driver.findElement(By.id("addcategory")).click();
-						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents());
-						driver.findElement(By.id("savecategory")).click();
+						// Create new milestone
+						driver.findElement(By.id("addmilestone")).click();
+						driver.findElement(By.id("milestone_name")).sendKeys(milestone.getContents());
+						((JavascriptExecutor) driver).executeScript(
+								"arguments[0].removeAttribute('readonly','readonly')",
+								driver.findElement(By.id("milestone_startdate")));
+						driver.findElement(By.id("milestone_startdate")).sendKeys("abc");
+						driver.findElement(By.id("milestone_startdate")).sendKeys(Keys.TAB);
+
+						((JavascriptExecutor) driver).executeScript(
+								"arguments[0].removeAttribute('readonly','readonly')",
+								driver.findElement(By.id("milestone_enddate")));
+						driver.findElement(By.id("milestone_enddate")).sendKeys("abc");
+						driver.findElement(By.id("milestone_enddate")).sendKeys(Keys.TAB);
+
+						driver.findElement(By.id("savemilestone")).click();
 					}
-				} catch (StaleElementReferenceException e) {
-					Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
 
 					Thread.sleep(1000);
-					found = false;
-					List<WebElement> allOptions1 = selec1.getOptions();
-
-					for (WebElement we : allOptions1) {
-						if (we.getText().equals(taskcategory.getContents())) {
-							found = true;
-						}
-					}
-					Thread.sleep(1000);
-					if (found == true) {
-						selec1.selectByVisibleText(taskcategory.getContents());
-					} else {
-						// Create new taskcategory
-						driver.findElement(By.id("addcategory")).click();
-						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents());
-						driver.findElement(By.id("savecategory")).click();
-					}
-				}
-
-				Thread.sleep(1000);
-
-				task_bug_radio_button_selection();
-
-				// submit button click for validation verification
-				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-						.click();
-
-				Thread.sleep(1000);
-				if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
-					Frame1.appendText(taskType.getContents() + " selection again");
-					error = taskType.getContents() + " selection again";
-					Thread.sleep(1000);
-					task_bug_radio_button_selection();
-				}
-
-				driver.findElement(By.id("task_name")).sendKeys(taskTitle.getContents());
-
-				js = (JavascriptExecutor) driver;
-				js.executeScript("window.scrollBy(0,250)");
-
-				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).click();
-				Thread.sleep(1000);
-
-				// reference
-				if (references.getContents().isEmpty()) {
-				} else {
-					macTextFormat(imagePath, references, "p[4]", sh1, row);
-//					if (systemName.contains("mac")) {
-//						macTextFormat(imagePath, references, "p[4]");
-//					} else {
-//						textFormat(imagePath, references);
-//					}
-				}
-
-				// Objective / Steps to Recreate
-
-//				Actions action = new Actions(driver);
-//				if (systemName.contains("mac")) {
-//					macTextFormat(imagePath, objective, "p[2]");
-//				} else {
-//					action.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).build().perform();
-//					action.keyUp(Keys.CONTROL).build().perform();
-				//
-//					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
-//							.sendKeys(Keys.ARROW_DOWN);
-//					textFormat(imagePath, objective);
-//					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).sendKeys(Keys.DELETE);
-//				}
-
-				macTextFormat(imagePath, objective, "p[2]", sh1, row);
-
-				// COS
-
-//				action = new Actions(driver);
-
-				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-				now = LocalDateTime.now();
-				System.out.println("cos start = "+dtf.format(now));
-				macTextFormat(imagePath, cos, "xyz", sh1, row);
-//				if (systemName.contains("mac")) {
-//					macTextFormat(imagePath, cos, "xyz");
-//				} else {
-//					action.keyDown(Keys.CONTROL).sendKeys(Keys.END).build().perform();
-//					action.keyUp(Keys.CONTROL).build().perform();
-				//
-//					textFormat(imagePath, cos);
-//					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]"))
-//							.sendKeys(Keys.BACK_SPACE);
-//				}
-
-				removeExtraSpace();
-
-				// Description verification
-
-				if ((driver
-						.findElements(By.xpath("//span[text()='"
-								+ GetSheetData.getData("Dev Tracker!B4").get(0).get(0).toString() + "']"))
-						.size() > 0
-						|| driver
-								.findElements(By.xpath("//span[text()='"
-										+ GetSheetData.getData("Dev Tracker!B5").get(0).get(0).toString() + "']"))
-								.size() > 0)
-						&& driver
-								.findElements(By.xpath("//span[text()='"
-										+ GetSheetData.getData("Dev Tracker!B6").get(0).get(0).toString() + "']"))
-								.size() > 0
-						&& driver
-								.findElements(By.xpath("//span[text()='"
-										+ GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString() + "']"))
-								.size() > 0) {
-					Frame1.appendText("Description is added properly");
-				} else {
-					Frame1.appendText("Issue in added description");
-				}
-
-				Thread.sleep(1000);
-
-				js = (JavascriptExecutor) driver;
-				js.executeScript("window.scrollBy(0,350)");
-
-				// Add Dependent Predecessor
-				if (dependent.getContents().isEmpty()) {
-				} else {
 					try {
-						String[] arrSplit = dependent.getContents().split("/");
+						Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
 
-						for (int i = 0; i < arrSplit.length; i++) {
-							driver.findElement(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B5").get(0).get(0).toString()))
-									.click();
-							driver.findElement(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B6").get(0).get(0).toString()))
-									.sendKeys(arrSplit[i]);
-							Thread.sleep(2000);
-							driver.findElement(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B6").get(0).get(0).toString()))
-									.sendKeys(Keys.ENTER);
-							Thread.sleep(1500);
-							driver.findElement(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B7").get(0).get(0).toString()))
-									.click();
-
-							if (driver
-									.findElements(By.xpath(
-											GetSheetData.getData("Dev Tracker Xpath!B8").get(0).get(0).toString()))
-									.size() > 0) {
-								if (driver
-										.findElement(By.xpath(
-												GetSheetData.getData("Dev Tracker Xpath!B8").get(0).get(0).toString()))
-										.getText().startsWith("Please select any ")) {
-									error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
-									Frame1.appendText("Some issue in Dependent task Popup text");
-								} else {
-									error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
-									Frame1.appendText("Some issue in Dependent task selection");
-								}
+						found = false;
+						List<WebElement> allOptions1 = selec1.getOptions();
+						Thread.sleep(1000);
+						for (WebElement we : allOptions1) {
+							if (we.getText().equals(taskcategory.getContents())) {
+								found = true;
+								Thread.sleep(1000);
 							}
 						}
 
-						// Verify Dependent Predecessor
-						int dependentCount = 1;
-						arrSplit = dependent.getContents().split("/");
-						for (int i = 0; i < arrSplit.length; i++) {
-							Thread.sleep(1000);
-							if (driver.findElement(By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
-									+ dependentCount + "]/td[1]/a")).getText().equals(arrSplit[i])) {
-								Frame1.appendText("Dependent Predecessor task is added");
-								dependentCount++;
-							} else {
-								Frame1.appendText(
-										arrSplit[i] + " Dependent Predecessor is not attached. Trying to add again.");
+						if (found == true) {
+							selec1.selectByVisibleText(taskcategory.getContents());
+						} else {
+							// Create new taskcategory
+							driver.findElement(By.id("addcategory")).click();
+							driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents());
+							driver.findElement(By.id("savecategory")).click();
+						}
+					} catch (StaleElementReferenceException e) {
+						Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
 
-								driver.findElement(By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
-										+ dependentCount + "]/td[4]/i[1]")).click();
-								Thread.sleep(1500);
+						Thread.sleep(1000);
+						found = false;
+						List<WebElement> allOptions1 = selec1.getOptions();
 
+						for (WebElement we : allOptions1) {
+							if (we.getText().equals(taskcategory.getContents())) {
+								found = true;
+							}
+						}
+						Thread.sleep(1000);
+						if (found == true) {
+							selec1.selectByVisibleText(taskcategory.getContents());
+						} else {
+							// Create new taskcategory
+							driver.findElement(By.id("addcategory")).click();
+							driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents());
+							driver.findElement(By.id("savecategory")).click();
+						}
+					}
+
+					Thread.sleep(1000);
+
+					task_bug_radio_button_selection();
+
+					// submit button click for validation verification
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+							.click();
+
+					Thread.sleep(1000);
+					if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
+						Frame1.appendText(taskType.getContents() + " selection again");
+						error = taskType.getContents() + " selection again";
+						Thread.sleep(1000);
+						task_bug_radio_button_selection();
+					}
+
+					driver.findElement(By.id("task_name")).sendKeys(taskTitle.getContents());
+
+					js = (JavascriptExecutor) driver;
+					js.executeScript("window.scrollBy(0,250)");
+
+					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).click();
+					Thread.sleep(1000);
+
+					// reference
+					if (references.getContents().isEmpty()) {
+					} else {
+						macTextFormat(imagePath, references, "p[4]", sh1, row);
+					}
+
+					// Objective / Steps to Recreate
+					macTextFormat(imagePath, objective, "p[2]", sh1, row);
+				}
+
+				// COS
+//				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//				now = LocalDateTime.now();
+//				System.out.println("cos start = " + dtf.format(now));
+				macTextFormat(imagePath, cos, "xyz", sh1, row);
+
+				if (acceptanceCriteria.equals("false")) {
+//					removeExtraSpace();
+
+					// Description verification
+
+					if ((driver
+							.findElements(By.xpath("//span[text()='"
+									+ GetSheetData.getData("Dev Tracker!B4").get(0).get(0).toString() + "']"))
+							.size() > 0
+							|| driver
+									.findElements(By.xpath("//span[text()='"
+											+ GetSheetData.getData("Dev Tracker!B5").get(0).get(0).toString() + "']"))
+									.size() > 0)
+							&& driver
+									.findElements(By.xpath("//span[text()='"
+											+ GetSheetData.getData("Dev Tracker!B6").get(0).get(0).toString() + "']"))
+									.size() > 0
+							&& driver
+									.findElements(By.xpath("//span[text()='"
+											+ GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString() + "']"))
+									.size() > 0) {
+						Frame1.appendText("Description is added properly");
+					} else {
+						Frame1.appendText("Issue in added description");
+					}
+
+					Thread.sleep(1000);
+
+					js = (JavascriptExecutor) driver;
+					js.executeScript("window.scrollBy(0,350)");
+
+					// Add Dependent Predecessor
+					if (dependent.getContents().isEmpty()) {
+					} else {
+						try {
+							String[] arrSplit = dependent.getContents().split("/");
+
+							for (int i = 0; i < arrSplit.length; i++) {
 								driver.findElement(
 										By.xpath(GetSheetData.getData("Dev Tracker Xpath!B5").get(0).get(0).toString()))
 										.click();
@@ -481,76 +459,75 @@ public class AddBugTask extends Utilities {
 										By.xpath(GetSheetData.getData("Dev Tracker Xpath!B7").get(0).get(0).toString()))
 										.click();
 
-								error = "Issue " + arrSplit[i] + " Dependent Predecessor is not matched with "
-										+ driver.findElement(
-												By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
-														+ dependentCount + "]/td[1]/a"))
-												.getText();
-								mailSend.mail(renamedFileName, uname, error);
-							}
-						}
-					} catch (ElementClickInterceptedException e) {
-						js = (JavascriptExecutor) driver;
-						js.executeScript("window.scrollBy(0,350)");
-					}
-				}
-
-				// Add Dependent Successor
-				if (successor.getContents().isEmpty()) {
-				} else {
-					try {
-						String[] arrSplit = successor.getContents().split("/");
-
-						for (int i = 0; i < arrSplit.length; i++) {
-							driver.findElement(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B9").get(0).get(0).toString()))
-									.click();
-							driver.findElement(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B10").get(0).get(0).toString()))
-									.sendKeys(arrSplit[i]);
-							Thread.sleep(2000);
-							driver.findElement(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B10").get(0).get(0).toString()))
-									.sendKeys(Keys.ENTER);
-							Thread.sleep(1500);
-							driver.findElement(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B11").get(0).get(0).toString()))
-									.click();
-
-							if (driver
-									.findElements(By.xpath(
-											GetSheetData.getData("Dev Tracker Xpath!B12").get(0).get(0).toString()))
-									.size() > 0) {
 								if (driver
-										.findElement(By.xpath(
-												GetSheetData.getData("Dev Tracker Xpath!B12").get(0).get(0).toString()))
-										.getText().startsWith("Please select any ")) {
-									error = "Issue " + arrSplit[i] + " Dependent Successor task Popup text";
-									Frame1.appendText("Some issue in successor task Popup text");
-								} else {
-									error = "Issue " + arrSplit[i] + " Dependent Successor task selection";
-									Frame1.appendText("Some issue in successor task selection");
+										.findElements(By.xpath(
+												GetSheetData.getData("Dev Tracker Xpath!B8").get(0).get(0).toString()))
+										.size() > 0) {
+									if (driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B8").get(0).get(0).toString()))
+											.getText().startsWith("Please select any ")) {
+										error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
+										Frame1.appendText("Some issue in Dependent task Popup text");
+									} else {
+										error = "Issue " + arrSplit[i] + " Dependent Predecessor task Popup text";
+										Frame1.appendText("Some issue in Dependent task selection");
+									}
 								}
 							}
+
+							// Verify Dependent Predecessor
+							int dependentCount = 1;
+							arrSplit = dependent.getContents().split("/");
+							for (int i = 0; i < arrSplit.length; i++) {
+								Thread.sleep(1000);
+								if (driver.findElement(By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
+										+ dependentCount + "]/td[1]/a")).getText().equals(arrSplit[i])) {
+									Frame1.appendText("Dependent Predecessor task is added");
+									dependentCount++;
+								} else {
+									Frame1.appendText(arrSplit[i]
+											+ " Dependent Predecessor is not attached. Trying to add again.");
+
+									driver.findElement(By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
+											+ dependentCount + "]/td[4]/i[1]")).click();
+									Thread.sleep(1500);
+
+									driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B5").get(0).get(0).toString()))
+											.click();
+									driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B6").get(0).get(0).toString()))
+											.sendKeys(arrSplit[i]);
+									Thread.sleep(2000);
+									driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B6").get(0).get(0).toString()))
+											.sendKeys(Keys.ENTER);
+									Thread.sleep(1500);
+									driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B7").get(0).get(0).toString()))
+											.click();
+
+									error = "Issue " + arrSplit[i] + " Dependent Predecessor is not matched with "
+											+ driver.findElement(
+													By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
+															+ dependentCount + "]/td[1]/a"))
+													.getText();
+									mailSend.mail(renamedFileName, uname, error);
+								}
+							}
+						} catch (ElementClickInterceptedException e) {
+							js = (JavascriptExecutor) driver;
+							js.executeScript("window.scrollBy(0,350)");
 						}
+					}
 
-						// Verify Dependent Successor
-						int dependentCount = 1;
-						arrSplit = successor.getContents().split("/");
-						for (int i = 0; i < arrSplit.length; i++) {
-							Thread.sleep(1000);
-							if (driver.findElement(By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
-									+ dependentCount + "]/td[1]/a")).getText().equals(arrSplit[i])) {
-								Frame1.appendText("Dependent Successor task is added");
-								dependentCount++;
-							} else {
-								Frame1.appendText(
-										arrSplit[i] + " Dependent Successor is not attached. Trying to add again.");
+					// Add Dependent Successor
+					if (successor.getContents().isEmpty()) {
+					} else {
+						try {
+							String[] arrSplit = successor.getContents().split("/");
 
-								driver.findElement(By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
-										+ dependentCount + "]/td[4]/i[1]")).click();
-								Thread.sleep(1500);
-
+							for (int i = 0; i < arrSplit.length; i++) {
 								driver.findElement(
 										By.xpath(GetSheetData.getData("Dev Tracker Xpath!B9").get(0).get(0).toString()))
 										.click();
@@ -566,123 +543,177 @@ public class AddBugTask extends Utilities {
 										.xpath(GetSheetData.getData("Dev Tracker Xpath!B11").get(0).get(0).toString()))
 										.click();
 
-								error = "Issue " + arrSplit[i] + " Dependent Successor is not matched with "
-										+ driver.findElement(
-												By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
-														+ dependentCount + "]/td[1]/a"))
-												.getText();
-								mailSend.mail(renamedFileName, uname, error);
+								if (driver
+										.findElements(By.xpath(
+												GetSheetData.getData("Dev Tracker Xpath!B12").get(0).get(0).toString()))
+										.size() > 0) {
+									if (driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B12").get(0).get(0).toString()))
+											.getText().startsWith("Please select any ")) {
+										error = "Issue " + arrSplit[i] + " Dependent Successor task Popup text";
+										Frame1.appendText("Some issue in successor task Popup text");
+									} else {
+										error = "Issue " + arrSplit[i] + " Dependent Successor task selection";
+										Frame1.appendText("Some issue in successor task selection");
+									}
+								}
+							}
+
+							// Verify Dependent Successor
+							int dependentCount = 1;
+							arrSplit = successor.getContents().split("/");
+							for (int i = 0; i < arrSplit.length; i++) {
+								Thread.sleep(1000);
+								if (driver.findElement(By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
+										+ dependentCount + "]/td[1]/a")).getText().equals(arrSplit[i])) {
+									Frame1.appendText("Dependent Successor task is added");
+									dependentCount++;
+								} else {
+									Frame1.appendText(
+											arrSplit[i] + " Dependent Successor is not attached. Trying to add again.");
+
+									driver.findElement(By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
+											+ dependentCount + "]/td[4]/i[1]")).click();
+									Thread.sleep(1500);
+
+									driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B9").get(0).get(0).toString()))
+											.click();
+									driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B10").get(0).get(0).toString()))
+											.sendKeys(arrSplit[i]);
+									Thread.sleep(2000);
+									driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B10").get(0).get(0).toString()))
+											.sendKeys(Keys.ENTER);
+									Thread.sleep(1500);
+									driver.findElement(By.xpath(
+											GetSheetData.getData("Dev Tracker Xpath!B11").get(0).get(0).toString()))
+											.click();
+
+									error = "Issue " + arrSplit[i] + " Dependent Successor is not matched with "
+											+ driver.findElement(
+													By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
+															+ dependentCount + "]/td[1]/a"))
+													.getText();
+									mailSend.mail(renamedFileName, uname, error);
+								}
+							}
+						} catch (ElementClickInterceptedException e) {
+							js = (JavascriptExecutor) driver;
+							js.executeScript("window.scrollBy(0,250)");
+						}
+					}
+
+					if (priority.getContents().isEmpty()) {
+						Frame1.appendText("Priority should be required");
+						driver.close();
+						driver.quit();
+//					System.exit(1);
+					} else {
+						Select selec2 = new Select(driver.findElement(By.id("priority_id")));
+						selec2.selectByVisibleText(priority.getContents());
+					}
+
+					if (taskStatus.getContents().isEmpty()) {
+						Frame1.appendText("Status is not available so set as default");
+					} else {
+						Thread.sleep(1500);
+						List<WebElement> options = driver.findElements(By.xpath("//select[@id='status']/option"));
+
+						for (WebElement option : options) {
+							if (option.getText().contains(taskStatus.getContents())) {
+								option.click();
+								break;
 							}
 						}
-					} catch (ElementClickInterceptedException e) {
+					}
+
+					if (assignee.getContents().isEmpty()) {
+						Frame1.appendText("Assignee user is not available in excel sheet");
+					} else {
+						Thread.sleep(1500);
+						List<WebElement> options = driver
+								.findElements(By.xpath("//select[@id='assign_user_id']/option"));
+						for (WebElement option : options) {
+							if (option.getText().contains(assignee.getContents())) {
+								option.click();
+								break;
+							}
+						}
+					}
+
+					if (reporter.getContents().isEmpty()) {
+						Frame1.appendText("Reporter user is not available in excel sheet");
+					} else {
+						List<WebElement> options = driver.findElements(By.xpath("//select[@id='report_to']/option"));
+
+						for (WebElement option : options) {
+							if (option.getText().contains(reporter.getContents())) {
+								option.click();
+								break;
+							}
+						}
+					}
+
+					if (uploadDocuments.getContents().isEmpty()) {
+						Frame1.appendText("Documents are not available in excel sheet");
+					} else {
+						multipleFileUpload.fileUpload(driver, imagePath, uploadDocuments);
+						driver.findElement(By.id("startall")).click();
+						Thread.sleep(1500);
+
+						int tmp = 0;
+
+						do {
+							if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
+									&& driver.findElement(By.xpath("//div[@role='progressbar']"))
+											.getAttribute("aria-valuenow").equals("100")) {
+								tmp = 1;
+								Frame1.appendText("Documents are uploaded");
+							} else if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
+									&& driver.findElement(By.xpath("//div[@role='progressbar']"))
+											.getAttribute("aria-valuenow").equals("0")) {
+								if (driver.findElements(By.xpath("//span[text()='Upload']")).size() > 0) {
+									Frame1.appendText("any one or multiple documents are not attached");
+									tmp = 1;
+								} else {
+									Frame1.appendText("documents are attached");
+									tmp = 1;
+								}
+							} else {
+								tmp = 0;
+								Frame1.appendText("documents are uploading");
+							}
+						} while (tmp == 0);
 						js = (JavascriptExecutor) driver;
 						js.executeScript("window.scrollBy(0,250)");
 					}
-				}
 
-				if (priority.getContents().isEmpty()) {
-					Frame1.appendText("Priority should be required");
-					driver.close();
-					driver.quit();
-//					System.exit(1);
-				} else {
-					Select selec2 = new Select(driver.findElement(By.id("priority_id")));
-					selec2.selectByVisibleText(priority.getContents());
-				}
+					if (acceptanceCriteria_nextRow.equals("false")) {
 
-				if (taskStatus.getContents().isEmpty()) {
-					Frame1.appendText("Status is not available so set as default");
-				} else {
-					Thread.sleep(1500);
-					List<WebElement> options = driver.findElements(By.xpath("//select[@id='status']/option"));
-
-					for (WebElement option : options) {
-						if (option.getText().contains(taskStatus.getContents())) {
-							option.click();
-							break;
-						}
-					}
-				}
-
-				if (assignee.getContents().isEmpty()) {
-					Frame1.appendText("Assignee user is not available in excel sheet");
-				} else {
-					Thread.sleep(1500);
-					List<WebElement> options = driver.findElements(By.xpath("//select[@id='assign_user_id']/option"));
-					for (WebElement option : options) {
-						if (option.getText().contains(assignee.getContents())) {
-							option.click();
-							break;
-						}
-					}
-				}
-
-				if (reporter.getContents().isEmpty()) {
-					Frame1.appendText("Reporter user is not available in excel sheet");
-				} else {
-					List<WebElement> options = driver.findElements(By.xpath("//select[@id='report_to']/option"));
-
-					for (WebElement option : options) {
-						if (option.getText().contains(reporter.getContents())) {
-							option.click();
-							break;
-						}
-					}
-				}
-
-				if (uploadDocuments.getContents().isEmpty()) {
-					Frame1.appendText("Documents are not available in excel sheet");
-				} else {
-					multipleFileUpload.fileUpload(driver, imagePath, uploadDocuments);
-					driver.findElement(By.id("startall")).click();
-					Thread.sleep(1500);
-
-					int tmp = 0;
-
-					do {
-						if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
-								&& driver.findElement(By.xpath("//div[@role='progressbar']"))
-										.getAttribute("aria-valuenow").equals("100")) {
-							tmp = 1;
-							Frame1.appendText("Documents are uploaded");
-						} else if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
-								&& driver.findElement(By.xpath("//div[@role='progressbar']"))
-										.getAttribute("aria-valuenow").equals("0")) {
-							if (driver.findElements(By.xpath("//span[text()='Upload']")).size() > 0) {
-								Frame1.appendText("any one or multiple documents are not attached");
-								tmp = 1;
-							} else {
-								Frame1.appendText("documents are attached");
-								tmp = 1;
-							}
-						} else {
-							tmp = 0;
-							Frame1.appendText("documents are uploading");
-						}
-					} while (tmp == 0);
-					js = (JavascriptExecutor) driver;
-					js.executeScript("window.scrollBy(0,250)");
-				}
-
-				now = LocalDateTime.now();
-				Frame1.appendText(dtf.format(now));
-				Thread.sleep(1500000);
-//				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+					} else {
+						removeExtraSpace();
+						now = LocalDateTime.now();
+						Frame1.appendText(dtf.format(now));
+						Thread.sleep(1500000);
+//						driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 //						.click();
-//				checkLoader();
-//				testcase = true;
-//				error = "complete";
-//				driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+//						checkLoader();
+//						testcase = true;
+//						error = "complete";
+//						driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
 //
-//				DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-//				Frame1.appendText(DevTrackerNumber);
+//						DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+//						Frame1.appendText(DevTrackerNumber);
 //
-//				if (bug_tracking_sheet.toLowerCase().equals("yes")) {
-//					createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
-//							taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
-//							taskType.getContents());
-//				}
-
+//						if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+//							createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
+//									taskTitle.getContents(), projectName, originator.getContents(),
+//									reporter.getContents(), taskType.getContents());
+//						}
+					}
+				}
 				row++;
 			}
 			now = LocalDateTime.now();
