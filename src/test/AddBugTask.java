@@ -365,6 +365,9 @@ public class AddBugTask extends Utilities {
 
 //				action = new Actions(driver);
 
+				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+				now = LocalDateTime.now();
+				System.out.println("cos start = "+dtf.format(now));
 				macTextFormat(imagePath, cos, "xyz", sh1, row);
 //				if (systemName.contains("mac")) {
 //					macTextFormat(imagePath, cos, "xyz");
@@ -663,6 +666,7 @@ public class AddBugTask extends Utilities {
 
 				now = LocalDateTime.now();
 				Frame1.appendText(dtf.format(now));
+				Thread.sleep(1500000);
 //				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 //						.click();
 //				checkLoader();

@@ -28,7 +28,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import jxl.Cell;
 import jxl.Sheet;
 
-public class Utilities {
+public class Utilities_suborder3 {
 	WebDriver driver;
 	JavascriptExecutor js;
 	String systemName;
@@ -47,7 +47,6 @@ public class Utilities {
 	int orderListNumber = 0;
 	int subOrderListNumber = 0;
 	int tempListNumber = 0;
-	int tempsubOrderListNumber = 0;
 	int subNumberCount = 0;
 	int numberCount = 0;
 
@@ -138,98 +137,79 @@ public class Utilities {
 			System.out.println("arrSplit[ar] = " + arrSplit[ar]);
 			Thread.sleep(2000);
 			if (arrSplit[ar].toLowerCase().contains("{number}")) {
-				orderListNumber++;
-				orderlist = "start";
-				listVal = 1;
-				oltagString = oltagString + "ol[" + orderListNumber + "]/";
-				System.out.println("number start oltagString = " + oltagString + "li[" + listVal + "]");
+
+				numberCount = numberCount + 1;
 
 				driver.findElement(
 						By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"))
 						.click();
+				orderlist = "start";
+				listVal = 1;
+				orderListNumber++;
+				int i = 1;
+				oltagString = "ol[" + orderListNumber + "]/";
+				while (i <= numberCount) {
+					System.out.println("1111");
+					oltagString = oltagString + "li[" + listVal + "]";
+					i++;
+				}
 
 				if (arrSplit[ar].toLowerCase().contains("{/number}")) {
-					System.out.println("3333333333333333 = orderListNumber = " + orderListNumber);
+					System.out.println("3333333333333333");
 					orderlist = "end";
 				}
 			} else if (arrSplit[ar].toLowerCase().contains("{/number}")) {
-				System.out.println("4444444444 = orderListNumber = " + orderListNumber);
+				System.out.println("4444444444");
 				orderlist = "end";
+				subOrderListNumber = 0;
 			} else if (arrSplit[ar].toLowerCase().contains("{subnumber}")) {
 
-				System.out.println(
-						"oltagString before sub number click = " + "//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-								+ oltagString + "/li[" + (listVal) + "]");
+				System.out.println("li count = /li[" + (listVal - 1) + "]");
+				oltagString = oltagString.replace("/li[" + (listVal - 1) + "]", "");
 
-				driver.findElement(By.xpath(
-						"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "/li[" + (listVal) + "]"))
-						.sendKeys(Keys.CONTROL + "]");
+				System.out
+						.println("start subnumber = //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString);
+				oldlistVal = listVal;
 
-				if (orderlist.equals("end") || orderlist.equals("stop")) {
-					System.out.println("if orderlist val = " + orderlist);
+				if (subNumberCount == 0) {
+					System.out.println("ppppppppppppp");
 					subOrderListNumber = 1;
 				} else {
-					if (subOrderList.equals("start")) {
-						System.out.println("if sub order list = " + subOrderList);
-						tempsubOrderListNumber = subOrderListNumber;
-						subOrderListNumber = 1;
-					} else {
-						System.out.println("else subOrderList val = " + subOrderList);
+					System.out.println("qqqqqqqqqqqqqq");
+					if (!subOrderList.equals("end")) {
+						System.out.println("rrrrrrrrrrrrr");
 						subOrderListNumber = subOrderListNumber + 1;
+					} else {
+						System.out.println("sssssssssssssssss");
+						subOrderListNumber = 1;
 					}
 				}
-
-				System.out.println("subOrderListNumber = " + subOrderListNumber);
-
-				oltagString = oltagString + "ol[" + subOrderListNumber + "]/";
-
-//				System.out.println("li count = /li[" + (listVal - 1) + "]");
-//				oltagString = oltagString.replace("/li[" + (listVal - 1) + "]", "");
-//
-//				System.out
-//						.println("start subnumber = //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString);
-				oldlistVal = listVal;
-//
-//				if (subNumberCount == 0) {
-//					System.out.println("ppppppppppppp");
-//					subOrderListNumber = 1;
-//				} else {
-//					System.out.println("qqqqqqqqqqqqqq");
-//					if (!subOrderList.equals("end")) {
-//						System.out.println("rrrrrrrrrrrrr");
-//						subOrderListNumber = subOrderListNumber + 1;
-//					} else {
-//						System.out.println("sssssssssssssssss");
-//						subOrderListNumber = 1;
-//					}
-//				}
 
 				subNumberCount = subNumberCount + 1;
 				subOrderList = "start";
 
 				listVal = 1;
 
-//				if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
-//						.size() > 0) {
-//					System.out.println("something problem in xpath = //*[@id='description']/div/div[3]/div[3]/div[2]/"
-//							+ oltagString);
-//				} else {
-//
-////					for (int oltag = 1; oltag <= 15; oltag++) {
-//					System.out.println("oltagString sub number before replace = " + oltagString);
-//					System.out.println("111111111 > = ol[" + orderListNumber + "]/li[" + oldlistVal + "]");
-//					oltagString = oltagString.replace("ol[" + orderListNumber + "]/li[" + oldlistVal + "]",
-//							"ol[" + orderListNumber + "]") + "/ol[" + subOrderListNumber + "]/li[" + listVal + "]";
-				tempListNumber = orderListNumber;
-//					orderListNumber = subOrderListNumber;
-				System.out.println("oltagString sub number = " + oltagString);
-////					}	
-//				}
+				System.out.println("oltagString before sub number click = " + oltagString);
 
-				if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
-					System.out.println("subOrderList with /subnumber = " + subOrderList);
-					subNumberCount = subNumberCount - 1;
-					subOrderList = "end";
+				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
+						.sendKeys(Keys.CONTROL + "]");
+
+				if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
+						.size() > 0) {
+					System.out.println("something problem in xpath = //*[@id='description']/div/div[3]/div[3]/div[2]/"
+							+ oltagString);
+				} else {
+
+//					for (int oltag = 1; oltag <= 15; oltag++) {
+					System.out.println("oltagString sub number before replace = " + oltagString);
+					System.out.println("111111111 > = ol[" + orderListNumber + "]/li[" + oldlistVal + "]");
+					oltagString = oltagString.replace("ol[" + orderListNumber + "]/li[" + oldlistVal + "]",
+							"ol[" + orderListNumber + "]") + "/ol[" + subOrderListNumber + "]/li[" + listVal + "]";
+					tempListNumber = orderListNumber;
+					orderListNumber = subOrderListNumber;
+					System.out.println("oltagString sub number = " + oltagString);
+//					}	
 				}
 
 			} else if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
@@ -244,7 +224,7 @@ public class Utilities {
 			arrSplit[ar] = arrSplit[ar].replace("{subnumber}", "");
 			arrSplit[ar] = arrSplit[ar].replace("{/subnumber}", "");
 			System.out.println("content = " + arrSplit[ar]);
-			System.out.println("oltagstring = " + oltagString + "li[" + listVal + "]");
+			System.out.println("oltagstring = " + oltagString);
 			File tempFile = new File(imagePath + arrSplit[ar]);
 			String imageURL = "";
 			if (arrSplit[ar].isEmpty()) {
@@ -741,8 +721,7 @@ public class Utilities {
 						Thread.sleep(1500);
 					}
 				} else {
-					if (driver.findElement(By.xpath(
-							"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + listVal + "]"))
+					if (driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 							.getText().isEmpty()) {
 						int cosLinkCount = 0;
 						int cosBoldConntentCount = 0;
@@ -764,27 +743,28 @@ public class Utilities {
 							}
 						}
 						boolean enter = false;
-						if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-								+ oltagString + "li[" + listVal + "]" + "/b")).size() > 0) {
+						if (driver
+								.findElements(By.xpath(
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "/b"))
+								.size() > 0) {
 							if (driver
-									.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-											+ oltagString + "li[" + listVal + "]" + "/b"))
+									.findElement(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "/b"))
 									.getText().isEmpty()
 									|| driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-											+ oltagString + "li[" + listVal + "]" + "/b/br")).size() > 0) {
+											+ oltagString + "/b/br")).size() > 0) {
 								js = (JavascriptExecutor) driver;
-								js.executeScript("arguments[0].remove()",
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]" + "/b")));
+								js.executeScript("arguments[0].remove()", driver.findElement(By.xpath(
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "/b")));
 
 								js.executeScript(
 										"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
 												.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																+ oltagString + "li[" + listVal + "]"))
+																+ oltagString))
 												.getAttribute("innerHTML").trim() + "<br>") + "'",
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]")));
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString)));
 							}
 						}
 
@@ -838,9 +818,8 @@ public class Utilities {
 										if (systemName.contains("mac")) {
 
 										} else {
-											driver.findElement(
-													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-															+ oltagString + "li[" + listVal + "]"))
+											driver.findElement(By.xpath(
+													"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 													.sendKeys(Keys.CONTROL + "b");
 										}
 
@@ -854,8 +833,8 @@ public class Utilities {
 
 								if (once == 0) {
 
-									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-											+ oltagString + "li[" + listVal + "]"))
+									driver.findElement(By
+											.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 											.sendKeys(arrSplit[ar].substring(0, a[abc]));
 									once = 1;
 								}
@@ -887,38 +866,39 @@ public class Utilities {
 											"//*[@id=\"description\"]/div/div[3]/div[5]/div[2]/div/div[3]/button"))
 											.click();
 									Thread.sleep(1000);
-									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-											+ oltagString + "li[" + listVal + "]")).sendKeys(Keys.ARROW_RIGHT);
+									driver.findElement(By
+											.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
+											.sendKeys(Keys.ARROW_RIGHT);
 
-									if (driver
-											.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-													+ oltagString + "li[" + listVal + "]" + "/b"))
+									if (driver.findElements(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "/b"))
 											.size() > 0) {
 										if (driver
 												.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																+ oltagString + "li[" + listVal + "]" + "/b"))
+																+ oltagString + "/b"))
 												.getText().isEmpty()
 												|| driver.findElements(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																+ oltagString + "li[" + listVal + "]" + "/b/br"))
+																+ oltagString + "/b/br"))
 														.size() > 0) {
 
 											js = (JavascriptExecutor) driver;
 											js.executeScript("arguments[0].remove()",
 													driver.findElement(By
 															.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																	+ oltagString + "li[" + listVal + "]" + "/b")));
+																	+ oltagString + "/b")));
 										}
 									}
 
 									if (abc + 3 < a.length) {
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]"))
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 												.sendKeys(arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]));
 									} else {
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]")).sendKeys(
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
+												.sendKeys(
 														arrSplit[ar].substring(a[abc + 2] + 1, arrSplit[ar].length()));
 									}
 									abc = abc + 3;
@@ -931,13 +911,13 @@ public class Utilities {
 											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
 													.findElement(By
 															.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																	+ oltagString + "li[" + listVal + "]"))
+																	+ oltagString))
 													.getAttribute("innerHTML").replace("<b><br></b>", "")
 													.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim() + " <b>"
 													+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1]) + "</b>") + "'",
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-															+ oltagString + "li[" + listVal + "]")));
+															+ oltagString)));
 
 									if (arrSplit[ar].charAt(a[abc + 1]) == '^') {
 										if (driver.findElement(By.xpath(
@@ -985,7 +965,7 @@ public class Utilities {
 												} else {
 													driver.findElement(By
 															.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																	+ oltagString + "li[" + listVal + "]"))
+																	+ oltagString))
 															.sendKeys(Keys.CONTROL + "b");
 												}
 
@@ -994,8 +974,8 @@ public class Utilities {
 											alreadybold = false;
 										}
 
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]"))
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 												.sendKeys(arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]));
 
 										try {
@@ -1021,14 +1001,12 @@ public class Utilities {
 										}
 
 										if (abc + 4 < a.length) {
-											driver.findElement(
-													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-															+ oltagString + "li[" + listVal + "]"))
+											driver.findElement(By.xpath(
+													"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 													.sendKeys(arrSplit[ar].substring(a[abc + 4] + 1, a[abc + 5]));
 										} else {
-											driver.findElement(
-													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-															+ oltagString + "li[" + listVal + "]"))
+											driver.findElement(By.xpath(
+													"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 													.sendKeys(arrSplit[ar].substring(a[abc + 4] + 1,
 															arrSplit[ar].length()));
 										}
@@ -1043,15 +1021,15 @@ public class Utilities {
 												"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
 														.findElement(By.xpath(
 																"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																		+ oltagString + "li[" + listVal + "]"))
+																		+ oltagString))
 														.getAttribute("innerHTML").replace("<b><br></b>", "")
 														.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
 														+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])) + "'",
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																+ oltagString + "li[" + listVal + "]")));
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]"))
+																+ oltagString)));
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 												.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 									} else {
 										js = (JavascriptExecutor) driver;
@@ -1059,24 +1037,24 @@ public class Utilities {
 												"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
 														.findElement(By.xpath(
 																"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																		+ oltagString + "li[" + listVal + "]"))
+																		+ oltagString))
 														.getAttribute("innerHTML").replace("<b><br></b>", "")
 														.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
 														+ arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length()))
 														+ "'",
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																+ oltagString + "li[" + listVal + "]")));
+																+ oltagString)));
 
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]"))
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 												.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 									}
 									abc = abc + 2;
 								} else if (arrSplit[ar].charAt(a[abc]) == '~') {
 									String username = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]);
-									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-											+ oltagString + "li[" + listVal + "]"))
+									driver.findElement(By
+											.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 											.sendKeys(" @" + username.substring(0, (username.indexOf(" "))));
 
 									if (driver
@@ -1088,9 +1066,8 @@ public class Utilities {
 												.findElements(By.xpath("//div[contains(@class,'note-hint-item')]"))
 												.size();
 										if (userCount == 1) {
-											driver.findElement(
-													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-															+ oltagString + "li[" + listVal + "]"))
+											driver.findElement(By.xpath(
+													"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 													.sendKeys(Keys.ENTER);
 										} else if (userCount > 1) {
 
@@ -1103,12 +1080,12 @@ public class Utilities {
 
 													driver.findElement(By
 															.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																	+ oltagString + "li[" + listVal + "]"))
+																	+ oltagString))
 															.sendKeys(Keys.ENTER);
 												} else {
 													driver.findElement(By
 															.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																	+ oltagString + "li[" + listVal + "]"))
+																	+ oltagString))
 															.sendKeys(Keys.ARROW_DOWN);
 												}
 											}
@@ -1116,8 +1093,8 @@ public class Utilities {
 											Frame1.appendText("Given username is not available");
 										}
 									} else {
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]"))
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 												.sendKeys(username.substring(username.indexOf(" "), username.length()));
 									}
 //									
@@ -1127,17 +1104,16 @@ public class Utilities {
 												"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
 														.findElement(By.xpath(
 																"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																		+ oltagString + "li[" + listVal + "]"))
+																		+ oltagString))
 														.getAttribute("innerHTML").replace("<b><br></b>", "")
 														.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
 														+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])) + "'",
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																+ oltagString + "li[" + listVal + "]")));
+																+ oltagString)));
 										if (systemName.contains("mac")) {
-											driver.findElement(
-													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-															+ oltagString + "li[" + listVal + "]"))
+											driver.findElement(By.xpath(
+													"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 													.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 										}
 									} else {
@@ -1147,16 +1123,16 @@ public class Utilities {
 												"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
 														.findElement(By.xpath(
 																"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																		+ oltagString + "li[" + listVal + "]"))
+																		+ oltagString))
 														.getAttribute("innerHTML").replace("<b><br></b>", "")
 														.replace("<br>", "").replace("&nbsp;&nbsp;", "").trim()
 														+ arrSplit[ar].substring(a[abc + 1] + 1, arrSplit[ar].length()))
 														+ "'",
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-																+ oltagString + "li[" + listVal + "]")));
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]"))
+																+ oltagString)));
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 												.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 									}
 									abc = abc + 2;
@@ -1165,12 +1141,13 @@ public class Utilities {
 									if (arrSplit[ar].charAt(a[abc]) == '\n') {
 
 										enter = true;
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]")).sendKeys(Keys.RETURN);
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
+												.sendKeys(Keys.RETURN);
 									} else {
 
-										driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-												+ oltagString + "li[" + listVal + "]"))
+										driver.findElement(By.xpath(
+												"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 												.sendKeys(arrSplit[ar].substring(a[abc], a[abc + 1]));
 									}
 
@@ -1183,14 +1160,15 @@ public class Utilities {
 							js.executeScript(
 									"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(arrSplit[ar])
 											+ "'",
-									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-											+ oltagString + "li[" + listVal + "]")));
+									driver.findElement(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString)));
 						}
 						if (enter == true) {
 							enter = false;
 						} else {
-							driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-									+ oltagString + "li[" + listVal + "]")).sendKeys(Keys.ENTER);
+							driver.findElement(
+									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
+									.sendKeys(Keys.ENTER);
 						}
 						Thread.sleep(1500);
 					}
@@ -1248,19 +1226,19 @@ public class Utilities {
 
 			if (orderlist.equals("start") || orderlist.equals("end")) {
 				listVal++;
-//				oltagString = oltagString + "/li[" + listVal + "]";
-				System.out.println("oltagstring after adding line in editor = " + oltagString + "li[" + listVal + "]");
-//				if (oltagString.contains("/li[" + (listVal - 1) + "]")) {
-//					System.out.println("iffffffffffffffffffffffffffffff");
-//					System.out.println("before replace = " + oltagString + "li[" + listVal + "]");
-////					oltagString = oltagString.replace("/li[" + (listVal - 1) + "]", "");
-//					System.out.println("after replace = " + oltagString + "li[" + listVal + "]");
-//				} else if (!oltagString.contains("/li[" + listVal + "]")) {
-//					System.out.println("elseeeeeeeeeee iffffffffffffffffffffffffffffff");
-//					System.out.println("before = " + oltagString + "li[" + listVal + "]");
-////					oltagString = oltagString + "/li[" + listVal + "]";
-//					System.out.println("after = " + oltagString + "li[" + listVal + "]");
-//				}
+				oltagString = oltagString + "/li[" + listVal + "]";
+				System.out.println("oltagstring after adding line in editor = " + oltagString);
+				if (oltagString.contains("/li[" + (listVal - 1) + "]")) {
+					System.out.println("iffffffffffffffffffffffffffffff");
+					System.out.println("before replace = " + oltagString);
+					oltagString = oltagString.replace("/li[" + (listVal - 1) + "]", "");
+					System.out.println("after replace = " + oltagString);
+				} else if (!oltagString.contains("/li[" + listVal + "]")) {
+					System.out.println("elseeeeeeeeeee iffffffffffffffffffffffffffffff");
+					System.out.println("before = " + oltagString);
+					oltagString = oltagString + "/li[" + listVal + "]";
+					System.out.println("after = " + oltagString);
+				}
 			} else {
 				countTag++;
 			}
@@ -1273,52 +1251,26 @@ public class Utilities {
 //				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 //						.sendKeys(Keys.ENTER);
 				orderlist = "stop";
-				oltagString = "";
-				subOrderListNumber = 0;
 			}
 
 			if (subOrderList.equals("end")) {
 				System.out.println("end subnumber 123123123123 = //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-						+ oltagString + "li[" + listVal + "]");
-				driver.findElement(By.xpath(
-						"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + listVal + "]"))
+						+ oltagString);
+				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
 						.sendKeys(Keys.CONTROL + "[");
 				subOrderList = "stop";
 				orderListNumber = tempListNumber;
 
 				listVal = oldlistVal;
-				System.out.println("before orderListNumber = " + orderListNumber);
-				System.out.println("before subOrderListNumber = " + subOrderListNumber);
-				System.out.println("before tempsubListNumber = " + tempsubOrderListNumber);
-
-				System.out.println("before replace = " + oltagString);
-				if (tempsubOrderListNumber != 0) {
-					System.out.println("temp order list is not 0");
-					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
-				} else {
-					System.out.println("temp order list is 0");
-					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
-				}
-				System.out.println("after replace = " + oltagString);
-
-				if (tempsubOrderListNumber != 0) {
-					subOrderListNumber = tempsubOrderListNumber;
-				}
-
-				System.out.println("after orderListNumber = " + orderListNumber);
-				System.out.println("after subOrderListNumber = " + subOrderListNumber);
-				System.out.println("after tempsubListNumber = " + tempsubOrderListNumber);
-
 				System.out.println("suborder list end but subNumberCount = " + subNumberCount
-						+ " xpath is //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + listVal
-						+ "]");
-//				if (subNumberCount == 0) {
-////					oltagString = "ol[" + orderListNumber + "]/li[" + listVal + "]";
-//				} else {
-//					System.out.println("subOrderListNumber before = " + subOrderListNumber);
-//					subOrderListNumber = subOrderListNumber - 1;
-//					System.out.println("subOrderListNumber after = " + subOrderListNumber);
-//				}
+						+ " xpath is //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString);
+				if (subNumberCount == 0) {
+					oltagString = "ol[" + orderListNumber + "]/li[" + listVal + "]";
+				} else {
+					System.out.println("subOrderListNumber before = " + subOrderListNumber);
+					subOrderListNumber = subOrderListNumber - 1;
+					System.out.println("subOrderListNumber after = " + subOrderListNumber);
+				}
 			}
 		}
 
