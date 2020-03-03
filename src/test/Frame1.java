@@ -1,6 +1,5 @@
 package test;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -46,18 +45,18 @@ public class Frame1 extends Utilities {
 	static JRadioButton rdbattachmentFolderFromExcelYes;
 	static JRadioButton rdbattachmentFolderFromExcelNo;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					test.Frame1 window = new test.Frame1();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					alertMessage(e.toString());
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					test.Frame1 window = new test.Frame1();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					alertMessage(e.toString());
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.

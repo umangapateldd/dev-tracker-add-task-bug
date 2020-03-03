@@ -5,11 +5,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileLock;
 import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipOutputStream;
@@ -23,6 +26,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import jxl.Cell;
@@ -42,8 +48,8 @@ public class Utilities {
 	int col = 15;
 	String orderlist = "stop";
 	String subOrderList = "stop";
-	int listVal;
-	int oldlistVal;
+	int listVal = 0;
+	int oldlistVal = 0;
 	int orderListNumber = 0;
 	int subOrderListNumber = 0;
 	int tempListNumber = 0;
@@ -99,6 +105,8 @@ public class Utilities {
 	@SuppressWarnings("deprecation")
 	public void macTextFormat(String imagePath, Cell descriptionType, String htmlTag, Sheet sh1, int row)
 			throws InterruptedException {
+		System.out.println("func start = " + AddBugTask.oltagStringGlobal);
+		String oltagString = AddBugTask.oltagStringGlobal;
 		int countTag = 0;
 		if (htmlTag.contains("p[")) {
 			// objective / reference
@@ -126,22 +134,25 @@ public class Utilities {
 			}
 
 			cosString = ACString;
+			AddBugTask.ACFileAvailable = "true";
+		} else {
+			AddBugTask.ACFileAvailable = "false";
 		}
 		String[] arrSplit = cosString.split("\n");
 
-		Thread.sleep(1000);
 		int attachmentCount = 0;
 		boolean exists = false;
 		boolean alreadybold = false;
-		String oltagString = "";
+
 		for (int ar = 0; ar < arrSplit.length; ar++) {
 			System.out.println("arrSplit[ar] = " + arrSplit[ar]);
-			Thread.sleep(2000);
+
 			if (arrSplit[ar].toLowerCase().contains("{number}")) {
 				orderListNumber++;
 				orderlist = "start";
 				listVal = 1;
 				oltagString = oltagString + "ol[" + orderListNumber + "]/";
+
 				System.out.println("number start oltagString = " + oltagString + "li[" + listVal + "]");
 
 				driver.findElement(
@@ -155,14 +166,18 @@ public class Utilities {
 			} else if (arrSplit[ar].toLowerCase().contains("{/number}")) {
 				System.out.println("4444444444 = orderListNumber = " + orderListNumber);
 				orderlist = "end";
+				if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
+					System.out.println("subOrderList with /number with /subnumber = " + subOrderList);
+					subNumberCount = subNumberCount - 1;
+					subOrderList = "end";
+				}
 			} else if (arrSplit[ar].toLowerCase().contains("{subnumber}")) {
 
-				System.out.println(
-						"oltagString before sub number click = " + "//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
-								+ oltagString + "/li[" + (listVal) + "]");
+				System.out.println("oltagString before sub number click = "
+						+ "//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + (listVal) + "]");
 
 				driver.findElement(By.xpath(
-						"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "/li[" + (listVal) + "]"))
+						"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + (listVal) + "]"))
 						.sendKeys(Keys.CONTROL + "]");
 
 				if (orderlist.equals("end") || orderlist.equals("stop")) {
@@ -236,6 +251,12 @@ public class Utilities {
 				System.out.println("subOrderList with /subnumber = " + subOrderList);
 				subNumberCount = subNumberCount - 1;
 				subOrderList = "end";
+
+				if (arrSplit[ar].toLowerCase().contains("{/number}")) {
+					System.out
+							.println("999999 slash sub number with slash number orderListNumber = " + orderListNumber);
+					orderlist = "end";
+				}
 			}
 
 			exists = false;
@@ -376,8 +397,6 @@ public class Utilities {
 															+ countTag + "]"))
 													.sendKeys(Keys.CONTROL + "b");
 										}
-
-										Thread.sleep(1000);
 									} else {
 
 									}
@@ -407,7 +426,6 @@ public class Utilities {
 												.click();
 									}
 
-									Thread.sleep(1500);
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[5]/div[2]/div/div[2]/div[1]/input"))
 											.sendKeys(arrSplit[ar].substring(a[abc] + 1, a[abc + 1]));
@@ -419,7 +437,7 @@ public class Utilities {
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[5]/div[2]/div/div[3]/button"))
 											.click();
-									Thread.sleep(1000);
+
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.ARROW_RIGHT);
@@ -497,7 +515,6 @@ public class Utilities {
 													"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[4]/div/button[2]"))
 													.click();
 										}
-										Thread.sleep(1500);
 										// Click Starting Color Code
 
 										if (driver.findElements(By.xpath("//button[@style='background-color:#"
@@ -524,8 +541,6 @@ public class Utilities {
 																	+ countTag + "]"))
 															.sendKeys(Keys.CONTROL + "b");
 												}
-
-												Thread.sleep(1000);
 											}
 											alreadybold = false;
 										}
@@ -571,8 +586,6 @@ public class Utilities {
 										}
 										abc = abc + 4;
 									}
-
-									Thread.sleep(1000);
 
 									if (abc + 2 < a.length) {
 										js = (JavascriptExecutor) driver;
@@ -738,7 +751,6 @@ public class Utilities {
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 									.sendKeys(Keys.ENTER);
 						}
-						Thread.sleep(1500);
 					}
 				} else {
 					if (driver.findElement(By.xpath(
@@ -843,8 +855,6 @@ public class Utilities {
 															+ oltagString + "li[" + listVal + "]"))
 													.sendKeys(Keys.CONTROL + "b");
 										}
-
-										Thread.sleep(1000);
 									} else {
 
 									}
@@ -874,7 +884,6 @@ public class Utilities {
 												.click();
 									}
 
-									Thread.sleep(1500);
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[5]/div[2]/div/div[2]/div[1]/input"))
 											.sendKeys(arrSplit[ar].substring(a[abc] + 1, a[abc + 1]));
@@ -886,7 +895,7 @@ public class Utilities {
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[5]/div[2]/div/div[3]/button"))
 											.click();
-									Thread.sleep(1000);
+
 									driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
 											+ oltagString + "li[" + listVal + "]")).sendKeys(Keys.ARROW_RIGHT);
 
@@ -961,7 +970,7 @@ public class Utilities {
 													"//*[@id=\"description\"]/div/div[3]/div[2]/div/div[4]/div/button[2]"))
 													.click();
 										}
-										Thread.sleep(1500);
+
 										// Click Starting Color Code
 
 										if (driver.findElements(By.xpath("//button[@style='background-color:#"
@@ -988,8 +997,6 @@ public class Utilities {
 																	+ oltagString + "li[" + listVal + "]"))
 															.sendKeys(Keys.CONTROL + "b");
 												}
-
-												Thread.sleep(1000);
 											}
 											alreadybold = false;
 										}
@@ -1034,8 +1041,6 @@ public class Utilities {
 										}
 										abc = abc + 4;
 									}
-
-									Thread.sleep(1000);
 
 									if (abc + 2 < a.length) {
 										js = (JavascriptExecutor) driver;
@@ -1192,7 +1197,6 @@ public class Utilities {
 							driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
 									+ oltagString + "li[" + listVal + "]")).sendKeys(Keys.ENTER);
 						}
-						Thread.sleep(1500);
 					}
 				}
 			} else {
@@ -1208,7 +1212,6 @@ public class Utilities {
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[2]/div/div[8]/button[2]"))
 							.click();
 				}
-				Thread.sleep(1500);
 
 				driver.findElement(By.name("files")).sendKeys(imageURL);
 
@@ -1273,7 +1276,9 @@ public class Utilities {
 //				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 //						.sendKeys(Keys.ENTER);
 				orderlist = "stop";
+				subOrderList = "stop";
 				oltagString = "";
+				AddBugTask.oltagStringGlobal = "";
 				subOrderListNumber = 0;
 			}
 
@@ -1322,37 +1327,77 @@ public class Utilities {
 			}
 		}
 
-		if (orderlist.equals("start")) {
-			System.out.println("1111111111111");
-			driver.findElement(
-					By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']")).click();
-			driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-					.sendKeys(Keys.ENTER);
-			orderlist = "stop";
+		if (AddBugTask.ACFileAvailable.equals("true")) {
+			if (orderlist.equals("start")) {
+				System.out.println("1111111111111");
+				driver.findElement(
+						By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"))
+						.click();
+				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+						.sendKeys(Keys.ENTER);
+				orderlist = "stop";
+			}
 		}
+
+		AddBugTask.oltagStringGlobal = oltagString;
 	}
 
 	public void removeExtraSpace() throws InterruptedException, IOException, GeneralSecurityException {
+		orderListNumber = 0;
+		subOrderListNumber = 0;
+		tempListNumber = 0;
+		tempsubOrderListNumber = 0;
+		subNumberCount = 0;
+		numberCount = 0;
+		orderlist = "stop";
+		subOrderList = "stop";
+		listVal = 0;
+		oldlistVal = 0;
+
 		Frame1.appendText("Removing Extra Space");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+		Frame1.appendText(dtf.format(now));
+
 		int pTag = 2;
 		int totalPTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
 		while (pTag <= totalPTag) {
+			dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+			now = LocalDateTime.now();
+			Frame1.appendText("time 1 = " + dtf.format(now));
 			if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 					.size() > 0) {
+				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+				now = LocalDateTime.now();
+				Frame1.appendText("time 2 = " + dtf.format(now));
 				if (pTag == 2 && driver
 						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 						.getText().isEmpty()) {
 					pTag = pTag + 2;
 				} else {
+					dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+					now = LocalDateTime.now();
+					Frame1.appendText("time 3 = " + dtf.format(now));
 					if (driver
 							.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 							.getText().isEmpty()) {
+						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+						now = LocalDateTime.now();
+						Frame1.appendText("time 4 = " + dtf.format(now));
+						List<WebElement> myResult = driver.findElements(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"));
+						System.out.println(myResult.size());
+						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+						now = LocalDateTime.now();
+						Frame1.appendText("time 14 = " + dtf.format(now));
 						if (driver
 								.findElements(By
 										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
 								.size() > 0) {
 							pTag++;
 						} else {
+							dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+							now = LocalDateTime.now();
+							Frame1.appendText("time 5 = " + dtf.format(now));
 							if (driver
 									.findElements(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
@@ -1378,13 +1423,21 @@ public class Utilities {
 								js.executeScript("arguments[0].remove()", driver.findElement(
 										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
 							} else {
-
+								dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+								now = LocalDateTime.now();
+								Frame1.appendText("time 6 = " + dtf.format(now));
 								pTag++;
 							}
 						}
 					} else {
+						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+						now = LocalDateTime.now();
+						Frame1.appendText("time 7 = " + dtf.format(now));
 						pTag++;
 					}
+					dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+					now = LocalDateTime.now();
+					Frame1.appendText("time 8 = " + dtf.format(now));
 					if (driver
 							.findElements(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br"))
@@ -1399,6 +1452,10 @@ public class Utilities {
 			}
 		}
 		Frame1.appendText("extra space remove done");
+
+		dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+		now = LocalDateTime.now();
+		Frame1.appendText(dtf.format(now));
 	}
 
 	public void checkLoader() throws InterruptedException {
@@ -1411,7 +1468,7 @@ public class Utilities {
 				Frame1.appendText("timeout");
 				tmp = 1;
 			}
-			Thread.sleep(1000);
+
 			if (driver.findElements(By.id("indicator")).size() > 0
 					&& driver.findElement(By.id("indicator")).getAttribute("class").equals("indicator hide")) {
 				tmp = 0;

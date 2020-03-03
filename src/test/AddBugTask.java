@@ -17,6 +17,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
@@ -46,6 +47,7 @@ public class AddBugTask extends Utilities {
 	Cell reporter;
 	Cell uploadDocuments;
 	Cell originator;
+	Cell project_name_next_row_acceptance_criteria = null;
 	String uname;
 	String zipFilename = "test-output.zip";
 	String outputFolderName = "test-output";
@@ -67,6 +69,8 @@ public class AddBugTask extends Utilities {
 	String projectName;
 	String bug_tracking_sheet;
 	CreateBugTrackingReport createBugTrackingReport;
+	static String oltagStringGlobal = "";
+	static String ACFileAvailable = "false";
 
 	public boolean checkFiles() {
 		File file = new File("tokens/StoredCredential");
@@ -151,7 +155,7 @@ public class AddBugTask extends Utilities {
 
 			} else {
 				if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
-					mailSend.mail(renamedFileName, uname, "start");
+					mailSend.mail("Ticket.xls", uname, "start");
 				} else {
 					Frame1.appendText("no option for mail on start");
 				}
@@ -168,13 +172,13 @@ public class AddBugTask extends Utilities {
 
 			openBrowser(headless);
 			driver.get(DevTrackerURL.getContents());
-
+			
 			if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
 				driver.findElement(By.name("access_login")).sendKeys(DevTrackerStageAccessUsername);
 				driver.findElement(By.name("access_password")).sendKeys(DevTrackerStageAccessPassword);
 				driver.findElement(By.name("access_password")).sendKeys(Keys.ENTER);
 			}
-			Thread.sleep(1000);
+			
 			driver.findElement(By.name("username")).click();
 			driver.findElement(By.name("username")).clear();
 			driver.findElement(By.name("username")).sendKeys(uname);
@@ -187,34 +191,48 @@ public class AddBugTask extends Utilities {
 
 			int row = 5;
 
+			System.out.println("row count = " + sh1.getRows());
 			while (row < sh1.getRows()) {
 				// column, row
 				Cell project_name = sh1.getCell(0, row);
-				Cell project_name_next_row_acceptance_criteria = sh1.getCell(0, row + 1);
-				System.out.println(
-						"project_name_next_row_acceptance_criteria = " + project_name_next_row_acceptance_criteria);
+
+				if ((row + 1) < sh1.getRows()) {
+					System.out.println("set value project_name_next_row_acceptance_criteria");
+					project_name_next_row_acceptance_criteria = sh1.getCell(0, row + 1);
+				} else {
+					System.out.println("set value project_name_next_row_acceptance_criteria");
+					project_name_next_row_acceptance_criteria = null;
+				}
 
 				if (project_name.getContents().isEmpty()) {
-					Thread.sleep(1500);
 					Frame1.appendText("Data are completed");
 					break;
 				}
 
-				if (project_name_next_row_acceptance_criteria.getContents().isEmpty()) {
+				if (project_name_next_row_acceptance_criteria == null
+						|| project_name_next_row_acceptance_criteria.getContents().isEmpty()) {
 					System.out.println("don't check next row");
 					acceptanceCriteria_nextRow = "false";
 				}
 
 				if (project_name.getContents()
 						.equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
-					System.out.println("acceptanceCriteria = true");
 
-					acceptanceCriteria = "true";
+					if (ACFileAvailable.equals("true")) {
+						acceptanceCriteria = "false";
+						acceptanceCriteria_nextRow = "false";
+					} else {
+						System.out.println("acceptanceCriteria = true");
+
+						acceptanceCriteria = "true";
+						cos = sh1.getCell(7, row);
+					}
 				} else {
+					ACFileAvailable = "false";
 					System.out.println("acceptanceCriteria = false");
 
-					if (project_name_next_row_acceptance_criteria.getContents()
-							.equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
+					if (project_name_next_row_acceptance_criteria != null && project_name_next_row_acceptance_criteria
+							.getContents().equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
 						System.out.println("acceptanceCriteria_nextRow = true");
 						acceptanceCriteria_nextRow = "true";
 					} else {
@@ -223,6 +241,10 @@ public class AddBugTask extends Utilities {
 					}
 
 					acceptanceCriteria = "false";
+
+				}
+
+				if (acceptanceCriteria.equals("false")) {
 					milestone = sh1.getCell(1, row);
 					taskcategory = sh1.getCell(2, row);
 					taskType = sh1.getCell(3, row);
@@ -250,9 +272,7 @@ public class AddBugTask extends Utilities {
 //					System.exit(1);
 						break;
 					}
-				}
 
-				if (acceptanceCriteria.equals("false")) {
 					BranchMilestone = milestone.getContents();
 					Frame1.appendText(taskType.getContents() + " is adding");
 					Frame1.appendText("Title is = " + taskTitle.getContents());
@@ -262,11 +282,10 @@ public class AddBugTask extends Utilities {
 						driver.get(
 								DevTrackerURL.getContents() + "index.php?route=common/task/loadDetailForm&project_id="
 										+ project_name.getContents());
-						Thread.sleep(2000);
 					} else {
 						driver.get(DevTrackerURL.getContents()
 								+ "index.php?route=common/task/loadDetailForm&project_id=0");
-						Thread.sleep(2000);
+						
 						driver.findElement(
 								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B1").get(0).get(0).toString()))
 								.click();
@@ -276,12 +295,11 @@ public class AddBugTask extends Utilities {
 						driver.findElement(
 								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
 								.sendKeys(Keys.ENTER);
-						Thread.sleep(2000);
+						
 					}
 
 					if (driver.findElements(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).size() > 0) {
-						driver.findElement(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).click();
-						Thread.sleep(2000);
+						driver.findElement(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).click();						
 					}
 
 					projectName = driver
@@ -293,15 +311,16 @@ public class AddBugTask extends Utilities {
 
 					Boolean found = false;
 					List<WebElement> allOptions = selec.getOptions();
-					Thread.sleep(1000);
+					
 					for (WebElement we : allOptions) {
 						if (we.getText().equals(milestone.getContents())) {
 							found = true;
-							Thread.sleep(1000);
+							
 						}
 					}
 					if (found == true) {
 						selec.selectByVisibleText(milestone.getContents());
+						Thread.sleep(1500);
 					} else {
 						// Create new milestone
 						driver.findElement(By.id("addmilestone")).click();
@@ -321,17 +340,15 @@ public class AddBugTask extends Utilities {
 						driver.findElement(By.id("savemilestone")).click();
 					}
 
-					Thread.sleep(1000);
 					try {
 						Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
 
 						found = false;
 						List<WebElement> allOptions1 = selec1.getOptions();
-						Thread.sleep(1000);
+						
 						for (WebElement we : allOptions1) {
 							if (we.getText().equals(taskcategory.getContents())) {
-								found = true;
-								Thread.sleep(1000);
+								found = true;								
 							}
 						}
 
@@ -346,7 +363,7 @@ public class AddBugTask extends Utilities {
 					} catch (StaleElementReferenceException e) {
 						Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
 
-						Thread.sleep(1000);
+						
 						found = false;
 						List<WebElement> allOptions1 = selec1.getOptions();
 
@@ -355,7 +372,7 @@ public class AddBugTask extends Utilities {
 								found = true;
 							}
 						}
-						Thread.sleep(1000);
+						
 						if (found == true) {
 							selec1.selectByVisibleText(taskcategory.getContents());
 						} else {
@@ -366,7 +383,7 @@ public class AddBugTask extends Utilities {
 						}
 					}
 
-					Thread.sleep(1000);
+					
 
 					task_bug_radio_button_selection();
 
@@ -374,11 +391,11 @@ public class AddBugTask extends Utilities {
 					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 							.click();
 
-					Thread.sleep(1000);
+					
 					if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
 						Frame1.appendText(taskType.getContents() + " selection again");
 						error = taskType.getContents() + " selection again";
-						Thread.sleep(1000);
+						
 						task_bug_radio_button_selection();
 					}
 
@@ -388,7 +405,7 @@ public class AddBugTask extends Utilities {
 					js.executeScript("window.scrollBy(0,250)");
 
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).click();
-					Thread.sleep(1000);
+					
 
 					// reference
 					if (references.getContents().isEmpty()) {
@@ -401,11 +418,17 @@ public class AddBugTask extends Utilities {
 				}
 
 				// COS
-//				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//				now = LocalDateTime.now();
-//				System.out.println("cos start = " + dtf.format(now));
+				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+				now = LocalDateTime.now();
+				System.out.println("cos start = " + dtf.format(now));
+				System.out.println("cos content = " + cos);
+				
 				macTextFormat(imagePath, cos, "xyz", sh1, row);
-
+				
+				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+				now = LocalDateTime.now();
+				System.out.println("cos end = " + dtf.format(now));
+				
 				if (acceptanceCriteria.equals("false")) {
 //					removeExtraSpace();
 
@@ -432,7 +455,7 @@ public class AddBugTask extends Utilities {
 						Frame1.appendText("Issue in added description");
 					}
 
-					Thread.sleep(1000);
+					
 
 					js = (JavascriptExecutor) driver;
 					js.executeScript("window.scrollBy(0,350)");
@@ -618,7 +641,7 @@ public class AddBugTask extends Utilities {
 					if (taskStatus.getContents().isEmpty()) {
 						Frame1.appendText("Status is not available so set as default");
 					} else {
-						Thread.sleep(1500);
+						
 						List<WebElement> options = driver.findElements(By.xpath("//select[@id='status']/option"));
 
 						for (WebElement option : options) {
@@ -632,7 +655,7 @@ public class AddBugTask extends Utilities {
 					if (assignee.getContents().isEmpty()) {
 						Frame1.appendText("Assignee user is not available in excel sheet");
 					} else {
-						Thread.sleep(1500);
+						
 						List<WebElement> options = driver
 								.findElements(By.xpath("//select[@id='assign_user_id']/option"));
 						for (WebElement option : options) {
@@ -661,7 +684,7 @@ public class AddBugTask extends Utilities {
 					} else {
 						multipleFileUpload.fileUpload(driver, imagePath, uploadDocuments);
 						driver.findElement(By.id("startall")).click();
-						Thread.sleep(1500);
+						
 
 						int tmp = 0;
 
@@ -689,16 +712,42 @@ public class AddBugTask extends Utilities {
 						js = (JavascriptExecutor) driver;
 						js.executeScript("window.scrollBy(0,250)");
 					}
+				}
 
-					if (acceptanceCriteria_nextRow.equals("false")) {
+				if (AddBugTask.ACFileAvailable.equals("true")) {
+					System.out.println("AddBugTask.ACFileAvailable = " + AddBugTask.ACFileAvailable);
+					removeExtraSpace();
+					now = LocalDateTime.now();
+					Frame1.appendText(dtf.format(now));
+					System.out.println("submit request");
+//					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+//							.click();
+//					checkLoader();
+//					testcase = true;
+//					error = "complete";
+//					driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+//
+//					DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+//					Frame1.appendText(DevTrackerNumber);
+//
+//					if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+//						createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
+//								taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
+//								taskType.getContents());
+//					}
+				} else {
+					System.out.println("AddBugTask.ACFileAvailable = " + AddBugTask.ACFileAvailable);
+					System.out.println(acceptanceCriteria_nextRow + " before remove extra space");
+					if (acceptanceCriteria_nextRow.equals("true")) {
 
 					} else {
 						removeExtraSpace();
 						now = LocalDateTime.now();
 						Frame1.appendText(dtf.format(now));
-						Thread.sleep(1500000);
-//						driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-//						.click();
+						System.out.println("submit request");
+//						driver.findElement(
+//								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+//								.click();
 //						checkLoader();
 //						testcase = true;
 //						error = "complete";
@@ -718,7 +767,6 @@ public class AddBugTask extends Utilities {
 			}
 			now = LocalDateTime.now();
 			Frame1.appendText(dtf.format(now));
-
 			if (BranchCreateSheet == true) {
 
 				Sheet BranchCreateSheetName = wb.getSheet("BranchCreate");
@@ -728,19 +776,19 @@ public class AddBugTask extends Utilities {
 				driver.findElement(By.xpath("//*[@id='username']")).clear();
 				driver.findElement(By.xpath("//*[@id='username']"))
 						.sendKeys(BranchCreateSheetName.getCell(1, 1).getContents());
-				Thread.sleep(1000);
+				
 				driver.findElement(By.xpath("//*[@id='login-submit']")).click();
 				driver.findElement(By.xpath("//*[@id='password']")).clear();
 				driver.findElement(By.xpath("//*[@id='password']"))
 						.sendKeys(BranchCreateSheetName.getCell(1, 2).getContents());
-				Thread.sleep(1000);
+				
 				driver.findElement(By.xpath("//*[@id='login-submit']")).click();
 
 				boolean repositoriesMatch = false;
 				int repositoriesrow = 1;
 				BranchMilestone = "baseproject";
 				while (repositoriesMatch == false) {
-					Thread.sleep(1500);
+					
 					if (checkElementAvailibility(
 							"//*[@id='root']/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
 									+ repositoriesrow + "]/td[1]/div/div[2]/span/a")) {
@@ -799,30 +847,30 @@ public class AddBugTask extends Utilities {
 	public void bugadd_fun_verify() throws Exception, InterruptedException {
 		try {
 
-			Frame1.btnFileUpload.setEnabled(true);
-			Frame1.txtFileUpload.setEnabled(true);
-			Frame1.btnExecuteScript.setEnabled(false);
-			Frame1.btnSetImageFolder.setEnabled(true);
-			Frame1.txtSetImageFolder.setEnabled(true);
-			Frame1.rdbChromeYes.setEnabled(true);
-			Frame1.rdbChromeNo.setEnabled(true);
-			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
-			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
+//			Frame1.btnFileUpload.setEnabled(true);
+//			Frame1.txtFileUpload.setEnabled(true);
+//			Frame1.btnExecuteScript.setEnabled(false);
+//			Frame1.btnSetImageFolder.setEnabled(true);
+//			Frame1.txtSetImageFolder.setEnabled(true);
+//			Frame1.rdbChromeYes.setEnabled(true);
+//			Frame1.rdbChromeNo.setEnabled(true);
+//			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
+//			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
 
 			Assert.assertTrue(testcase);
 
 			testcase = true;
 			mailSend.mail(renamedFileName, uname, error);
 		} catch (AssertionError e) {
-			Frame1.btnFileUpload.setEnabled(false);
-			Frame1.txtFileUpload.setEnabled(false);
-			Frame1.btnExecuteScript.setEnabled(true);
-			Frame1.btnSetImageFolder.setEnabled(false);
-			Frame1.txtSetImageFolder.setEnabled(false);
-			Frame1.rdbChromeYes.setEnabled(false);
-			Frame1.rdbChromeNo.setEnabled(false);
-			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
-			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
+//			Frame1.btnFileUpload.setEnabled(false);
+//			Frame1.txtFileUpload.setEnabled(false);
+//			Frame1.btnExecuteScript.setEnabled(true);
+//			Frame1.btnSetImageFolder.setEnabled(false);
+//			Frame1.txtSetImageFolder.setEnabled(false);
+//			Frame1.rdbChromeYes.setEnabled(false);
+//			Frame1.rdbChromeNo.setEnabled(false);
+//			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
+//			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
 
 			System.out.println("Script is failed");
 			File f = new File(outputFolderName);
@@ -843,12 +891,17 @@ public class AddBugTask extends Utilities {
 			error = "Something problem in script";
 		}
 
-		Thread.sleep(1000);
-		if (Frame1.stop == true) {
-		} else {
-			mailSend mailSend1 = new mailSend();
-			mailSend1.mail(renamedFileName, uname, error);
-		}
+		
+//		if (Frame1.stop == true) {
+//		} else {
+//			mailSend mailSend1 = new mailSend();
+//			mailSend1.mail(renamedFileName, uname, error);
+//		}
+		
+		
+		
+//		mailSend mailSend1 = new mailSend();
+//		mailSend1.mail(renamedFileName, uname, error);
 
 		Thread.sleep(2000);
 		File file = new File(renamedFileName);
@@ -856,28 +909,31 @@ public class AddBugTask extends Utilities {
 			file.delete();
 		}
 
-		Thread.sleep(1000);
-		if (Frame1.stop == true) {
-		} else {
-			driver.close();
-			driver.quit();
-		}
+		
+//		if (Frame1.stop == true) {
+//		} else {
+//			driver.close();
+//			driver.quit();
+//		}
+		
+		driver.close();
+		driver.quit();
 
-		if (testcase == true) {
-			Frame1.alertMessage("Script is done");
-		} else {
-			Frame1.alertMessage("Script is stopped 2");
-		}
+//		if (testcase == true) {
+//			Frame1.alertMessage("Script is done");
+//		} else {
+//			Frame1.alertMessage("Script is stopped 2");
+//		}
 
-		Frame1.btnFileUpload.setEnabled(true);
-		Frame1.txtFileUpload.setEnabled(true);
-		Frame1.btnExecuteScript.setEnabled(false);
-		Frame1.btnSetImageFolder.setEnabled(true);
-		Frame1.txtSetImageFolder.setEnabled(true);
-		Frame1.rdbChromeYes.setEnabled(true);
-		Frame1.rdbChromeNo.setEnabled(true);
-		Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
-		Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
+//		Frame1.btnFileUpload.setEnabled(true);
+//		Frame1.txtFileUpload.setEnabled(true);
+//		Frame1.btnExecuteScript.setEnabled(false);
+//		Frame1.btnSetImageFolder.setEnabled(true);
+//		Frame1.txtSetImageFolder.setEnabled(true);
+//		Frame1.rdbChromeYes.setEnabled(true);
+//		Frame1.rdbChromeNo.setEnabled(true);
+//		Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
+//		Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
 	}
 
 	public void zipDirectory(File dir, String zipDirName) throws Exception {
