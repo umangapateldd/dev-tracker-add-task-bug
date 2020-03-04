@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipOutputStream;
@@ -22,13 +21,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import jxl.Cell;
@@ -49,6 +46,9 @@ public class Utilities {
 	String orderlist = "stop";
 	String subOrderList = "stop";
 	int listVal = 0;
+	int numlistVal = 0;
+	int oldnumlistVal = 0;
+	int subnumbercnt = 0;
 	int oldlistVal = 0;
 	int orderListNumber = 0;
 	int subOrderListNumber = 0;
@@ -56,6 +56,9 @@ public class Utilities {
 	int tempsubOrderListNumber = 0;
 	int subNumberCount = 0;
 	int numberCount = 0;
+	int count = 0;
+	int fromIndex = 0;
+	int slashsubnumbercount = 0;
 
 	public void openBrowser(String headless) throws IOException {
 
@@ -151,6 +154,7 @@ public class Utilities {
 				orderListNumber++;
 				orderlist = "start";
 				listVal = 1;
+				numlistVal = 1;
 				oltagString = oltagString + "ol[" + orderListNumber + "]/";
 
 				System.out.println("number start oltagString = " + oltagString + "li[" + listVal + "]");
@@ -162,16 +166,12 @@ public class Utilities {
 				if (arrSplit[ar].toLowerCase().contains("{/number}")) {
 					System.out.println("3333333333333333 = orderListNumber = " + orderListNumber);
 					orderlist = "end";
-				}
-			} else if (arrSplit[ar].toLowerCase().contains("{/number}")) {
-				System.out.println("4444444444 = orderListNumber = " + orderListNumber);
-				orderlist = "end";
-				if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
-					System.out.println("subOrderList with /number with /subnumber = " + subOrderList);
-					subNumberCount = subNumberCount - 1;
-					subOrderList = "end";
+					subnumbercnt = 0;
 				}
 			} else if (arrSplit[ar].toLowerCase().contains("{subnumber}")) {
+				numlistVal = listVal;
+				subnumbercnt = subnumbercnt + 1;
+				System.out.println("subnumbercnt in subnumber tag = " + subnumbercnt);
 
 				System.out.println("oltagString before sub number click = "
 						+ "//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + (listVal) + "]");
@@ -245,17 +245,58 @@ public class Utilities {
 					System.out.println("subOrderList with /subnumber = " + subOrderList);
 					subNumberCount = subNumberCount - 1;
 					subOrderList = "end";
-				}
 
+					String str = arrSplit[ar].toLowerCase();
+					slashsubnumbercount = 0;
+					fromIndex = 0;
+					String strFind = "{/subnumber}";
+
+					while ((fromIndex = str.indexOf(strFind, fromIndex)) != -1) {
+						slashsubnumbercount++;
+						fromIndex++;
+					}
+
+					System.out.println("Total occurrences 2 times /subnumber: " + slashsubnumbercount);
+
+					if (arrSplit[ar].toLowerCase().contains("{/number}")) {
+						System.out.println(
+								"888888 slash sub number with slash subnumber and slash number orderListNumber = "
+										+ orderListNumber);
+						orderlist = "end";
+						subnumbercnt = 0;
+					}
+				}
 			} else if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
 				System.out.println("subOrderList with /subnumber = " + subOrderList);
 				subNumberCount = subNumberCount - 1;
 				subOrderList = "end";
 
+				String str = arrSplit[ar].toLowerCase();
+				slashsubnumbercount = 0;
+				fromIndex = 0;
+				String strFind = "{/subnumber}";
+
+				while ((fromIndex = str.indexOf(strFind, fromIndex)) != -1) {
+					slashsubnumbercount++;
+					fromIndex++;
+				}
+
+				System.out.println("Total occurrences: " + slashsubnumbercount);
+
 				if (arrSplit[ar].toLowerCase().contains("{/number}")) {
 					System.out
 							.println("999999 slash sub number with slash number orderListNumber = " + orderListNumber);
 					orderlist = "end";
+					subnumbercnt = 0;
+				}
+			} else if (arrSplit[ar].toLowerCase().contains("{/number}")) {
+				System.out.println("4444444444 = orderListNumber = " + orderListNumber);
+				orderlist = "end";
+				subnumbercnt = 0;
+				if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
+					System.out.println("subOrderList with /number with /subnumber = " + subOrderList);
+					subNumberCount = subNumberCount - 1;
+					subOrderList = "end";
 				}
 			}
 
@@ -753,6 +794,20 @@ public class Utilities {
 						}
 					}
 				} else {
+					try {
+						System.out.println("try");
+						System.out.println(oltagString + "li[" + listVal + "]");
+						driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString
+								+ "li[" + listVal + "]")).getText();
+					} catch (NoSuchElementException e) {
+						System.out.println("catch");
+						int lisize = driver
+								.findElements(By.xpath(
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li"))
+								.size();
+						listVal = lisize;
+					}
+
 					if (driver.findElement(By.xpath(
 							"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + listVal + "]"))
 							.getText().isEmpty()) {
@@ -1285,38 +1340,63 @@ public class Utilities {
 			if (subOrderList.equals("end")) {
 				System.out.println("end subnumber 123123123123 = //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
 						+ oltagString + "li[" + listVal + "]");
-				driver.findElement(By.xpath(
-						"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + listVal + "]"))
-						.sendKeys(Keys.CONTROL + "[");
-				subOrderList = "stop";
-				orderListNumber = tempListNumber;
 
-				listVal = oldlistVal;
-				System.out.println("before orderListNumber = " + orderListNumber);
-				System.out.println("before subOrderListNumber = " + subOrderListNumber);
-				System.out.println("before tempsubListNumber = " + tempsubOrderListNumber);
+				int k = 0;
+				while (k < slashsubnumbercount) {
+					subnumbercnt = subnumbercnt - 1;
+					System.out.println("while loop k = " + k);
+					System.out.println("subnumbercnt deduct = " + subnumbercnt);
+					driver.findElement(By.xpath(
+							"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + listVal + "]"))
+							.sendKeys(Keys.CONTROL + "[");
+					k++;
 
-				System.out.println("before replace = " + oltagString);
-				if (tempsubOrderListNumber != 0) {
-					System.out.println("temp order list is not 0");
-					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
-				} else {
-					System.out.println("temp order list is 0");
-					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
-				}
-				System.out.println("after replace = " + oltagString);
+					subOrderList = "stop";
+					orderListNumber = tempListNumber;
 
-				if (tempsubOrderListNumber != 0) {
-					subOrderListNumber = tempsubOrderListNumber;
-				}
+					listVal = oldlistVal;
 
-				System.out.println("after orderListNumber = " + orderListNumber);
-				System.out.println("after subOrderListNumber = " + subOrderListNumber);
-				System.out.println("after tempsubListNumber = " + tempsubOrderListNumber);
+					System.out.println("before orderListNumber = " + orderListNumber);
+					System.out.println("before subOrderListNumber = " + subOrderListNumber);
+					System.out.println("before tempsubListNumber = " + tempsubOrderListNumber);
 
-				System.out.println("suborder list end but subNumberCount = " + subNumberCount
-						+ " xpath is //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + listVal
-						+ "]");
+					System.out.println("before replace = " + oltagString);
+
+					String str = oltagString;
+					count = 0;
+					fromIndex = 0;
+
+					String strFind = "/ol[" + subOrderListNumber + "]/";
+
+					while ((fromIndex = str.indexOf(strFind, fromIndex)) != -1) {
+						count++;
+						fromIndex++;
+					}
+
+					System.out.println("Total occurrences oltagString : " + count);
+
+					if (tempsubOrderListNumber != 0) {
+						System.out.println("temp order list is not 0");
+						oltagString = oltagString.substring(0, oltagString.length() - 6);
+//					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
+					} else {
+						System.out.println("temp order list is 0");
+						oltagString = oltagString.substring(0, oltagString.length() - 6);
+//					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
+					}
+					System.out.println("after replace = " + oltagString);
+
+					if (tempsubOrderListNumber != 0) {
+						subOrderListNumber = tempsubOrderListNumber;
+					}
+
+					System.out.println("after orderListNumber = " + orderListNumber);
+					System.out.println("after subOrderListNumber = " + subOrderListNumber);
+					System.out.println("after tempsubListNumber = " + tempsubOrderListNumber);
+
+					System.out.println("suborder list end but subNumberCount = " + subNumberCount
+							+ " xpath is //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li["
+							+ listVal + "]");
 //				if (subNumberCount == 0) {
 ////					oltagString = "ol[" + orderListNumber + "]/li[" + listVal + "]";
 //				} else {
@@ -1324,6 +1404,17 @@ public class Utilities {
 //					subOrderListNumber = subOrderListNumber - 1;
 //					System.out.println("subOrderListNumber after = " + subOrderListNumber);
 //				}
+				}
+
+				if (subnumbercnt == 0) {
+					numlistVal++;
+					System.out.println("numlistVal = " + numlistVal);
+					subOrderList = "stop";
+					listVal = numlistVal;
+				}
+
+				k = 0;
+				slashsubnumbercount = 0;
 			}
 		}
 
@@ -1353,6 +1444,12 @@ public class Utilities {
 		subOrderList = "stop";
 		listVal = 0;
 		oldlistVal = 0;
+		numlistVal = 0;
+		oldnumlistVal = 0;
+		subnumbercnt = 0;
+		count = 0;
+		fromIndex = 0;
+		slashsubnumbercount = 0;
 
 		Frame1.appendText("Removing Extra Space");
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
@@ -1384,7 +1481,8 @@ public class Utilities {
 						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
 						now = LocalDateTime.now();
 						Frame1.appendText("time 4 = " + dtf.format(now));
-						List<WebElement> myResult = driver.findElements(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"));
+						List<WebElement> myResult = driver.findElements(
+								By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"));
 						System.out.println(myResult.size());
 						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
 						now = LocalDateTime.now();

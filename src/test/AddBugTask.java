@@ -916,8 +916,8 @@ public class AddBugTask extends Utilities {
 //			driver.quit();
 //		}
 		
-		driver.close();
-		driver.quit();
+//		driver.close();
+//		driver.quit();
 
 //		if (testcase == true) {
 //			Frame1.alertMessage("Script is done");
