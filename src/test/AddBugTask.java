@@ -319,7 +319,6 @@ public class AddBugTask extends Utilities {
 					}
 					if (found == true) {
 						selec.selectByVisibleText(milestone.getContents());
-						Thread.sleep(1500);
 					} else {
 						// Create new milestone
 						driver.findElement(By.id("addmilestone")).click();
@@ -338,6 +337,8 @@ public class AddBugTask extends Utilities {
 
 						driver.findElement(By.id("savemilestone")).click();
 					}
+
+					Thread.sleep(2500);
 
 					try {
 						Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
@@ -840,7 +841,6 @@ public class AddBugTask extends Utilities {
 			Assert.assertTrue(testcase);
 
 			testcase = true;
-			mailSend.mail(renamedFileName, uname, error);
 		} catch (AssertionError e) {
 			Frame1.btnFileUpload.setEnabled(false);
 			Frame1.txtFileUpload.setEnabled(false);

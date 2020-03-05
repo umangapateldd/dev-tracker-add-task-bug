@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileLock;
 import java.security.GeneralSecurityException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -166,7 +164,7 @@ public class Utilities {
 			} else if (arrSplit[ar].toLowerCase().contains("{subnumber}")) {
 				numlistVal = listVal;
 				subnumbercnt = subnumbercnt + 1;
-				
+
 				driver.findElement(By.xpath(
 						"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + (listVal) + "]"))
 						.sendKeys(Keys.CONTROL + "]");
@@ -1289,7 +1287,7 @@ public class Utilities {
 						oltagString = oltagString.substring(0, oltagString.length() - 6);
 //					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
 					}
-					
+
 					if (tempsubOrderListNumber != 0) {
 						subOrderListNumber = tempsubOrderListNumber;
 					}
@@ -1339,49 +1337,49 @@ public class Utilities {
 		slashsubnumbercount = 0;
 
 		Frame1.appendText("Removing Extra Space");
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-		LocalDateTime now = LocalDateTime.now();
-		Frame1.appendText(dtf.format(now));
+//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//		LocalDateTime now = LocalDateTime.now();
+//		Frame1.appendText(dtf.format(now));
 
 		int pTag = 2;
 		int totalPTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
 		while (pTag <= totalPTag) {
-			dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-			now = LocalDateTime.now();
-			Frame1.appendText("time 1 = " + dtf.format(now));
+//			dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//			now = LocalDateTime.now();
+//			Frame1.appendText("time 1 = " + dtf.format(now));
 			if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 					.size() > 0) {
-				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-				now = LocalDateTime.now();
-				Frame1.appendText("time 2 = " + dtf.format(now));
+//				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//				now = LocalDateTime.now();
+//				Frame1.appendText("time 2 = " + dtf.format(now));
 				if (pTag == 2 && driver
 						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 						.getText().isEmpty()) {
 					pTag = pTag + 2;
 				} else {
-					dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-					now = LocalDateTime.now();
-					Frame1.appendText("time 3 = " + dtf.format(now));
+//					dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//					now = LocalDateTime.now();
+//					Frame1.appendText("time 3 = " + dtf.format(now));
 					if (driver
 							.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
 							.getText().isEmpty()) {
-						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-						now = LocalDateTime.now();
-						Frame1.appendText("time 4 = " + dtf.format(now));
+//						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//						now = LocalDateTime.now();
+//						Frame1.appendText("time 4 = " + dtf.format(now));
 						List<WebElement> myResult = driver.findElements(
 								By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"));
-						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-						now = LocalDateTime.now();
-						Frame1.appendText("time 14 = " + dtf.format(now));
+//						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//						now = LocalDateTime.now();
+//						Frame1.appendText("time 14 = " + dtf.format(now));
 						if (driver
 								.findElements(By
 										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
 								.size() > 0) {
 							pTag++;
 						} else {
-							dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-							now = LocalDateTime.now();
-							Frame1.appendText("time 5 = " + dtf.format(now));
+//							dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//							now = LocalDateTime.now();
+//							Frame1.appendText("time 5 = " + dtf.format(now));
 							if (driver
 									.findElements(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
@@ -1407,21 +1405,21 @@ public class Utilities {
 								js.executeScript("arguments[0].remove()", driver.findElement(
 										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
 							} else {
-								dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-								now = LocalDateTime.now();
-								Frame1.appendText("time 6 = " + dtf.format(now));
+//								dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//								now = LocalDateTime.now();
+//								Frame1.appendText("time 6 = " + dtf.format(now));
 								pTag++;
 							}
 						}
 					} else {
-						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-						now = LocalDateTime.now();
-						Frame1.appendText("time 7 = " + dtf.format(now));
+//						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//						now = LocalDateTime.now();
+//						Frame1.appendText("time 7 = " + dtf.format(now));
 						pTag++;
 					}
-					dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-					now = LocalDateTime.now();
-					Frame1.appendText("time 8 = " + dtf.format(now));
+//					dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//					now = LocalDateTime.now();
+//					Frame1.appendText("time 8 = " + dtf.format(now));
 					if (driver
 							.findElements(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br"))
@@ -1437,9 +1435,9 @@ public class Utilities {
 		}
 		Frame1.appendText("extra space remove done");
 
-		dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-		now = LocalDateTime.now();
-		Frame1.appendText(dtf.format(now));
+//		dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+//		now = LocalDateTime.now();
+//		Frame1.appendText(dtf.format(now));
 	}
 
 	public void checkLoader() throws InterruptedException {

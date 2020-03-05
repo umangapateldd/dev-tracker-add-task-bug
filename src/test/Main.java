@@ -1,14 +1,10 @@
 package test;
 
-import java.io.IOException;
-
-import org.testng.TestNG;
-
 public class Main {
-	public static void main(String[] args) throws IOException {
-		TestNG testSuite = new TestNG();
-		testSuite.setTestClasses(new Class[] { AddBugTask.class });
-		testSuite.run();
+//	public static void main(String[] args) throws IOException {
+//		TestNG testSuite = new TestNG();
+//		testSuite.setTestClasses(new Class[] { AddBugTask.class });
+//		testSuite.run();
 		
 //		JLanguageTool langTool = new JLanguageTool(new BritishEnglish());
 //		// comment in to use statistical ngram data:
@@ -29,5 +25,5 @@ public class Main {
 //		Potential error at characters 50-56: Did you mean <suggestion>to the</suggestion>?
 //		Suggested correction(s): [to the]
 
-	}
+//	}
 }
