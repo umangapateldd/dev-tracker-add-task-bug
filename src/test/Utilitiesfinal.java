@@ -31,7 +31,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import jxl.Cell;
 import jxl.Sheet;
 
-public class Utilities {
+public class Utilitiesfinal {
 	WebDriver driver;
 	JavascriptExecutor js;
 	String systemName;
@@ -108,6 +108,7 @@ public class Utilities {
 	@SuppressWarnings("deprecation")
 	public void macTextFormat(String imagePath, Cell descriptionType, String htmlTag, Sheet sh1, int row)
 			throws InterruptedException {
+		System.out.println("func start = " + AddBugTask.oltagStringGlobal);
 		String oltagString = AddBugTask.oltagStringGlobal;
 		int countTag = 0;
 		if (htmlTag.contains("p[")) {
@@ -119,6 +120,7 @@ public class Utilities {
 		}
 
 		String cosString = descriptionType.getContents();
+		System.out.println("cosString = " + cosString);
 		String ACString = "";
 		File ACFile = new File("AC\\" + cosString);
 		if (ACFile.exists()) {
@@ -155,43 +157,92 @@ public class Utilities {
 				numlistVal = 1;
 				oltagString = oltagString + "ol[" + orderListNumber + "]/";
 
+				System.out.println("number start oltagString = " + oltagString + "li[" + listVal + "]");
+
 				driver.findElement(
 						By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"))
 						.click();
 
 				if (arrSplit[ar].toLowerCase().contains("{/number}")) {
+					System.out.println("3333333333333333 = orderListNumber = " + orderListNumber);
 					orderlist = "end";
 					subnumbercnt = 0;
 				}
 			} else if (arrSplit[ar].toLowerCase().contains("{subnumber}")) {
 				numlistVal = listVal;
 				subnumbercnt = subnumbercnt + 1;
-				
+				System.out.println("subnumbercnt in subnumber tag = " + subnumbercnt);
+
+				System.out.println("oltagString before sub number click = "
+						+ "//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + (listVal) + "]");
+
 				driver.findElement(By.xpath(
 						"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + (listVal) + "]"))
 						.sendKeys(Keys.CONTROL + "]");
 
 				if (orderlist.equals("end") || orderlist.equals("stop")) {
+					System.out.println("if orderlist val = " + orderlist);
 					subOrderListNumber = 1;
 				} else {
 					if (subOrderList.equals("start")) {
+						System.out.println("if sub order list = " + subOrderList);
 						tempsubOrderListNumber = subOrderListNumber;
 						subOrderListNumber = 1;
 					} else {
+						System.out.println("else subOrderList val = " + subOrderList);
 						subOrderListNumber = subOrderListNumber + 1;
 					}
 				}
 
+				System.out.println("subOrderListNumber = " + subOrderListNumber);
+
 				oltagString = oltagString + "ol[" + subOrderListNumber + "]/";
+
+//				System.out.println("li count = /li[" + (listVal - 1) + "]");
+//				oltagString = oltagString.replace("/li[" + (listVal - 1) + "]", "");
+//
+//				System.out
+//						.println("start subnumber = //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString);
 				oldlistVal = listVal;
+//
+//				if (subNumberCount == 0) {
+//					System.out.println("ppppppppppppp");
+//					subOrderListNumber = 1;
+//				} else {
+//					System.out.println("qqqqqqqqqqqqqq");
+//					if (!subOrderList.equals("end")) {
+//						System.out.println("rrrrrrrrrrrrr");
+//						subOrderListNumber = subOrderListNumber + 1;
+//					} else {
+//						System.out.println("sssssssssssssssss");
+//						subOrderListNumber = 1;
+//					}
+//				}
 
 				subNumberCount = subNumberCount + 1;
 				subOrderList = "start";
 
 				listVal = 1;
+
+//				if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString))
+//						.size() > 0) {
+//					System.out.println("something problem in xpath = //*[@id='description']/div/div[3]/div[3]/div[2]/"
+//							+ oltagString);
+//				} else {
+//
+////					for (int oltag = 1; oltag <= 15; oltag++) {
+//					System.out.println("oltagString sub number before replace = " + oltagString);
+//					System.out.println("111111111 > = ol[" + orderListNumber + "]/li[" + oldlistVal + "]");
+//					oltagString = oltagString.replace("ol[" + orderListNumber + "]/li[" + oldlistVal + "]",
+//							"ol[" + orderListNumber + "]") + "/ol[" + subOrderListNumber + "]/li[" + listVal + "]";
 				tempListNumber = orderListNumber;
+//					orderListNumber = subOrderListNumber;
+				System.out.println("oltagString sub number = " + oltagString);
+////					}	
+//				}
 
 				if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
+					System.out.println("subOrderList with /subnumber = " + subOrderList);
 					subNumberCount = subNumberCount - 1;
 					subOrderList = "end";
 
@@ -205,12 +256,18 @@ public class Utilities {
 						fromIndex++;
 					}
 
+					System.out.println("Total occurrences 2 times /subnumber: " + slashsubnumbercount);
+
 					if (arrSplit[ar].toLowerCase().contains("{/number}")) {
+						System.out.println(
+								"888888 slash sub number with slash subnumber and slash number orderListNumber = "
+										+ orderListNumber);
 						orderlist = "end";
 						subnumbercnt = 0;
 					}
 				}
 			} else if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
+				System.out.println("subOrderList with /subnumber = " + subOrderList);
 				subNumberCount = subNumberCount - 1;
 				subOrderList = "end";
 
@@ -224,6 +281,8 @@ public class Utilities {
 					fromIndex++;
 				}
 
+				System.out.println("Total occurrences: " + slashsubnumbercount);
+
 				if (arrSplit[ar].toLowerCase().contains("{/number}")) {
 					System.out
 							.println("999999 slash sub number with slash number orderListNumber = " + orderListNumber);
@@ -231,9 +290,11 @@ public class Utilities {
 					subnumbercnt = 0;
 				}
 			} else if (arrSplit[ar].toLowerCase().contains("{/number}")) {
+				System.out.println("4444444444 = orderListNumber = " + orderListNumber);
 				orderlist = "end";
 				subnumbercnt = 0;
 				if (arrSplit[ar].toLowerCase().contains("{/subnumber}")) {
+					System.out.println("subOrderList with /number with /subnumber = " + subOrderList);
 					subNumberCount = subNumberCount - 1;
 					subOrderList = "end";
 				}
@@ -244,6 +305,8 @@ public class Utilities {
 			arrSplit[ar] = arrSplit[ar].replace("{/number}", "");
 			arrSplit[ar] = arrSplit[ar].replace("{subnumber}", "");
 			arrSplit[ar] = arrSplit[ar].replace("{/subnumber}", "");
+			System.out.println("content = " + arrSplit[ar]);
+			System.out.println("oltagstring = " + oltagString + "li[" + listVal + "]");
 			File tempFile = new File(imagePath + arrSplit[ar]);
 			String imageURL = "";
 			if (arrSplit[ar].isEmpty()) {
@@ -732,9 +795,12 @@ public class Utilities {
 					}
 				} else {
 					try {
+						System.out.println("try");
+						System.out.println(oltagString + "li[" + listVal + "]");
 						driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString
 								+ "li[" + listVal + "]")).getText();
 					} catch (NoSuchElementException e) {
+						System.out.println("catch");
 						int lisize = driver
 								.findElements(By.xpath(
 										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li"))
@@ -1240,11 +1306,25 @@ public class Utilities {
 
 			if (orderlist.equals("start") || orderlist.equals("end")) {
 				listVal++;
+//				oltagString = oltagString + "/li[" + listVal + "]";
+				System.out.println("oltagstring after adding line in editor = " + oltagString + "li[" + listVal + "]");
+//				if (oltagString.contains("/li[" + (listVal - 1) + "]")) {
+//					System.out.println("iffffffffffffffffffffffffffffff");
+//					System.out.println("before replace = " + oltagString + "li[" + listVal + "]");
+////					oltagString = oltagString.replace("/li[" + (listVal - 1) + "]", "");
+//					System.out.println("after replace = " + oltagString + "li[" + listVal + "]");
+//				} else if (!oltagString.contains("/li[" + listVal + "]")) {
+//					System.out.println("elseeeeeeeeeee iffffffffffffffffffffffffffffff");
+//					System.out.println("before = " + oltagString + "li[" + listVal + "]");
+////					oltagString = oltagString + "/li[" + listVal + "]";
+//					System.out.println("after = " + oltagString + "li[" + listVal + "]");
+//				}
 			} else {
 				countTag++;
 			}
 
 			if (orderlist.equals("end")) {
+				System.out.println("222222222222222");
 				driver.findElement(
 						By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"))
 						.click();
@@ -1258,9 +1338,14 @@ public class Utilities {
 			}
 
 			if (subOrderList.equals("end")) {
+				System.out.println("end subnumber 123123123123 = //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/"
+						+ oltagString + "li[" + listVal + "]");
+
 				int k = 0;
 				while (k < slashsubnumbercount) {
 					subnumbercnt = subnumbercnt - 1;
+					System.out.println("while loop k = " + k);
+					System.out.println("subnumbercnt deduct = " + subnumbercnt);
 					driver.findElement(By.xpath(
 							"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li[" + listVal + "]"))
 							.sendKeys(Keys.CONTROL + "[");
@@ -1270,6 +1355,12 @@ public class Utilities {
 					orderListNumber = tempListNumber;
 
 					listVal = oldlistVal;
+
+					System.out.println("before orderListNumber = " + orderListNumber);
+					System.out.println("before subOrderListNumber = " + subOrderListNumber);
+					System.out.println("before tempsubListNumber = " + tempsubOrderListNumber);
+
+					System.out.println("before replace = " + oltagString);
 
 					String str = oltagString;
 					count = 0;
@@ -1282,21 +1373,42 @@ public class Utilities {
 						fromIndex++;
 					}
 
+					System.out.println("Total occurrences oltagString : " + count);
+
 					if (tempsubOrderListNumber != 0) {
+						System.out.println("temp order list is not 0");
 						oltagString = oltagString.substring(0, oltagString.length() - 6);
 //					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
 					} else {
+						System.out.println("temp order list is 0");
 						oltagString = oltagString.substring(0, oltagString.length() - 6);
 //					oltagString = oltagString.replace("/ol[" + subOrderListNumber + "]/", "/");
 					}
-					
+					System.out.println("after replace = " + oltagString);
+
 					if (tempsubOrderListNumber != 0) {
 						subOrderListNumber = tempsubOrderListNumber;
 					}
+
+					System.out.println("after orderListNumber = " + orderListNumber);
+					System.out.println("after subOrderListNumber = " + subOrderListNumber);
+					System.out.println("after tempsubListNumber = " + tempsubOrderListNumber);
+
+					System.out.println("suborder list end but subNumberCount = " + subNumberCount
+							+ " xpath is //*[@id=\"description\"]/div/div[3]/div[3]/div[2]/" + oltagString + "li["
+							+ listVal + "]");
+//				if (subNumberCount == 0) {
+////					oltagString = "ol[" + orderListNumber + "]/li[" + listVal + "]";
+//				} else {
+//					System.out.println("subOrderListNumber before = " + subOrderListNumber);
+//					subOrderListNumber = subOrderListNumber - 1;
+//					System.out.println("subOrderListNumber after = " + subOrderListNumber);
+//				}
 				}
 
 				if (subnumbercnt == 0) {
 					numlistVal++;
+					System.out.println("numlistVal = " + numlistVal);
 					subOrderList = "stop";
 					listVal = numlistVal;
 				}
@@ -1308,6 +1420,7 @@ public class Utilities {
 
 		if (AddBugTask.ACFileAvailable.equals("true")) {
 			if (orderlist.equals("start")) {
+				System.out.println("1111111111111");
 				driver.findElement(
 						By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"))
 						.click();
@@ -1370,6 +1483,7 @@ public class Utilities {
 						Frame1.appendText("time 4 = " + dtf.format(now));
 						List<WebElement> myResult = driver.findElements(
 								By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"));
+						System.out.println(myResult.size());
 						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
 						now = LocalDateTime.now();
 						Frame1.appendText("time 14 = " + dtf.format(now));
@@ -1488,4 +1602,33 @@ public class Utilities {
 			return false;
 		}
 	}
+
+	public String getAbsoluteXPath(WebElement element) {
+		return (String) ((JavascriptExecutor) driver)
+				.executeScript("function absoluteXPath(element) {" + "var comp, comps = [];" + "var parent = null;"
+						+ "var xpath = '';" + "var getPos = function(element) {" + "var position = 1, curNode;"
+						+ "if (element.nodeType == Node.ATTRIBUTE_NODE) {" + "return null;" + "}"
+						+ "for (curNode = element.previousSibling; curNode; curNode = curNode.previousSibling) {"
+						+ "if (curNode.nodeName == element.nodeName) {" + "++position;" + "}" + "}" + "return position;"
+						+ "};" +
+
+						"if (element instanceof Document) {" + "return '/';" + "}" +
+
+						"for (; element && !(element instanceof Document); element = element.nodeType == Node.ATTRIBUTE_NODE ? element.ownerElement : element.parentNode) {"
+						+ "comp = comps[comps.length] = {};" + "switch (element.nodeType) {" + "case Node.TEXT_NODE:"
+						+ "comp.name = 'text()';" + "break;" + "case Node.ATTRIBUTE_NODE:"
+						+ "comp.name = '@' + element.nodeName;" + "break;" + "case Node.PROCESSING_INSTRUCTION_NODE:"
+						+ "comp.name = 'processing-instruction()';" + "break;" + "case Node.COMMENT_NODE:"
+						+ "comp.name = 'comment()';" + "break;" + "case Node.ELEMENT_NODE:"
+						+ "comp.name = element.nodeName;" + "break;" + "}" + "comp.position = getPos(element);" + "}" +
+
+						"for (var i = comps.length - 1; i >= 0; i--) {" + "comp = comps[i];"
+						+ "xpath += '/' + comp.name.toLowerCase();" + "if (comp.position !== null) {"
+						+ "xpath += '[' + comp.position + ']';" + "}" + "}" +
+
+						"return xpath;" +
+
+						"} return absoluteXPath(arguments[0]);", element);
+	}
+
 }

@@ -17,7 +17,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
@@ -172,13 +171,13 @@ public class AddBugTask extends Utilities {
 
 			openBrowser(headless);
 			driver.get(DevTrackerURL.getContents());
-			
+
 			if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
 				driver.findElement(By.name("access_login")).sendKeys(DevTrackerStageAccessUsername);
 				driver.findElement(By.name("access_password")).sendKeys(DevTrackerStageAccessPassword);
 				driver.findElement(By.name("access_password")).sendKeys(Keys.ENTER);
 			}
-			
+
 			driver.findElement(By.name("username")).click();
 			driver.findElement(By.name("username")).clear();
 			driver.findElement(By.name("username")).sendKeys(uname);
@@ -285,7 +284,7 @@ public class AddBugTask extends Utilities {
 					} else {
 						driver.get(DevTrackerURL.getContents()
 								+ "index.php?route=common/task/loadDetailForm&project_id=0");
-						
+
 						driver.findElement(
 								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B1").get(0).get(0).toString()))
 								.click();
@@ -295,11 +294,11 @@ public class AddBugTask extends Utilities {
 						driver.findElement(
 								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B2").get(0).get(0).toString()))
 								.sendKeys(Keys.ENTER);
-						
+
 					}
 
 					if (driver.findElements(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).size() > 0) {
-						driver.findElement(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).click();						
+						driver.findElement(By.xpath("//*[@id=\"gritter-item-1\"]/div[2]/a")).click();
 					}
 
 					projectName = driver
@@ -311,11 +310,11 @@ public class AddBugTask extends Utilities {
 
 					Boolean found = false;
 					List<WebElement> allOptions = selec.getOptions();
-					
+
 					for (WebElement we : allOptions) {
 						if (we.getText().equals(milestone.getContents())) {
 							found = true;
-							
+
 						}
 					}
 					if (found == true) {
@@ -345,10 +344,10 @@ public class AddBugTask extends Utilities {
 
 						found = false;
 						List<WebElement> allOptions1 = selec1.getOptions();
-						
+
 						for (WebElement we : allOptions1) {
 							if (we.getText().equals(taskcategory.getContents())) {
-								found = true;								
+								found = true;
 							}
 						}
 
@@ -363,7 +362,6 @@ public class AddBugTask extends Utilities {
 					} catch (StaleElementReferenceException e) {
 						Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
 
-						
 						found = false;
 						List<WebElement> allOptions1 = selec1.getOptions();
 
@@ -372,7 +370,7 @@ public class AddBugTask extends Utilities {
 								found = true;
 							}
 						}
-						
+
 						if (found == true) {
 							selec1.selectByVisibleText(taskcategory.getContents());
 						} else {
@@ -383,19 +381,16 @@ public class AddBugTask extends Utilities {
 						}
 					}
 
-					
-
 					task_bug_radio_button_selection();
 
 					// submit button click for validation verification
 					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 							.click();
 
-					
 					if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
 						Frame1.appendText(taskType.getContents() + " selection again");
 						error = taskType.getContents() + " selection again";
-						
+
 						task_bug_radio_button_selection();
 					}
 
@@ -405,7 +400,6 @@ public class AddBugTask extends Utilities {
 					js.executeScript("window.scrollBy(0,250)");
 
 					driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).click();
-					
 
 					// reference
 					if (references.getContents().isEmpty()) {
@@ -418,17 +412,8 @@ public class AddBugTask extends Utilities {
 				}
 
 				// COS
-				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-				now = LocalDateTime.now();
-				System.out.println("cos start = " + dtf.format(now));
-				System.out.println("cos content = " + cos);
-				
 				macTextFormat(imagePath, cos, "xyz", sh1, row);
-				
-				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-				now = LocalDateTime.now();
-				System.out.println("cos end = " + dtf.format(now));
-				
+
 				if (acceptanceCriteria.equals("false")) {
 //					removeExtraSpace();
 
@@ -454,8 +439,6 @@ public class AddBugTask extends Utilities {
 					} else {
 						Frame1.appendText("Issue in added description");
 					}
-
-					
 
 					js = (JavascriptExecutor) driver;
 					js.executeScript("window.scrollBy(0,350)");
@@ -641,7 +624,7 @@ public class AddBugTask extends Utilities {
 					if (taskStatus.getContents().isEmpty()) {
 						Frame1.appendText("Status is not available so set as default");
 					} else {
-						
+
 						List<WebElement> options = driver.findElements(By.xpath("//select[@id='status']/option"));
 
 						for (WebElement option : options) {
@@ -655,7 +638,7 @@ public class AddBugTask extends Utilities {
 					if (assignee.getContents().isEmpty()) {
 						Frame1.appendText("Assignee user is not available in excel sheet");
 					} else {
-						
+
 						List<WebElement> options = driver
 								.findElements(By.xpath("//select[@id='assign_user_id']/option"));
 						for (WebElement option : options) {
@@ -684,7 +667,6 @@ public class AddBugTask extends Utilities {
 					} else {
 						multipleFileUpload.fileUpload(driver, imagePath, uploadDocuments);
 						driver.findElement(By.id("startall")).click();
-						
 
 						int tmp = 0;
 
@@ -715,26 +697,24 @@ public class AddBugTask extends Utilities {
 				}
 
 				if (AddBugTask.ACFileAvailable.equals("true")) {
-					System.out.println("AddBugTask.ACFileAvailable = " + AddBugTask.ACFileAvailable);
 					removeExtraSpace();
 					now = LocalDateTime.now();
 					Frame1.appendText(dtf.format(now));
-					System.out.println("submit request");
-//					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-//							.click();
-//					checkLoader();
-//					testcase = true;
-//					error = "complete";
-//					driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-//
-//					DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-//					Frame1.appendText(DevTrackerNumber);
-//
-//					if (bug_tracking_sheet.toLowerCase().equals("yes")) {
-//						createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
-//								taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
-//								taskType.getContents());
-//					}
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+							.click();
+					checkLoader();
+					testcase = true;
+					error = "complete";
+					driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+
+					DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+					Frame1.appendText(DevTrackerNumber);
+
+					if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+						createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
+								taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
+								taskType.getContents());
+					}
 				} else {
 					System.out.println("AddBugTask.ACFileAvailable = " + AddBugTask.ACFileAvailable);
 					System.out.println(acceptanceCriteria_nextRow + " before remove extra space");
@@ -745,22 +725,22 @@ public class AddBugTask extends Utilities {
 						now = LocalDateTime.now();
 						Frame1.appendText(dtf.format(now));
 						System.out.println("submit request");
-//						driver.findElement(
-//								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-//								.click();
-//						checkLoader();
-//						testcase = true;
-//						error = "complete";
-//						driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-//
-//						DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-//						Frame1.appendText(DevTrackerNumber);
-//
-//						if (bug_tracking_sheet.toLowerCase().equals("yes")) {
-//							createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
-//									taskTitle.getContents(), projectName, originator.getContents(),
-//									reporter.getContents(), taskType.getContents());
-//						}
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+								.click();
+						checkLoader();
+						testcase = true;
+						error = "complete";
+						driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+
+						DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+						Frame1.appendText(DevTrackerNumber);
+
+						if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+							createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
+									taskTitle.getContents(), projectName, originator.getContents(),
+									reporter.getContents(), taskType.getContents());
+						}
 					}
 				}
 				row++;
@@ -776,19 +756,19 @@ public class AddBugTask extends Utilities {
 				driver.findElement(By.xpath("//*[@id='username']")).clear();
 				driver.findElement(By.xpath("//*[@id='username']"))
 						.sendKeys(BranchCreateSheetName.getCell(1, 1).getContents());
-				
+
 				driver.findElement(By.xpath("//*[@id='login-submit']")).click();
 				driver.findElement(By.xpath("//*[@id='password']")).clear();
 				driver.findElement(By.xpath("//*[@id='password']"))
 						.sendKeys(BranchCreateSheetName.getCell(1, 2).getContents());
-				
+
 				driver.findElement(By.xpath("//*[@id='login-submit']")).click();
 
 				boolean repositoriesMatch = false;
 				int repositoriesrow = 1;
 				BranchMilestone = "baseproject";
 				while (repositoriesMatch == false) {
-					
+
 					if (checkElementAvailibility(
 							"//*[@id='root']/div/div/div[2]/div/div/div[1]/div/div/div/div/section/div/table/tbody/tr["
 									+ repositoriesrow + "]/td[1]/div/div[2]/span/a")) {
@@ -847,30 +827,30 @@ public class AddBugTask extends Utilities {
 	public void bugadd_fun_verify() throws Exception, InterruptedException {
 		try {
 
-//			Frame1.btnFileUpload.setEnabled(true);
-//			Frame1.txtFileUpload.setEnabled(true);
-//			Frame1.btnExecuteScript.setEnabled(false);
-//			Frame1.btnSetImageFolder.setEnabled(true);
-//			Frame1.txtSetImageFolder.setEnabled(true);
-//			Frame1.rdbChromeYes.setEnabled(true);
-//			Frame1.rdbChromeNo.setEnabled(true);
-//			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
-//			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
+			Frame1.btnFileUpload.setEnabled(true);
+			Frame1.txtFileUpload.setEnabled(true);
+			Frame1.btnExecuteScript.setEnabled(false);
+			Frame1.btnSetImageFolder.setEnabled(true);
+			Frame1.txtSetImageFolder.setEnabled(true);
+			Frame1.rdbChromeYes.setEnabled(true);
+			Frame1.rdbChromeNo.setEnabled(true);
+			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
+			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
 
 			Assert.assertTrue(testcase);
 
 			testcase = true;
 			mailSend.mail(renamedFileName, uname, error);
 		} catch (AssertionError e) {
-//			Frame1.btnFileUpload.setEnabled(false);
-//			Frame1.txtFileUpload.setEnabled(false);
-//			Frame1.btnExecuteScript.setEnabled(true);
-//			Frame1.btnSetImageFolder.setEnabled(false);
-//			Frame1.txtSetImageFolder.setEnabled(false);
-//			Frame1.rdbChromeYes.setEnabled(false);
-//			Frame1.rdbChromeNo.setEnabled(false);
-//			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
-//			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
+			Frame1.btnFileUpload.setEnabled(false);
+			Frame1.txtFileUpload.setEnabled(false);
+			Frame1.btnExecuteScript.setEnabled(true);
+			Frame1.btnSetImageFolder.setEnabled(false);
+			Frame1.txtSetImageFolder.setEnabled(false);
+			Frame1.rdbChromeYes.setEnabled(false);
+			Frame1.rdbChromeNo.setEnabled(false);
+			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
+			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
 
 			System.out.println("Script is failed");
 			File f = new File(outputFolderName);
@@ -891,17 +871,11 @@ public class AddBugTask extends Utilities {
 			error = "Something problem in script";
 		}
 
-		
-//		if (Frame1.stop == true) {
-//		} else {
-//			mailSend mailSend1 = new mailSend();
-//			mailSend1.mail(renamedFileName, uname, error);
-//		}
-		
-		
-		
-//		mailSend mailSend1 = new mailSend();
-//		mailSend1.mail(renamedFileName, uname, error);
+		if (Frame1.stop == true) {
+		} else {
+			mailSend mailSend1 = new mailSend();
+			mailSend1.mail(renamedFileName, uname, error);
+		}
 
 		Thread.sleep(2000);
 		File file = new File(renamedFileName);
@@ -909,31 +883,30 @@ public class AddBugTask extends Utilities {
 			file.delete();
 		}
 
-		
-//		if (Frame1.stop == true) {
-//		} else {
-//			driver.close();
-//			driver.quit();
-//		}
-		
+		if (Frame1.stop == true) {
+		} else {
+			driver.close();
+			driver.quit();
+		}
+
 //		driver.close();
 //		driver.quit();
 
-//		if (testcase == true) {
-//			Frame1.alertMessage("Script is done");
-//		} else {
-//			Frame1.alertMessage("Script is stopped 2");
-//		}
+		if (testcase == true) {
+			Frame1.alertMessage("Script is done");
+		} else {
+			Frame1.alertMessage("Script is stopped 2");
+		}
 
-//		Frame1.btnFileUpload.setEnabled(true);
-//		Frame1.txtFileUpload.setEnabled(true);
-//		Frame1.btnExecuteScript.setEnabled(false);
-//		Frame1.btnSetImageFolder.setEnabled(true);
-//		Frame1.txtSetImageFolder.setEnabled(true);
-//		Frame1.rdbChromeYes.setEnabled(true);
-//		Frame1.rdbChromeNo.setEnabled(true);
-//		Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
-//		Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
+		Frame1.btnFileUpload.setEnabled(true);
+		Frame1.txtFileUpload.setEnabled(true);
+		Frame1.btnExecuteScript.setEnabled(false);
+		Frame1.btnSetImageFolder.setEnabled(true);
+		Frame1.txtSetImageFolder.setEnabled(true);
+		Frame1.rdbChromeYes.setEnabled(true);
+		Frame1.rdbChromeNo.setEnabled(true);
+		Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
+		Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
 	}
 
 	public void zipDirectory(File dir, String zipDirName) throws Exception {
