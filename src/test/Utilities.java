@@ -317,6 +317,42 @@ public class Utilities {
 														+ countTag + "]")));
 							}
 						}
+						System.out.println("xxxxxxxxxxxxxxxxxxxxxxx");
+						System.out.println("before cosBoldConntentCount = " + cosBoldConntentCount);
+						System.out.println("before cosLinkCount = " + cosLinkCount);
+						System.out.println("before cosTagUserSymbolCount = " + cosTagUserSymbolCount);
+
+						if (cosBoldConntentCount > 0) {
+							if (cosBoldConntentCount % 2 == 0) {
+							} else {
+								cosBoldConntentCount = 0;
+							}
+						} else {
+							cosBoldConntentCount = 0;
+						}
+
+						if (cosLinkCount > 0) {
+							if (cosLinkCount % 3 == 0) {
+							} else {
+								cosLinkCount = 0;
+							}
+						} else {
+							cosLinkCount = 0;
+						}
+
+						if (cosTagUserSymbolCount > 0) {
+							if (cosTagUserSymbolCount % 2 == 0) {
+							} else {
+								cosTagUserSymbolCount = 0;
+							}
+						} else {
+							cosTagUserSymbolCount = 0;
+						}
+
+						System.out.println("after cosBoldConntentCount = " + cosBoldConntentCount);
+						System.out.println("after cosLinkCount = " + cosLinkCount);
+						System.out.println("after cosTagUserSymbolCount = " + cosTagUserSymbolCount);
+						System.out.println("==========================");
 
 						if (cosLinkCount > 0 || cosBoldConntentCount > 0 || cosColorConntentCount > 0
 								|| cosTagUserSymbolCount > 0) {
@@ -712,7 +748,9 @@ public class Utilities {
 								}
 							}
 						} else {
-
+							System.out.println("123123123 = " + arrSplit[ar]);
+							System.out.println("StringEscapeUtils.escapeEcmaScript(arrSplit[ar]) = "
+									+ StringEscapeUtils.escapeEcmaScript(arrSplit[ar]));
 							JavascriptExecutor js = (JavascriptExecutor) driver;
 							js.executeScript(
 									"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(arrSplit[ar])
