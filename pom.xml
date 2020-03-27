@@ -21,17 +21,28 @@
 
 	<dependencies>
 
+		<!-- dependency> <groupId>org.languagetool</groupId> <artifactId>language-en</artifactId> 
+			<version>4.8</version> </dependency -->
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
 		<dependency>
-			<groupId>org.languagetool</groupId>
-			<artifactId>language-en</artifactId>
-			<version>4.8</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.6.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.opentracing/opentracing-api -->
+		<dependency>
+			<groupId>io.opentracing</groupId>
+			<artifactId>opentracing-api</artifactId>
+			<version>0.31.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
-			<version>1.10.8</version>
+			<version>1.10.7</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
@@ -45,21 +56,21 @@
 		<dependency>
 			<groupId>com.google.api-client</groupId>
 			<artifactId>google-api-client</artifactId>
-			<version>1.30.8</version>
+			<version>1.30.9</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client-jetty</artifactId>
-			<version>1.30.5</version>
+			<version>1.30.6</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-sheets -->
 		<dependency>
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-sheets</artifactId>
-			<version>v4-rev20200131-1.30.8</version>
+			<version>v4-rev20200312-1.30.9</version>
 		</dependency>
 
 		<!-- Selenium Dependencies -->
@@ -90,42 +101,87 @@
 
 		<!-- Cucumber Dependencies -->
 
+		<!-- Cucumber Dependencies -->
+
 		<dependency>
-			<groupId>info.cukes</groupId>
+			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
-			<version>1.2.6</version>
+			<version>5.5.0</version>
 		</dependency>
 
 		<dependency>
-			<groupId>info.cukes</groupId>
+			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-core</artifactId>
-			<version>1.2.6</version>
+			<version>5.5.0</version>
 		</dependency>
 
 		<dependency>
-			<groupId>info.cukes</groupId>
+			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-picocontainer</artifactId>
-			<version>1.2.6</version>
+			<version>5.5.0</version>
 			<scope>test</scope>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-jvm -->
 		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-jvm-deps</artifactId>
-			<version>1.0.5</version>
-			<scope>provided</scope>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-jvm</artifactId>
+			<version>5.5.0</version>
+			<type>pom</type>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/messages -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>messages</artifactId>
+			<version>10.0.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-expressions -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-expressions</artifactId>
+			<version>9.0.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-html -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-html</artifactId>
+			<version>0.2.7</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/gherkin -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>gherkin</artifactId>
+			<version>11.0.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-gherkin -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-gherkin</artifactId>
+			<version>5.5.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-plugin -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-plugin</artifactId>
+			<version>5.5.0</version>
 		</dependency>
 
 		<dependency>
-			<groupId>info.cukes</groupId>
+			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-testng</artifactId>
-			<version>1.2.6</version>
+			<version>5.5.0</version>
 		</dependency>
 
 		<dependency>
-			<groupId>info.cukes</groupId>
+			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-junit</artifactId>
-			<version>1.2.6</version>
+			<version>5.5.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -215,6 +271,13 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>28.2-jre</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.guava/failureaccess -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>failureaccess</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 
 		<!-- Log4j Dependencies -->
