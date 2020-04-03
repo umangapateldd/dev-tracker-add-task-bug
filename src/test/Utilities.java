@@ -104,8 +104,8 @@ public class Utilities {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void macTextFormat(String imagePath, Cell descriptionType, String htmlTag, Sheet sh1, int row)
-			throws InterruptedException {
+	public void macTextFormat(String imagePath, String pmName, String pmComment, Cell descriptionType, String htmlTag,
+			Sheet sh1, int row) throws InterruptedException {
 		String oltagString = AddBugTask.oltagStringGlobal;
 		int countTag = 0;
 		if (htmlTag.contains("p[")) {
@@ -117,6 +117,13 @@ public class Utilities {
 		}
 
 		String cosString = descriptionType.getContents();
+		System.out.println("pmName = " + pmName);
+		System.out.println("pmComment = " + pmComment);
+
+		if (!pmComment.isEmpty()) {
+			cosString = cosString + "\n$Comment from PM:$ ~" + pmName.trim() + "~\n" + pmComment;
+		}
+
 		String ACString = "";
 		File ACFile = new File("AC\\" + cosString);
 		if (ACFile.exists()) {
