@@ -197,16 +197,24 @@ public class AddBugTask extends Utilities {
 //					BranchCreateSheet = true;
 //					break;
 //				}
-				if (sheetNames[i].equals("Approved Bugs by PM")) {
+				if (sheetNames[i].equals(GetSheetData.getData("Dev Tracker!B11").get(0).get(0).toString())) {
 					// bug / task status - TO DO
 					ApprovedBugsByPM = true;
-					sh1 = wb.getSheet(0);
-					executeSheet("To Do");
-				} else if (sheetNames[i].equals("Issues with Deferred status")) {
+					DeferredBugsByPM = false;
+					sh1 = wb.getSheet(sheetNames[i]);
+					executeSheet(GetSheetData.getData("Dev Tracker!B12").get(0).get(0).toString());
+				} else if (sheetNames[i].equals(GetSheetData.getData("Dev Tracker!B13").get(0).get(0).toString())) {
 					// bug / task status - Deferred
 					DeferredBugsByPM = true;
-					sh1 = wb.getSheet(1);
-					executeSheet("PM Review");
+					ApprovedBugsByPM = false;
+					sh1 = wb.getSheet(sheetNames[i]);
+					executeSheet(GetSheetData.getData("Dev Tracker!B14").get(0).get(0).toString());
+				} else {
+					// bug / task status - as per sheet
+					DeferredBugsByPM = false;
+					ApprovedBugsByPM = false;
+					sh1 = wb.getSheet(sheetNames[i]);
+					executeSheet("Any");
 				}
 			}
 		}
@@ -283,7 +291,9 @@ public class AddBugTask extends Utilities {
 				dependent = sh1.getCell(4, row);
 				successor = sh1.getCell(5, row);
 				priority = sh1.getCell(6, row);
-//				taskStatus = sh1.getCell(11, row);
+				if (taskStatus.equals("Any")) {
+					taskStatus = sh1.getCell(16, row).getContents();
+				}
 				assignee = sh1.getCell(7, row);
 				reporter = sh1.getCell(8, row);
 				uploadDocuments = sh1.getCell(9, row);
@@ -653,6 +663,7 @@ public class AddBugTask extends Utilities {
 
 					for (WebElement option : options) {
 						if (option.getText().contains(taskStatus)) {
+							Thread.sleep(1500);
 							option.click();
 							break;
 						}
@@ -661,11 +672,17 @@ public class AddBugTask extends Utilities {
 
 				System.out.println("assignee.getContents() = " + assignee.getContents());
 				if (assignee.getContents().isEmpty()) {
-					Frame1.appendText("Assignee user is not available in excel sheet");
+					if (DeferredBugsByPM == true) {
+						assignee = pmName;
+					} else {
+						Frame1.appendText("Assignee user is not available in excel sheet");
+					}
 				} else {
 					List<WebElement> options = driver.findElements(By.xpath("//select[@id='assign_user_id']/option"));
 					for (WebElement option : options) {
 						if (option.getText().contains(assignee.getContents())) {
+							Thread.sleep(1500);
+							System.out.println("selected option = " + option.getText());
 							option.click();
 							break;
 						}
@@ -679,6 +696,7 @@ public class AddBugTask extends Utilities {
 
 					for (WebElement option : options) {
 						if (option.getText().contains(reporter.getContents())) {
+							Thread.sleep(1500);
 							option.click();
 							break;
 						}
@@ -748,9 +766,8 @@ public class AddBugTask extends Utilities {
 					now = LocalDateTime.now();
 					Frame1.appendText(dtf.format(now));
 					System.out.println("submit request");
-					Thread.sleep(1500000);
-//					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-//							.click();
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+							.click();
 					checkLoader();
 					testcase = true;
 					error = "complete";
