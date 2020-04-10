@@ -5,7 +5,7 @@ public class Main {
 //		TestNG testSuite = new TestNG();
 //		testSuite.setTestClasses(new Class[] { AddBugTask.class });
 //		testSuite.run();
-		
+
 //		JLanguageTool langTool = new JLanguageTool(new BritishEnglish());
 //		// comment in to use statistical ngram data:
 //		//langTool.activateLanguageModelRules(new File("/data/google-ngram-data"));
@@ -17,7 +17,7 @@ public class Main {
 //		  System.out.println("Suggested correction(s): " +
 //		      match.getSuggestedReplacements());
 //		}
-		
+
 //		Potential error at characters 16-17: Use <suggestion>an</suggestion> instead of 'a' if the following word starts with a vowel sound, e.g. 'an article', 'an hour'
 //		Suggested correction(s): [an]
 //		Potential error at characters 31-41: Possible spelling mistake found

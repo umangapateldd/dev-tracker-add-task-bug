@@ -7,6 +7,7 @@ import java.nio.channels.FileLock;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import jxl.Cell;
@@ -61,15 +63,20 @@ public class Utilities {
 	public void openBrowser(String headless) throws IOException {
 
 		DesiredCapabilities chrome = new DesiredCapabilities();
-
+		String downloadFilepath = "F:\\MscIT\\AFD\\dev-tracker-add-task-bug\\Download Files\\";
+		HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+		chromePrefs.put("profile.default_content_settings.popups", 0);
+		chromePrefs.put("download.default_directory", downloadFilepath);
 		ChromeOptions options = new ChromeOptions();
+		options.setExperimentalOption("prefs", chromePrefs);
 		options.addArguments("--test-type");
 		options.addArguments("--disable-popup-blocking");
 		options.addArguments("--proxy-server='direct://'");
 		options.addArguments("--proxy-bypass-list=*");
-		if (headless.equals("No")) {
+		if (headless.toLowerCase().equals("yes")) {
 			options.addArguments("--headless");
 		}
+		options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 		options.setCapability(ChromeOptions.CAPABILITY, chrome);
 		chrome.setJavascriptEnabled(true);
 		systemName = System.getProperty("os.name").toLowerCase();

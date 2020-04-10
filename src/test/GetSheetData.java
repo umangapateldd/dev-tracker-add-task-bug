@@ -68,6 +68,12 @@ public class GetSheetData extends Utilities {
 		service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
 				.setApplicationName(APPLICATION_NAME).build();
 	}
+	
+	public static void getFileName() throws GeneralSecurityException, IOException {
+		if (HTTP_TRANSPORT == null || service == null) {
+			GetSheetData.googleSheetConnection();
+		}
+	}
 
 	public static List<List<Object>> getData(String range) throws IOException, GeneralSecurityException {
 		if (HTTP_TRANSPORT == null || service == null) {

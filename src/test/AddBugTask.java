@@ -127,6 +127,47 @@ public class AddBugTask extends Utilities {
 		}
 	}
 
+	public void downloadFile() throws GeneralSecurityException, IOException, InterruptedException {
+		openBrowser(headless);
+		driver.get("https://docs.google.com/uc?id=156pRgW5rm5-oghUuqptbcsDaA5czoytY&export=download");
+		Thread.sleep(5000);
+//		URL url = new URL("https://docs.google.com/uc?id=156pRgW5rm5-oghUuqptbcsDaA5czoytY&export=download");
+		File folder = new File("F:\\MscIT\\AFD\\dev-tracker-add-task-bug\\Download Files\\");
+		File files[] = folder.listFiles();
+		for (File f : files) {
+			System.out.println(f.getName() + " " + f.lastModified());
+		}
+		Thread.sleep(5000);
+
+//		DriveFile googleDriveFile  = Drive.DriveApi.getFile(googleApiClient, driveId);
+//		MetadataResult mdRslt = googleDriveFile .getMetadata(googleApiClient).await();
+//		if (mdRslt != null && mdRslt.getStatus().isSuccess()) {
+//		  mdRslt.getMetadata().getTitle();
+//		}
+
+//		URL url;
+//		URLConnection con;
+//		DataInputStream dis;
+//		FileOutputStream fos;
+//		byte[] fileData;
+//		try {
+//			url = new URL("https://docs.google.com/uc?id=156pRgW5rm5-oghUuqptbcsDaA5czoytY&export=download"); // File Location goes here
+//			con = url.openConnection(); // open the url connection.
+//			dis = new DataInputStream(con.getInputStream());
+//			fileData = new byte[con.getContentLength()];
+//			for (int q = 0; q < fileData.length; q++) {
+//				fileData[q] = dis.readByte();
+//			}
+//			dis.close(); // close the data input stream
+//			fos = new FileOutputStream(new File("Download File/abc.png")); // FILE Save Location goes
+//																								// here
+//			fos.write(fileData); // write out the file we want to save.
+//			fos.close(); // close the output stream writer
+//		} catch (Exception m) {
+//			System.out.println(m);
+//		}
+	}
+
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
 		if (checkVersion() == true) {
@@ -145,11 +186,13 @@ public class AddBugTask extends Utilities {
 
 			password = sh1.getCell(1, 2);
 
-			if (Frame1.imageDirPath == null || Frame1.imageDirPath.isEmpty()) {
-				imagePath = sh1.getCell(1, 3).getContents();
-			} else {
-				imagePath = Frame1.imageDirPath;
-			}
+//			if (Frame1.imageDirPath == null || Frame1.imageDirPath.isEmpty()) {
+//				imagePath = sh1.getCell(1, 3).getContents();
+//			} else {
+//				imagePath = Frame1.imageDirPath;
+//			}
+
+			imagePath = Frame1.imageDirPath;
 
 			Frame1.appendText("image path = " + imagePath);
 
@@ -259,7 +302,7 @@ public class AddBugTask extends Utilities {
 					System.out.println("acceptanceCriteria = true");
 
 					acceptanceCriteria = "true";
-					cos = sh1.getCell(13, row);
+					cos = sh1.getCell(14, row);
 				}
 			} else {
 				ACFileAvailable = "false";
@@ -281,23 +324,23 @@ public class AddBugTask extends Utilities {
 			if (acceptanceCriteria.equals("false")) {
 				milestone = sh1.getCell(1, row);
 				taskcategory = sh1.getCell(2, row);
-				taskType = sh1.getCell(3, row);
+				taskType = sh1.getCell(9, row);
 				taskTitle = sh1.getCell(11, row);
 				objective = sh1.getCell(12, row);
-				references = sh1.getCell(15, row);
-				cos = sh1.getCell(13, row);
-				pmComment = sh1.getCell(14, row);
-				pmName = sh1.getCell(14, 4);
-				dependent = sh1.getCell(4, row);
-				successor = sh1.getCell(5, row);
-				priority = sh1.getCell(6, row);
+				references = sh1.getCell(13, row);
+				cos = sh1.getCell(14, row);
+				pmComment = sh1.getCell(15, row);
+				pmName = sh1.getCell(15, 4);
+				dependent = sh1.getCell(3, row);
+				successor = sh1.getCell(4, row);
+				priority = sh1.getCell(10, row);
 				if (taskStatus.equals("Any")) {
 					taskStatus = sh1.getCell(16, row).getContents();
 				}
-				assignee = sh1.getCell(7, row);
-				reporter = sh1.getCell(8, row);
-				uploadDocuments = sh1.getCell(9, row);
-				originator = sh1.getCell(10, row);
+				assignee = sh1.getCell(5, row);
+				reporter = sh1.getCell(6, row);
+				uploadDocuments = sh1.getCell(8, row);
+				originator = sh1.getCell(7, row);
 
 				if (milestone.getContents().isEmpty() || taskcategory.getContents().isEmpty()
 						|| taskType.getContents().isEmpty() || taskTitle.getContents().isEmpty()
@@ -872,8 +915,8 @@ public class AddBugTask extends Utilities {
 			Frame1.txtSetImageFolder.setEnabled(true);
 			Frame1.rdbChromeYes.setEnabled(true);
 			Frame1.rdbChromeNo.setEnabled(true);
-			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
-			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
+//			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
+//			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
 
 			Assert.assertTrue(testcase);
 
@@ -886,8 +929,8 @@ public class AddBugTask extends Utilities {
 			Frame1.txtSetImageFolder.setEnabled(false);
 			Frame1.rdbChromeYes.setEnabled(false);
 			Frame1.rdbChromeNo.setEnabled(false);
-			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
-			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
+//			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
+//			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
 
 			System.out.println("Script is failed");
 			File f = new File(outputFolderName);
@@ -942,8 +985,8 @@ public class AddBugTask extends Utilities {
 		Frame1.txtSetImageFolder.setEnabled(true);
 		Frame1.rdbChromeYes.setEnabled(true);
 		Frame1.rdbChromeNo.setEnabled(true);
-		Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
-		Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
+//		Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
+//		Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
 	}
 
 	public void zipDirectory(File dir, String zipDirName) throws Exception {

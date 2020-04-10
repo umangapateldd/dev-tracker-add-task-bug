@@ -13,7 +13,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -43,8 +42,8 @@ public class Frame1 extends Utilities {
 	static JButton btnStopExecution;
 	static JRadioButton rdbChromeYes;
 	static JRadioButton rdbChromeNo;
-	static JRadioButton rdbattachmentFolderFromExcelYes;
-	static JRadioButton rdbattachmentFolderFromExcelNo;
+//	static JRadioButton rdbattachmentFolderFromExcelYes;
+//	static JRadioButton rdbattachmentFolderFromExcelNo;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -73,7 +72,7 @@ public class Frame1 extends Utilities {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 731, 468);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel jp = new JPanel();
+//		JPanel jp = new JPanel();
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
 
@@ -88,7 +87,7 @@ public class Frame1 extends Utilities {
 		JLabel lblImageFolder = new JLabel();
 		JLabel orlabel1 = new JLabel("OR");
 		JLabel orlabel2 = new JLabel("OR");
-		JLabel lblBrowserDisplay = new JLabel("Browser Display ?");
+		JLabel lblScriptBackground = new JLabel("Do you want to execute script in background ?");
 		rdbChromeYes = new JRadioButton();
 		rdbChromeNo = new JRadioButton();
 		ButtonGroup G1 = new ButtonGroup();
@@ -101,22 +100,22 @@ public class Frame1 extends Utilities {
 		btnFileUpload.setBounds(10, 11, 140, 41);
 
 		lblfileUpload.setBounds(460, 15, 209, 28);
-		lblImageFolder.setBounds(460, 116, 209, 28);
+		lblImageFolder.setBounds(261, 70, 245, 28);
 
-		btnSetImageFolder.setBounds(10, 109, 140, 41);
+		btnSetImageFolder.setBounds(10, 70, 140, 41);
 		btnExecuteScript.setBounds(10, 157, 140, 41);
 		btnStopExecution.setBounds(193, 152, 125, 46);
 
-		txtFileUpload.setBounds(193, 17, 260, 28);
-		txtSetImageFolder.setBounds(193, 115, 260, 28);
+		txtFileUpload.setBounds(260, 15, 260, 28);
+		txtSetImageFolder.setBounds(260, 76, 260, 28);
 
 		orlabel1.setBounds(163, 17, 30, 28);
-		orlabel2.setBounds(163, 115, 30, 28);
+		orlabel2.setBounds(160, 76, 30, 28);
 
-		rdbChromeYes.setBounds(550, 163, 52, 28);
-		rdbChromeNo.setBounds(617, 163, 52, 28);
+		rdbChromeYes.setBounds(320, 116, 52, 28);
+		rdbChromeNo.setBounds(370, 116, 52, 28);
 
-		lblBrowserDisplay.setBounds(434, 163, 110, 28);
+		lblScriptBackground.setBounds(10, 118, 330, 28);
 
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
@@ -135,7 +134,7 @@ public class Frame1 extends Utilities {
 		frame.getContentPane().add(orlabel2);
 		frame.getContentPane().add(rdbChromeYes);
 		frame.getContentPane().add(rdbChromeNo);
-		frame.getContentPane().add(lblBrowserDisplay);
+		frame.getContentPane().add(lblScriptBackground);
 
 		rdbChromeYes.setText("Yes");
 		rdbChromeNo.setText("No");
@@ -149,23 +148,23 @@ public class Frame1 extends Utilities {
 		sampleScrollPane.setBounds(10, 209, 443, 214);
 		frame.getContentPane().add(sampleScrollPane);
 
-		JLabel attachmentFolderFromExcel = new JLabel("Attachments folder from excel ?");
-		attachmentFolderFromExcel.setBounds(10, 70, 200, 28);
-		frame.getContentPane().add(attachmentFolderFromExcel);
+//		JLabel attachmentFolderFromExcel = new JLabel("Attachments folder from excel ?");
+//		attachmentFolderFromExcel.setBounds(10, 70, 200, 28);
+//		frame.getContentPane().add(attachmentFolderFromExcel);
 
-		rdbattachmentFolderFromExcelYes = new JRadioButton();
-		rdbattachmentFolderFromExcelYes.setText("Yes");
-		rdbattachmentFolderFromExcelYes.setBounds(216, 70, 52, 28);
-		frame.getContentPane().add(rdbattachmentFolderFromExcelYes);
+//		rdbattachmentFolderFromExcelYes = new JRadioButton();
+//		rdbattachmentFolderFromExcelYes.setText("Yes");
+//		rdbattachmentFolderFromExcelYes.setBounds(216, 70, 52, 28);
+//		frame.getContentPane().add(rdbattachmentFolderFromExcelYes);
+//
+//		rdbattachmentFolderFromExcelNo = new JRadioButton();
+//		rdbattachmentFolderFromExcelNo.setText("No");
+//		rdbattachmentFolderFromExcelNo.setSelected(true);
+//		rdbattachmentFolderFromExcelNo.setBounds(283, 70, 52, 28);
+//		frame.getContentPane().add(rdbattachmentFolderFromExcelNo);
 
-		rdbattachmentFolderFromExcelNo = new JRadioButton();
-		rdbattachmentFolderFromExcelNo.setText("No");
-		rdbattachmentFolderFromExcelNo.setSelected(true);
-		rdbattachmentFolderFromExcelNo.setBounds(283, 70, 52, 28);
-		frame.getContentPane().add(rdbattachmentFolderFromExcelNo);
-
-		G2.add(rdbattachmentFolderFromExcelYes);
-		G2.add(rdbattachmentFolderFromExcelNo);
+//		G2.add(rdbattachmentFolderFromExcelYes);
+//		G2.add(rdbattachmentFolderFromExcelNo);
 
 		AddBugTask test = new AddBugTask();
 		btnExecuteScript.addActionListener(new ActionListener() {
@@ -175,10 +174,11 @@ public class Frame1 extends Utilities {
 					@Override
 					public void run() {
 						try {
-							if (filePath.isEmpty() && rdbattachmentFolderFromExcelNo.isSelected()) {
+//							if (filePath.isEmpty() && rdbattachmentFolderFromExcelNo.isSelected()) {
+							if (filePath.isEmpty()) {
 								JOptionPane.showMessageDialog(null, "Please select excel file");
-							} else if (lblImageFolder.getText().isEmpty()
-									&& rdbattachmentFolderFromExcelNo.isSelected()) {
+							} else if (lblImageFolder.getText().isEmpty()) {
+//									&& rdbattachmentFolderFromExcelNo.isSelected()) {
 								JOptionPane.showMessageDialog(null, "Please select appropriate folder");
 							} else {
 								if (test.checkFiles() == true) {
@@ -200,8 +200,8 @@ public class Frame1 extends Utilities {
 										txtSetImageFolder.setEnabled(false);
 										rdbChromeYes.setEnabled(false);
 										rdbChromeNo.setEnabled(false);
-										rdbattachmentFolderFromExcelYes.setEnabled(false);
-										rdbattachmentFolderFromExcelNo.setEnabled(false);
+//										rdbattachmentFolderFromExcelYes.setEnabled(false);
+//										rdbattachmentFolderFromExcelNo.setEnabled(false);
 										btnStopExecution.setEnabled(true);
 
 										TestNG testSuite = new TestNG();
@@ -246,8 +246,8 @@ public class Frame1 extends Utilities {
 						txtSetImageFolder.setEnabled(true);
 						rdbChromeYes.setEnabled(true);
 						rdbChromeNo.setEnabled(true);
-						rdbattachmentFolderFromExcelYes.setEnabled(true);
-						rdbattachmentFolderFromExcelNo.setEnabled(true);
+//						rdbattachmentFolderFromExcelYes.setEnabled(true);
+//						rdbattachmentFolderFromExcelNo.setEnabled(true);
 					}
 				}).start();
 			}
@@ -273,9 +273,10 @@ public class Frame1 extends Utilities {
 								txtFileUpload.setText(filePath);
 								if (!lblImageFolder.getText().isEmpty()) {
 									btnExecuteScript.setEnabled(true);
-								} else if (rdbattachmentFolderFromExcelYes.isSelected()) {
-									btnExecuteScript.setEnabled(true);
 								}
+//								else if (rdbattachmentFolderFromExcelYes.isSelected()) {
+//									btnExecuteScript.setEnabled(true);
+//								}
 							} else {
 								filePath = "";
 								lblfileUpload.setText("");
@@ -386,9 +387,10 @@ public class Frame1 extends Utilities {
 							lblfileUpload.setText(ext.getName());
 							if (!lblImageFolder.getText().isEmpty()) {
 								btnExecuteScript.setEnabled(true);
-							} else if (rdbattachmentFolderFromExcelYes.isSelected()) {
-								btnExecuteScript.setEnabled(true);
 							}
+//							else if (rdbattachmentFolderFromExcelYes.isSelected()) {
+//								btnExecuteScript.setEnabled(true);
+//							}
 						} else {
 							filePath = "";
 							btnExecuteScript.setEnabled(false);
@@ -453,27 +455,27 @@ public class Frame1 extends Utilities {
 			}
 		});
 
-		rdbattachmentFolderFromExcelYes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				btnSetImageFolder.setEnabled(false);
-				txtSetImageFolder.setEnabled(false);
-				lblImageFolder.setText("");
-				imageDirPath = "";
-				if (!lblfileUpload.getText().isEmpty()) {
-					btnExecuteScript.setEnabled(true);
-				}
-			}
-		});
+//		rdbattachmentFolderFromExcelYes.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				btnSetImageFolder.setEnabled(false);
+//				txtSetImageFolder.setEnabled(false);
+//				lblImageFolder.setText("");
+//				imageDirPath = "";
+//				if (!lblfileUpload.getText().isEmpty()) {
+//					btnExecuteScript.setEnabled(true);
+//				}
+//			}
+//		});
 
-		rdbattachmentFolderFromExcelNo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				btnSetImageFolder.setEnabled(true);
-				txtSetImageFolder.setEnabled(true);
-				if (btnExecuteScript.isEnabled()) {
-					btnExecuteScript.setEnabled(false);
-				}
-			}
-		});
+//		rdbattachmentFolderFromExcelNo.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				btnSetImageFolder.setEnabled(true);
+//				txtSetImageFolder.setEnabled(true);
+//				if (btnExecuteScript.isEnabled()) {
+//					btnExecuteScript.setEnabled(false);
+//				}
+//			}
+//		});
 	}
 
 	public static void appendText(String text) {
