@@ -99,8 +99,8 @@ public class Frame1 extends Utilities {
 		// x,y,width,height
 		btnFileUpload.setBounds(10, 11, 140, 41);
 
-		lblfileUpload.setBounds(460, 15, 209, 28);
-		lblImageFolder.setBounds(261, 70, 245, 28);
+//		lblfileUpload.setBounds(460, 15, 209, 28);
+//		lblImageFolder.setBounds(261, 70, 245, 28);
 
 		btnSetImageFolder.setBounds(10, 70, 140, 41);
 		btnExecuteScript.setBounds(10, 157, 140, 41);
