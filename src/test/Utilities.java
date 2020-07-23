@@ -22,7 +22,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
@@ -1389,107 +1388,19 @@ public class Utilities {
 		slashsubnumbercount = 0;
 
 		Frame1.appendText("Removing Extra Space");
-//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//		LocalDateTime now = LocalDateTime.now();
-//		Frame1.appendText(dtf.format(now));
 
 		int pTag = 2;
 		int totalPTag = driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p")).size();
 		while (pTag <= totalPTag) {
-//			dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//			now = LocalDateTime.now();
-//			Frame1.appendText("time 1 = " + dtf.format(now));
-			if (driver.findElements(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
+			if (driver.findElements(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br"))
 					.size() > 0) {
-//				dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//				now = LocalDateTime.now();
-//				Frame1.appendText("time 2 = " + dtf.format(now));
-				if (pTag == 2 && driver
-						.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
-						.getText().isEmpty()) {
-					pTag = pTag + 2;
-				} else {
-//					dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//					now = LocalDateTime.now();
-//					Frame1.appendText("time 3 = " + dtf.format(now));
-					if (driver
-							.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]"))
-							.getText().isEmpty()) {
-//						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//						now = LocalDateTime.now();
-//						Frame1.appendText("time 4 = " + dtf.format(now));
-						List<WebElement> myResult = driver.findElements(
-								By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"));
-//						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//						now = LocalDateTime.now();
-//						Frame1.appendText("time 14 = " + dtf.format(now));
-						if (driver
-								.findElements(By
-										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/img"))
-								.size() > 0) {
-							pTag++;
-						} else {
-//							dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//							now = LocalDateTime.now();
-//							Frame1.appendText("time 5 = " + dtf.format(now));
-							if (driver
-									.findElements(By.xpath(
-											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
-									.size() > 0
-									&& driver
-											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
-													+ (pTag + 1) + "]"))
-											.getText()
-											.equals(GetSheetData.getData("Dev Tracker!B6").get(0).get(0).toString())) {
-								js = (JavascriptExecutor) driver;
-								js.executeScript("arguments[0].remove()", driver.findElement(
-										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
-							} else if (driver
-									.findElements(By.xpath(
-											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (pTag + 1) + "]"))
-									.size() > 0
-									&& driver
-											.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
-													+ (pTag + 1) + "]"))
-											.getText()
-											.equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
-								js = (JavascriptExecutor) driver;
-								js.executeScript("arguments[0].remove()", driver.findElement(
-										By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]")));
-							} else {
-//								dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//								now = LocalDateTime.now();
-//								Frame1.appendText("time 6 = " + dtf.format(now));
-								pTag++;
-							}
-						}
-					} else {
-//						dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//						now = LocalDateTime.now();
-//						Frame1.appendText("time 7 = " + dtf.format(now));
-						pTag++;
-					}
-//					dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//					now = LocalDateTime.now();
-//					Frame1.appendText("time 8 = " + dtf.format(now));
-					if (driver
-							.findElements(
-									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br"))
-							.size() > 0) {
-						js = (JavascriptExecutor) driver;
-						js.executeScript("arguments[0].remove()", driver.findElement(
-								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br")));
-					}
-				}
-			} else {
-				break;
+				js = (JavascriptExecutor) driver;
+				js.executeScript("arguments[0].remove()", driver
+						.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br")));
 			}
+			pTag++;
 		}
 		Frame1.appendText("extra space remove done");
-
-//		dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-//		now = LocalDateTime.now();
-//		Frame1.appendText(dtf.format(now));
 	}
 
 	public void checkLoader() throws InterruptedException {

@@ -199,10 +199,9 @@ public class AddBugTask extends Utilities {
 			bug_tracking_sheet = sh1.getCell(3, 0).getContents();
 
 			if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
-
 			} else {
 				if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
-					mailSend.mail("Ticket.xls", uname, "start");
+					mailSend.mail(Frame1.filePath, uname, "start");
 				} else {
 					Frame1.appendText("no option for mail on start");
 				}
@@ -692,7 +691,6 @@ public class AddBugTask extends Utilities {
 					Frame1.appendText("Priority should be required");
 					driver.close();
 					driver.quit();
-//				System.exit(1);
 				} else {
 					Select selec2 = new Select(driver.findElement(By.id("priority_id")));
 					selec2.selectByVisibleText(priority.getContents());
@@ -747,7 +745,6 @@ public class AddBugTask extends Utilities {
 				}
 
 				if (uploadDocuments.getContents().isEmpty()) {
-					Frame1.appendText("Documents are not available in excel sheet");
 				} else {
 					multipleFileUpload.fileUpload(driver, imagePath, uploadDocuments);
 					driver.findElement(By.id("startall")).click();
@@ -786,6 +783,13 @@ public class AddBugTask extends Utilities {
 				Frame1.appendText(dtf.format(now));
 				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 						.click();
+				int size = driver
+						.findElements(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
+						.size();
+				if (size > 0) {
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
+							.click();
+				}
 				checkLoader();
 				testcase = true;
 				error = "complete";
@@ -811,6 +815,15 @@ public class AddBugTask extends Utilities {
 					System.out.println("submit request");
 					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 							.click();
+					int size = driver
+							.findElements(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
+							.size();
+					if (size > 0) {
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
+								.click();
+					}
 					checkLoader();
 					testcase = true;
 					error = "complete";
@@ -922,13 +935,13 @@ public class AddBugTask extends Utilities {
 
 			testcase = true;
 		} catch (AssertionError e) {
-			Frame1.btnFileUpload.setEnabled(false);
-			Frame1.txtFileUpload.setEnabled(false);
+			Frame1.btnFileUpload.setEnabled(true);
+			Frame1.txtFileUpload.setEnabled(true);
 			Frame1.btnExecuteScript.setEnabled(true);
-			Frame1.btnSetImageFolder.setEnabled(false);
-			Frame1.txtSetImageFolder.setEnabled(false);
-			Frame1.rdbChromeYes.setEnabled(false);
-			Frame1.rdbChromeNo.setEnabled(false);
+			Frame1.btnSetImageFolder.setEnabled(true);
+			Frame1.txtSetImageFolder.setEnabled(true);
+			Frame1.rdbChromeYes.setEnabled(true);
+			Frame1.rdbChromeNo.setEnabled(true);
 //			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
 //			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
 
