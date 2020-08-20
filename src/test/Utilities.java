@@ -127,7 +127,11 @@ public class Utilities {
 		System.out.println("pmComment = " + pmComment);
 
 		if (!pmComment.isEmpty()) {
-			cosString = cosString + "\n$Comment from PM:$ ~" + pmName.trim() + "~\n" + pmComment;
+			if (pmComment.equals(".")) {
+				cosString = cosString + "\n~" + pmName.trim() + "~";
+			} else {
+				cosString = cosString + "\n$Comment from PM:$ ~" + pmName.trim() + "~\n" + pmComment;
+			}
 		}
 
 		String ACString = "";
