@@ -115,8 +115,10 @@ public class mailSend extends Utilities {
 			transport.connect(SMTP_SERVER, USERNAME, PASSWORD);
 			transport.sendMessage(msg, msg.getAllRecipients());
 			file = new File(filename);
-			if (file.exists()) {
-				file.delete();
+			if (filename.equalsIgnoreCase("testoutput.pdf")) {
+				if (file.exists()) {
+					file.delete();
+				}
 			}
 			transport.close();
 		} catch (MessagingException e) {

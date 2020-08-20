@@ -91,13 +91,13 @@ public class AddBugTask extends Utilities {
 			} else {
 				Frame1.appendText("client_secret json file is not available.");
 				Frame1.appendText(
-						"Please download latest build from https://drive.google.com/open?id=1dI-bVzWUoGtyLgeywZzLBii99lJYVNCG");
+						"Please download latest build from https://drive.google.com/file/d/1AZ1fZAnymK04nUap41C3FNhZsYKQexnU/view");
 				return false;
 			}
 		} else {
 			Frame1.appendText("StoredCredential file is not available in tokens folder.");
 			Frame1.appendText(
-					"Please download latest build from https://drive.google.com/open?id=1dI-bVzWUoGtyLgeywZzLBii99lJYVNCG");
+					"Please download latest build from https://drive.google.com/file/d/1AZ1fZAnymK04nUap41C3FNhZsYKQexnU/view");
 			return false;
 		}
 	}
