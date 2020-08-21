@@ -41,11 +41,10 @@ public class mailSend extends Utilities {
 		String EMAIL_SUBJECT = "Script run by " + username;
 
 		Properties prop = System.getProperties();
-		prop.put("mail.smtp.host", SMTP_SERVER); // optional, defined in
-													// SMTPTransport
+		prop.put("mail.smtp.host", SMTP_SERVER);
 		prop.put("mail.smtp.auth", "true");
-		prop.put("mail.smtp.port", "587"); // default port 25
-		prop.put("mail.smtp.starttls.enable", "true"); // default port 25
+		prop.put("mail.smtp.port", "587");
+		prop.put("mail.smtp.starttls.enable", "true");
 		prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
 		Session session = Session.getDefaultInstance(prop, null);
