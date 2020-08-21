@@ -46,6 +46,7 @@ public class mailSend extends Utilities {
 		prop.put("mail.smtp.auth", "true");
 		prop.put("mail.smtp.port", "587"); // default port 25
 		prop.put("mail.smtp.starttls.enable", "true"); // default port 25
+		prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
 		Session session = Session.getDefaultInstance(prop, null);
 		try {
