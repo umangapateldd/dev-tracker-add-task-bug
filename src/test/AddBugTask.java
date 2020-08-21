@@ -48,6 +48,7 @@ public class AddBugTask extends Utilities {
 	Cell priority;
 	String taskStatus;
 	Cell assignee;
+	Cell estimatedTime;
 	Cell reporter;
 	Cell uploadDocuments;
 	Cell originator;
@@ -334,8 +335,9 @@ public class AddBugTask extends Utilities {
 				successor = sh1.getCell(4, row);
 				priority = sh1.getCell(10, row);
 				if (taskStatus.equals("Any")) {
-					taskStatus = sh1.getCell(16, row).getContents();
+					taskStatus = sh1.getCell(17, row).getContents();
 				}
+				estimatedTime = sh1.getCell(16, row);
 				assignee = sh1.getCell(5, row);
 				reporter = sh1.getCell(6, row);
 				uploadDocuments = sh1.getCell(8, row);
@@ -744,6 +746,12 @@ public class AddBugTask extends Utilities {
 					}
 				}
 
+				if (!estimatedTime.getContents().isEmpty()) {
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B15").get(0).get(0).toString()))
+							.sendKeys(estimatedTime.getContents());
+					Thread.sleep(1000);
+				}
+
 				if (uploadDocuments.getContents().isEmpty()) {
 				} else {
 					multipleFileUpload.fileUpload(driver, imagePath, uploadDocuments);
@@ -783,6 +791,21 @@ public class AddBugTask extends Utilities {
 				Frame1.appendText(dtf.format(now));
 				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 						.click();
+				Thread.sleep(1000);
+
+				// Estimate Time error message
+				int sizeEstimateTime = driver
+						.findElements(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B14").get(0).get(0).toString()))
+						.size();
+				if (sizeEstimateTime > 0) {
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B15").get(0).get(0).toString()))
+							.clear();
+					Thread.sleep(1000);
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+							.click();
+				}
+
+				// Alert box for attached word
 				int size = driver
 						.findElements(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
 						.size();
@@ -815,6 +838,23 @@ public class AddBugTask extends Utilities {
 					System.out.println("submit request");
 					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 							.click();
+
+					// Estimate Time error message
+					int sizeEstimateTime = driver
+							.findElements(
+									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B14").get(0).get(0).toString()))
+							.size();
+					if (sizeEstimateTime > 0) {
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B15").get(0).get(0).toString()))
+								.clear();
+						Thread.sleep(1000);
+						driver.findElement(
+								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+								.click();
+					}
+
+					// Alert box for attached word
 					int size = driver
 							.findElements(
 									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
