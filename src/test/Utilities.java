@@ -282,6 +282,8 @@ public class Utilities {
 					}
 				}
 
+				System.out.println("order list val = " + orderlist);
+				System.out.println("count tag = " + countTag);
 				if (orderlist.equals("stop")) {
 					if (driver
 							.findElement(
@@ -421,6 +423,14 @@ public class Utilities {
 										if (systemName.contains("mac")) {
 
 										} else {
+											driver.findElement(By
+													.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+													.click();
+
+											driver.findElement(By
+													.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+													.sendKeys(Keys.END);
+											
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 															+ countTag + "]"))
@@ -434,6 +444,13 @@ public class Utilities {
 								}
 
 								if (once == 0) {
+									driver.findElement(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											.click();
+
+									driver.findElement(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											.sendKeys(Keys.END);
 
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
@@ -493,11 +510,25 @@ public class Utilities {
 									}
 
 									if (abc + 3 < a.length) {
+										driver.findElement(By
+												.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+												.click();
+
+										driver.findElement(By
+												.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+												.sendKeys(Keys.END);
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]"))
 												.sendKeys(arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]));
 									} else {
+										driver.findElement(By
+												.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+												.click();
+
+										driver.findElement(By
+												.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+												.sendKeys(Keys.END);
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]"))
@@ -629,6 +660,7 @@ public class Utilities {
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																+ countTag + "]")));
+										
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]"))
@@ -656,6 +688,14 @@ public class Utilities {
 									abc = abc + 2;
 								} else if (arrSplit[ar].charAt(a[abc]) == '~') {
 									String username = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]);
+									driver.findElement(By
+											.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											.click();
+
+									driver.findElement(By
+											.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											.sendKeys(Keys.END);
+									
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(" @" + username.substring(0, (username.indexOf(" "))));
@@ -768,6 +808,14 @@ public class Utilities {
 							System.out.println("123123123 = " + arrSplit[ar]);
 							System.out.println("StringEscapeUtils.escapeEcmaScript(arrSplit[ar]) = "
 									+ StringEscapeUtils.escapeEcmaScript(arrSplit[ar]));
+							System.out.println("countTag = " + countTag);
+							driver.findElement(
+									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+									.click();
+
+							driver.findElement(
+									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+									.sendKeys(Keys.END);
 							JavascriptExecutor js = (JavascriptExecutor) driver;
 							js.executeScript(
 									"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(arrSplit[ar])
@@ -775,12 +823,27 @@ public class Utilities {
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]")));
 						}
+
 						if (enter == true) {
 							enter = false;
 						} else {
-							driver.findElement(
-									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-									.sendKeys(Keys.ENTER);
+							if (arrSplit[ar].isEmpty()) {
+								driver.findElement(By
+										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+										.sendKeys(Keys.ENTER);
+							} else {
+								driver.findElement(By
+										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+										.click();
+
+								driver.findElement(By
+										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+										.sendKeys(Keys.END);
+								driver.findElement(By
+										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+										.sendKeys(Keys.ENTER);
+							}
+
 						}
 					}
 				} else {

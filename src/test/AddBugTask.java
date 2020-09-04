@@ -171,6 +171,10 @@ public class AddBugTask extends Utilities {
 
 	@org.testng.annotations.Test
 	public void add_bug_task() throws Exception {
+		ApprovedBugsByPM = false;
+		DeferredBugsByPM = false;
+		BranchCreateSheet = false;
+		ACFileAvailable = "false";
 		if (checkVersion() == true) {
 			dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
 			now = LocalDateTime.now();
@@ -187,12 +191,6 @@ public class AddBugTask extends Utilities {
 
 			password = sh1.getCell(1, 2);
 
-//			if (Frame1.imageDirPath == null || Frame1.imageDirPath.isEmpty()) {
-//				imagePath = sh1.getCell(1, 3).getContents();
-//			} else {
-//				imagePath = Frame1.imageDirPath;
-//			}
-
 			imagePath = Frame1.imageDirPath;
 
 			Frame1.appendText("image path = " + imagePath);
@@ -201,7 +199,7 @@ public class AddBugTask extends Utilities {
 
 			if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
 			} else {
-				if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().toLowerCase().equals("yes")) {
+				if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().equalsIgnoreCase("yes")) {
 					mailSend.mail(Frame1.filePath, uname, "start");
 				} else {
 					Frame1.appendText("no option for mail on start");
@@ -272,11 +270,14 @@ public class AddBugTask extends Utilities {
 		System.out.println("row count = " + sh1.getRows());
 		while (row < sh1.getRows()) {
 			// column, row
-			Cell project_name = sh1.getCell(0, row);
+			Cell project_name = sh1.getCell(
+					Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B1").get(0).get(0).toString()), row);
 
 			if ((row + 1) < sh1.getRows()) {
 				System.out.println("set value project_name_next_row_acceptance_criteria");
-				project_name_next_row_acceptance_criteria = sh1.getCell(0, row + 1);
+				project_name_next_row_acceptance_criteria = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B1").get(0).get(0).toString()),
+						row + 1);
 			} else {
 				System.out.println("set value project_name_next_row_acceptance_criteria");
 				project_name_next_row_acceptance_criteria = null;
@@ -302,7 +303,9 @@ public class AddBugTask extends Utilities {
 					System.out.println("acceptanceCriteria = true");
 
 					acceptanceCriteria = "true";
-					cos = sh1.getCell(14, row);
+					cos = sh1.getCell(
+							Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B15").get(0).get(0).toString()),
+							row);
 				}
 			} else {
 				ACFileAvailable = "false";
@@ -322,26 +325,45 @@ public class AddBugTask extends Utilities {
 			}
 
 			if (acceptanceCriteria.equals("false")) {
-				milestone = sh1.getCell(1, row);
-				taskcategory = sh1.getCell(2, row);
-				taskType = sh1.getCell(9, row);
-				taskTitle = sh1.getCell(11, row);
-				objective = sh1.getCell(12, row);
-				references = sh1.getCell(13, row);
-				cos = sh1.getCell(14, row);
-				pmComment = sh1.getCell(15, row);
-				pmName = sh1.getCell(15, 4);
-				dependent = sh1.getCell(3, row);
-				successor = sh1.getCell(4, row);
-				priority = sh1.getCell(10, row);
+				milestone = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B2").get(0).get(0).toString()), row);
+				taskcategory = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B3").get(0).get(0).toString()), row);
+				taskType = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B10").get(0).get(0).toString()), row);
+				taskTitle = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B12").get(0).get(0).toString()), row);
+				objective = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B13").get(0).get(0).toString()), row);
+				references = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B14").get(0).get(0).toString()), row);
+				cos = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B15").get(0).get(0).toString()), row);
+				pmComment = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B16").get(0).get(0).toString()), row);
+				pmName = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B16").get(0).get(0).toString()), 4);
+				dependent = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B4").get(0).get(0).toString()), row);
+				successor = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B5").get(0).get(0).toString()), row);
+				priority = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B11").get(0).get(0).toString()), row);
 				if (taskStatus.equals("Any")) {
-					taskStatus = sh1.getCell(17, row).getContents();
+					taskStatus = sh1.getCell(
+							Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B18").get(0).get(0).toString()),
+							row).getContents();
 				}
-				estimatedTime = sh1.getCell(16, row);
-				assignee = sh1.getCell(5, row);
-				reporter = sh1.getCell(6, row);
-				uploadDocuments = sh1.getCell(8, row);
-				originator = sh1.getCell(7, row);
+				estimatedTime = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B17").get(0).get(0).toString()), row);
+				assignee = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B6").get(0).get(0).toString()), row);
+				reporter = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B7").get(0).get(0).toString()), row);
+				uploadDocuments = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B9").get(0).get(0).toString()), row);
+				originator = sh1.getCell(
+						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B8").get(0).get(0).toString()), row);
 
 				if (milestone.getContents().isEmpty() || taskcategory.getContents().isEmpty()
 						|| taskType.getContents().isEmpty() || taskTitle.getContents().isEmpty()
@@ -351,11 +373,10 @@ public class AddBugTask extends Utilities {
 									+ (row + 1) + " row");
 					driver.close();
 					driver.quit();
-//				System.exit(1);
 					break;
 				}
 
-				BranchMilestone = milestone.getContents();
+				BranchMilestone = milestone.getContents().trim();
 				Frame1.appendText(taskType.getContents() + " is adding");
 				Frame1.appendText("Title is = " + taskTitle.getContents());
 				testcase = false;
@@ -387,19 +408,20 @@ public class AddBugTask extends Utilities {
 
 				Boolean found = false;
 				List<WebElement> allOptions = selec.getOptions();
+				String milestoneText = null;
 
 				for (WebElement we : allOptions) {
-					if (we.getText().equals(milestone.getContents())) {
+					if (we.getText().trim().equals(milestone.getContents().trim())) {
+						milestoneText = we.getText();
 						found = true;
-
 					}
 				}
-				if (found == true) {
-					selec.selectByVisibleText(milestone.getContents());
+				if (Boolean.TRUE.equals(found)) {
+					selec.selectByVisibleText(milestoneText);
 				} else {
 					// Create new milestone
 					driver.findElement(By.id("addmilestone")).click();
-					driver.findElement(By.id("milestone_name")).sendKeys(milestone.getContents());
+					driver.findElement(By.id("milestone_name")).sendKeys(milestone.getContents().trim());
 					((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('readonly','readonly')",
 							driver.findElement(By.id("milestone_startdate")));
 					driver.findElement(By.id("milestone_startdate")).sendKeys("abc");
@@ -421,18 +443,21 @@ public class AddBugTask extends Utilities {
 					found = false;
 					List<WebElement> allOptions1 = selec1.getOptions();
 
+					String taskcategoryText = null;
+
 					for (WebElement we : allOptions1) {
-						if (we.getText().equals(taskcategory.getContents())) {
+						if (we.getText().trim().equals(taskcategory.getContents().trim())) {
+							taskcategoryText = we.getText();
 							found = true;
 						}
 					}
 
-					if (found == true) {
-						selec1.selectByVisibleText(taskcategory.getContents());
+					if (Boolean.TRUE.equals(found)) {
+						selec1.selectByVisibleText(taskcategoryText);
 					} else {
 						// Create new taskcategory
 						driver.findElement(By.id("addcategory")).click();
-						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents());
+						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 						driver.findElement(By.id("savecategory")).click();
 					}
 				} catch (StaleElementReferenceException e) {
@@ -441,18 +466,21 @@ public class AddBugTask extends Utilities {
 					found = false;
 					List<WebElement> allOptions1 = selec1.getOptions();
 
+					String taskcategoryText = null;
+
 					for (WebElement we : allOptions1) {
-						if (we.getText().equals(taskcategory.getContents())) {
+						if (we.getText().trim().equals(taskcategory.getContents().trim())) {
+							taskcategoryText = we.getText();
 							found = true;
 						}
 					}
 
-					if (found == true) {
-						selec1.selectByVisibleText(taskcategory.getContents());
+					if (Boolean.TRUE.equals(found)) {
+						selec1.selectByVisibleText(taskcategoryText);
 					} else {
 						// Create new taskcategory
 						driver.findElement(By.id("addcategory")).click();
-						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents());
+						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 						driver.findElement(By.id("savecategory")).click();
 					}
 				}
@@ -462,6 +490,56 @@ public class AddBugTask extends Utilities {
 				// submit button click for validation verification
 				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 						.click();
+
+				if (driver.findElements(By.xpath("//*[@id='taskcategory_id']//following::ul[1]/li")).size() > 0) {
+					try {
+						Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
+
+						found = false;
+						List<WebElement> allOptions1 = selec1.getOptions();
+
+						String taskcategoryText = null;
+
+						for (WebElement we : allOptions1) {
+							if (we.getText().trim().equals(taskcategory.getContents().trim())) {
+								taskcategoryText = we.getText();
+								found = true;
+							}
+						}
+
+						if (Boolean.TRUE.equals(found)) {
+							selec1.selectByVisibleText(taskcategoryText);
+						} else {
+							// Create new taskcategory
+							driver.findElement(By.id("addcategory")).click();
+							driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
+							driver.findElement(By.id("savecategory")).click();
+						}
+					} catch (StaleElementReferenceException e) {
+						Select selec1 = new Select(driver.findElement(By.id("taskcategory_id")));
+
+						found = false;
+						List<WebElement> allOptions1 = selec1.getOptions();
+
+						String taskcategoryText = null;
+
+						for (WebElement we : allOptions1) {
+							if (we.getText().trim().equals(taskcategory.getContents().trim())) {
+								taskcategoryText = we.getText();
+								found = true;
+							}
+						}
+
+						if (Boolean.TRUE.equals(found)) {
+							selec1.selectByVisibleText(taskcategoryText);
+						} else {
+							// Create new taskcategory
+							driver.findElement(By.id("addcategory")).click();
+							driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
+							driver.findElement(By.id("savecategory")).click();
+						}
+					}
+				}
 
 				if (driver.findElements(By.xpath("//*[@id='parsley-id-multiple-type_id']/li")).size() > 0) {
 					Frame1.appendText(taskType.getContents() + " selection again");
@@ -758,30 +836,19 @@ public class AddBugTask extends Utilities {
 					driver.findElement(By.id("startall")).click();
 
 					int tmp = 0;
-
+					Frame1.appendText("documents are uploading");
 					do {
-						if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
-								&& driver.findElement(By.xpath("//div[@role='progressbar']"))
-										.getAttribute("aria-valuenow").equals("100")) {
-							tmp = 1;
-							Frame1.appendText("Documents are uploaded");
-						} else if (driver.findElements(By.xpath("//div[@role='progressbar']")).size() > 0
-								&& driver.findElement(By.xpath("//div[@role='progressbar']"))
-										.getAttribute("aria-valuenow").equals("0")) {
-							if (driver.findElements(By.xpath("//span[text()='Upload']")).size() > 0) {
-								Frame1.appendText("any one or multiple documents are not attached");
-								tmp = 1;
-							} else {
-								Frame1.appendText("documents are attached");
-								tmp = 1;
-							}
-						} else {
+						int size = driver.findElements(By.xpath("//*[@id='basic-uploader']//span[text()='Upload']"))
+								.size();
+						if (size > 0) {
 							tmp = 0;
-							Frame1.appendText("documents are uploading");
+						} else {
+							tmp = 1;
 						}
 					} while (tmp == 0);
 					js = (JavascriptExecutor) driver;
 					js.executeScript("window.scrollBy(0,250)");
+					Frame1.appendText("documents are attached");
 				}
 			}
 
