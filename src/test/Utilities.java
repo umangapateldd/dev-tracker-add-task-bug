@@ -17,6 +17,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -286,6 +287,25 @@ public class Utilities {
 				System.out.println("count tag = " + countTag);
 				if (orderlist.equals("stop")) {
 					if (driver
+							.findElements(
+									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+							.size() <= 0) {
+						driver.findElement(
+								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (countTag - 1) + "]"))
+								.click();
+
+						driver.findElement(
+								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (countTag - 1) + "]"))
+								.sendKeys(Keys.END);
+						driver.findElement(
+								By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (countTag - 1) + "]"))
+								.sendKeys(Keys.ENTER);
+					}
+					Dimension newDimension = new Dimension(1300, 768);
+					if (!driver.manage().window().getSize().equals(newDimension)) {
+						driver.manage().window().setSize(newDimension);
+					}
+					if (driver
 							.findElement(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 							.getText().isEmpty()) {
@@ -423,14 +443,16 @@ public class Utilities {
 										if (systemName.contains("mac")) {
 
 										} else {
-											driver.findElement(By
-													.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											driver.findElement(
+													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+															+ countTag + "]"))
 													.click();
 
-											driver.findElement(By
-													.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											driver.findElement(
+													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+															+ countTag + "]"))
 													.sendKeys(Keys.END);
-											
+
 											driver.findElement(
 													By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 															+ countTag + "]"))
@@ -510,24 +532,28 @@ public class Utilities {
 									}
 
 									if (abc + 3 < a.length) {
-										driver.findElement(By
-												.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+										driver.findElement(
+												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+														+ countTag + "]"))
 												.click();
 
-										driver.findElement(By
-												.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+										driver.findElement(
+												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+														+ countTag + "]"))
 												.sendKeys(Keys.END);
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]"))
 												.sendKeys(arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]));
 									} else {
-										driver.findElement(By
-												.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+										driver.findElement(
+												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+														+ countTag + "]"))
 												.click();
 
-										driver.findElement(By
-												.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+										driver.findElement(
+												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
+														+ countTag + "]"))
 												.sendKeys(Keys.END);
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
@@ -540,7 +566,7 @@ public class Utilities {
 
 									int boldWithColor = 0;
 
-									JavascriptExecutor js = (JavascriptExecutor) driver;
+									js = (JavascriptExecutor) driver;
 									js.executeScript(
 											"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
 													.findElement(By.xpath(
@@ -660,7 +686,7 @@ public class Utilities {
 												driver.findElement(
 														By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 																+ countTag + "]")));
-										
+
 										driver.findElement(
 												By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p["
 														+ countTag + "]"))
@@ -688,14 +714,14 @@ public class Utilities {
 									abc = abc + 2;
 								} else if (arrSplit[ar].charAt(a[abc]) == '~') {
 									String username = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]);
-									driver.findElement(By
-											.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+									driver.findElement(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.click();
 
-									driver.findElement(By
-											.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+									driver.findElement(By.xpath(
+											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.END);
-									
+
 									driver.findElement(By.xpath(
 											"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(" @" + username.substring(0, (username.indexOf(" "))));
@@ -816,7 +842,7 @@ public class Utilities {
 							driver.findElement(
 									By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 									.sendKeys(Keys.END);
-							JavascriptExecutor js = (JavascriptExecutor) driver;
+							js = (JavascriptExecutor) driver;
 							js.executeScript(
 									"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(arrSplit[ar])
 											+ "'",
@@ -828,8 +854,8 @@ public class Utilities {
 							enter = false;
 						} else {
 							if (arrSplit[ar].isEmpty()) {
-								driver.findElement(By
-										.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+								driver.findElement(By.xpath(
+										"//*[@id=\"description\"]/div/div[3]/div[3]/div[2]/p[" + (countTag - 1) + "]"))
 										.sendKeys(Keys.ENTER);
 							} else {
 								driver.findElement(By

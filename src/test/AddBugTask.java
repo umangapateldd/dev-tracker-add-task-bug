@@ -8,14 +8,19 @@ import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
@@ -565,6 +570,10 @@ public class AddBugTask extends Utilities {
 				macTextFormat(imagePath, "", "", objective, "p[2]", sh1, row);
 			}
 
+			Dimension newDimension = new Dimension(1300, 768);
+			if (!driver.manage().window().getSize().equals(newDimension)) {
+				driver.manage().window().setSize(newDimension);
+			}
 			// COS
 			macTextFormat(imagePath, pmName.getContents(), pmComment.getContents(), cos, "xyz", sh1, row);
 
@@ -1035,8 +1044,6 @@ public class AddBugTask extends Utilities {
 			Frame1.txtSetImageFolder.setEnabled(true);
 			Frame1.rdbChromeYes.setEnabled(true);
 			Frame1.rdbChromeNo.setEnabled(true);
-//			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(true);
-//			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(true);
 
 			Assert.assertTrue(testcase);
 
@@ -1049,8 +1056,17 @@ public class AddBugTask extends Utilities {
 			Frame1.txtSetImageFolder.setEnabled(true);
 			Frame1.rdbChromeYes.setEnabled(true);
 			Frame1.rdbChromeNo.setEnabled(true);
-//			Frame1.rdbattachmentFolderFromExcelYes.setEnabled(false);
-//			Frame1.rdbattachmentFolderFromExcelNo.setEnabled(false);
+
+			File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			File destFile;
+
+			systemName = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+			if (systemName.contains("mac")) {
+				destFile = new File(System.getProperty("user.dir") + "/test-output/problem.png");
+			} else {
+				destFile = new File(System.getProperty("user.dir") + "\\test-output\\problem.png");
+			}
+			FileUtils.copyFile(screenshot, destFile);
 
 			System.out.println("Script is failed");
 			File f = new File(outputFolderName);
