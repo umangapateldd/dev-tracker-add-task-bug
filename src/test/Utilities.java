@@ -166,10 +166,8 @@ public class Utilities {
 
 			cosString = ACString;
 			AddBugTask.ACFileAvailable = "true";
-			System.out.println("file true");
 		} else {
 			AddBugTask.ACFileAvailable = "false";
-			System.out.println("file false");
 		}
 		String[] arrSplit = cosString.split("\n");
 
@@ -191,7 +189,6 @@ public class Utilities {
 			}
 
 			if (arrSplit[ar].toLowerCase(Locale.ENGLISH).contains("{number}")) {
-				System.out.println("countTag = " + countTag);
 				orderListNumber++;
 				orderlist = "start";
 				listVal = 1;
@@ -271,8 +268,6 @@ public class Utilities {
 				}
 
 				if (arrSplit[ar].toLowerCase().contains("{/number}")) {
-					System.out
-							.println("999999 slash sub number with slash number orderListNumber = " + orderListNumber);
 					orderlist = "end";
 					subnumbercnt = 0;
 				}
@@ -332,17 +327,15 @@ public class Utilities {
 
 			if (arrSplit[ar].toLowerCase().contains("{/number}")) {
 				if (prevSumTab == 0) {
-					driver.findElement(
-							By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"));
-					driver.findElement(By.xpath(xpathNumbering)).sendKeys(Keys.ENTER);
+					driver.findElement(By.xpath(xpathNumbering)).sendKeys(Keys.CONTROL + "[");
 				} else {
-					orderlist = "end";
 					driver.findElement(By.xpath(xpathNumbering)).sendKeys(Keys.ENTER);
 					Thread.sleep(1500);
 					driver.findElement(By.xpath(xpathNumbering)).sendKeys(Keys.ENTER);
-					prevSumTab = 0;
-					sumTab = 0;
 				}
+				orderlist = "end";
+				prevSumTab = 0;
+				sumTab = 0;
 			}
 
 			prevSumTab = sumTab;
@@ -1350,7 +1343,7 @@ public class Utilities {
 									} else {
 
 										driver.findElement(By.xpath(xpathNumbering))
-												.sendKeys(arrSplit[ar].substring(a[abc], a[abc + 1]));
+												.sendKeys(arrSplit[ar].substring(a[abc], a[abc + 1]).trim());
 									}
 
 									abc++;
@@ -1360,7 +1353,7 @@ public class Utilities {
 						} else {
 							js = (JavascriptExecutor) driver;
 							js.executeScript("arguments[0].innerHTML = '"
-									+ StringEscapeUtils.escapeEcmaScript(arrSplit[ar]) + "'",
+									+ StringEscapeUtils.escapeEcmaScript(arrSplit[ar].trim()) + "'",
 									driver.findElement(By.xpath(xpathNumbering)));
 						}
 						if (enter) {
