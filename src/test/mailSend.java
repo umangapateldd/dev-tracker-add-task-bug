@@ -26,7 +26,7 @@ public class mailSend extends Utilities {
 	String PASSWORD = "Vivekbhatt@123";
 	String EMAIL_TO = "";
 	String EMAIL_FROM = "";
-	String CC_Email = "";
+//	String CC_Email = "";
 
 	public void mail(String filename, String username, String processStart)
 			throws IOException, InterruptedException, GeneralSecurityException {
@@ -35,8 +35,8 @@ public class mailSend extends Utilities {
 
 		EMAIL_FROM = USERNAME;
 
-		CC_Email = GetSheetData.getData("Dev Tracker!B3").get(0).get(0).toString().toLowerCase();
-		String[] CC_Emailvalues = CC_Email.trim().split(",");
+//		CC_Email = GetSheetData.getData("Dev Tracker!B3").get(0).get(0).toString().toLowerCase();
+//		String[] CC_Emailvalues = CC_Email.trim().split(",");
 
 		String EMAIL_SUBJECT = "Script run by " + username;
 
@@ -63,10 +63,10 @@ public class mailSend extends Utilities {
 
 			// cc
 			int CCtmp = 0;
-			while (CCtmp < CC_Emailvalues.length) {
-				msg.addRecipient(Message.RecipientType.CC, new InternetAddress(CC_Emailvalues[CCtmp]));
-				CCtmp++;
-			}
+//			while (CCtmp < CC_Emailvalues.length) {
+//				msg.addRecipient(Message.RecipientType.CC, new InternetAddress(CC_Emailvalues[CCtmp]));
+//				CCtmp++;
+//			}
 
 			// subject
 			msg.setSubject(EMAIL_SUBJECT);

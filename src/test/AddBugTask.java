@@ -77,7 +77,6 @@ public class AddBugTask extends Utilities {
 	DateTimeFormatter dtf;
 	LocalDateTime now;
 	String acceptanceCriteria = "false";
-	String acceptanceCriteria_nextRow = "false";
 	String projectName;
 	String bug_tracking_sheet;
 	CreateBugTrackingReport createBugTrackingReport;
@@ -272,19 +271,16 @@ public class AddBugTask extends Utilities {
 
 		int row = 5;
 
-		System.out.println("row count = " + sh1.getRows());
 		while (row < sh1.getRows()) {
 			// column, row
 			Cell project_name = sh1.getCell(
 					Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B1").get(0).get(0).toString()), row);
 
 			if ((row + 1) < sh1.getRows()) {
-				System.out.println("set value project_name_next_row_acceptance_criteria");
 				project_name_next_row_acceptance_criteria = sh1.getCell(
 						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B1").get(0).get(0).toString()),
 						row + 1);
 			} else {
-				System.out.println("set value project_name_next_row_acceptance_criteria");
 				project_name_next_row_acceptance_criteria = null;
 			}
 
@@ -296,17 +292,13 @@ public class AddBugTask extends Utilities {
 			if (project_name_next_row_acceptance_criteria == null
 					|| project_name_next_row_acceptance_criteria.getContents().isEmpty()) {
 				System.out.println("don't check next row");
-				acceptanceCriteria_nextRow = "false";
 			}
 
 			if (project_name.getContents().equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
 
 				if (ACFileAvailable.equals("true")) {
 					acceptanceCriteria = "false";
-					acceptanceCriteria_nextRow = "false";
 				} else {
-					System.out.println("acceptanceCriteria = true");
-
 					acceptanceCriteria = "true";
 					cos = sh1.getCell(
 							Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B15").get(0).get(0).toString()),
@@ -314,22 +306,10 @@ public class AddBugTask extends Utilities {
 				}
 			} else {
 				ACFileAvailable = "false";
-				System.out.println("acceptanceCriteria = false");
-
-				if (project_name_next_row_acceptance_criteria != null && project_name_next_row_acceptance_criteria
-						.getContents().equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
-					System.out.println("acceptanceCriteria_nextRow = true");
-					acceptanceCriteria_nextRow = "true";
-				} else {
-					System.out.println("acceptanceCriteria_nextRow = false");
-					acceptanceCriteria_nextRow = "false";
-				}
-
 				acceptanceCriteria = "false";
-
 			}
 
-			if (acceptanceCriteria.equals("false")) {
+			if ("false".equals(acceptanceCriteria)) {
 				milestone = sh1.getCell(
 						Integer.parseInt(GetSheetData.getData("Excel Sheet Column!B2").get(0).get(0).toString()), row);
 				taskcategory = sh1.getCell(
@@ -559,13 +539,14 @@ public class AddBugTask extends Utilities {
 				js.executeScript("window.scrollBy(0,250)");
 
 				driver.findElement(By.xpath("//*[@id=\"description\"]/div/div[3]/div[3]/div[2]")).click();
-
+				oltagStringGlobal = "";
 				// reference
 				if (references.getContents().isEmpty()) {
 				} else {
 					macTextFormat(imagePath, "", "", references, "p[4]", sh1, row);
 				}
 
+				oltagStringGlobal = "";
 				// Objective / Steps to Recreate
 				macTextFormat(imagePath, "", "", objective, "p[2]", sh1, row);
 			}
@@ -574,6 +555,7 @@ public class AddBugTask extends Utilities {
 			if (!driver.manage().window().getSize().equals(newDimension)) {
 				driver.manage().window().setSize(newDimension);
 			}
+			oltagStringGlobal = "";
 			// COS
 			macTextFormat(imagePath, pmName.getContents(), pmComment.getContents(), cos, "xyz", sh1, row);
 
@@ -800,7 +782,6 @@ public class AddBugTask extends Utilities {
 					}
 				}
 
-				System.out.println("assignee.getContents() = " + assignee.getContents());
 				if (assignee.getContents().isEmpty()) {
 					if (DeferredBugsByPM == true) {
 						assignee = pmName;
@@ -812,7 +793,6 @@ public class AddBugTask extends Utilities {
 					for (WebElement option : options) {
 						if (option.getText().contains(assignee.getContents())) {
 							Thread.sleep(1500);
-							System.out.println("selected option = " + option.getText());
 							option.click();
 							break;
 						}
@@ -903,57 +883,46 @@ public class AddBugTask extends Utilities {
 							taskType.getContents());
 				}
 			} else {
-				System.out.println("AddBugTask.ACFileAvailable = " + AddBugTask.ACFileAvailable);
-				System.out.println(acceptanceCriteria_nextRow + " before remove extra space");
-				if (acceptanceCriteria_nextRow.equals("true")) {
+				removeExtraSpace();
+				now = LocalDateTime.now();
+				Frame1.appendText(dtf.format(now));
+				driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
+						.click();
 
-				} else {
-					removeExtraSpace();
-					now = LocalDateTime.now();
-					Frame1.appendText(dtf.format(now));
-					System.out.println("submit request");
+				// Estimate Time error message
+				int sizeEstimateTime = driver
+						.findElements(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B14").get(0).get(0).toString()))
+						.size();
+				if (sizeEstimateTime > 0) {
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B15").get(0).get(0).toString()))
+							.clear();
+					Thread.sleep(1000);
 					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
 							.click();
-
-					// Estimate Time error message
-					int sizeEstimateTime = driver
-							.findElements(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B14").get(0).get(0).toString()))
-							.size();
-					if (sizeEstimateTime > 0) {
-						driver.findElement(
-								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B15").get(0).get(0).toString()))
-								.clear();
-						Thread.sleep(1000);
-						driver.findElement(
-								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B4").get(0).get(0).toString()))
-								.click();
-					}
-
-					// Alert box for attached word
-					int size = driver
-							.findElements(
-									By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
-							.size();
-					if (size > 0) {
-						driver.findElement(
-								By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
-								.click();
-					}
-					checkLoader();
-					testcase = true;
-					error = "complete";
-					driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
-
-					DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
-					Frame1.appendText(DevTrackerNumber);
-
-					if (bug_tracking_sheet.toLowerCase().equals("yes")) {
-						createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
-								taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
-								taskType.getContents());
-					}
 				}
+
+				// Alert box for attached word
+				int size = driver
+						.findElements(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
+						.size();
+				if (size > 0) {
+					driver.findElement(By.xpath(GetSheetData.getData("Dev Tracker Xpath!B13").get(0).get(0).toString()))
+							.click();
+				}
+				checkLoader();
+				testcase = true;
+				error = "complete";
+				driver.findElement(By.tagName("body")).sendKeys(Keys.HOME);
+
+				DevTrackerNumber = driver.getCurrentUrl().replace(DevTrackerURL.getContents() + "track/", "");
+				Frame1.appendText(DevTrackerNumber);
+
+				if (bug_tracking_sheet.toLowerCase().equals("yes")) {
+					createBugTrackingReport.createBugTracking(driver, DevTrackerURL.getContents(),
+							taskTitle.getContents(), projectName, originator.getContents(), reporter.getContents(),
+							taskType.getContents());
+				}
+
 			}
 			row++;
 		}
