@@ -195,6 +195,7 @@ public class Utilities {
 
 		int attachmentCount = 0;
 		boolean exists = false;
+		boolean isFile = false;
 		boolean alreadybold = false;
 
 		for (int ar = 0; ar < arrSplit.length; ar++) {
@@ -222,7 +223,7 @@ public class Utilities {
 					sumTab = spaceCount / 8;
 				}
 			}
-			
+
 			if ("stop".equals(orderlist)) {
 				if (driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 						.getText().isEmpty()) {
@@ -347,11 +348,12 @@ public class Utilities {
 			if (arrSplit[ar].isEmpty()) {
 				imageURL = arrSplit[ar];
 			} else {
+				isFile = tempFile.isFile();
 				exists = tempFile.exists();
 				imageURL = imagePath + arrSplit[ar];
 			}
 
-			if (exists != true) {
+			if (!isFile) {
 				List<String> extractedUrls = extractUrls(arrSplit[ar]);
 				if (extractedUrls.size() > 0) {
 					for (int urlCount = 0; urlCount < extractedUrls.size(); urlCount++) {
@@ -365,9 +367,7 @@ public class Utilities {
 					}
 				} else {
 					if (arrSplit[ar].contains("\t")) {
-						System.out.println("666666666666");
 					} else {
-						System.out.println("77777777777");
 						arrSplit[ar] = arrSplit[ar].trim();
 					}
 				}
@@ -1425,50 +1425,53 @@ public class Utilities {
 			} else {
 				attachmentCount++;
 
-				try {
-					driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[2]/div/div[8]/button[2]"))
-							.click();
-				} catch (ElementClickInterceptedException e) {
-					Frame1.appendText("catch");
-					js = (JavascriptExecutor) driver;
-					js.executeScript("window.scrollBy(0,-250)");
-					driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[2]/div/div[8]/button[2]"))
-							.click();
-				}
-
-				driver.findElement(By.name("files")).sendKeys(imageURL);
-
-				int tmp = 0;
-				long t = System.currentTimeMillis();
-				long end = t + 100000;
-
-				do {
-					if (System.currentTimeMillis() > end) {
-						Frame1.appendText("image upload timeout");
-						tmp = 1;
-						break;
+				if (exists) {
+					try {
+						driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[2]/div/div[8]/button[2]"))
+								.click();
+					} catch (ElementClickInterceptedException e) {
+						Frame1.appendText("catch");
+						js = (JavascriptExecutor) driver;
+						js.executeScript("window.scrollBy(0,-250)");
+						driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[2]/div/div[8]/button[2]"))
+								.click();
 					}
 
-					if (driver.findElements(By.xpath(
-							"//*[@id='description']/div/div[3]/div[3]/div[2]//following::img[" + attachmentCount + "]"))
-							.size() > 0) {
-						if (driver
-								.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]//following::img["
-										+ attachmentCount + "]"))
-								.isDisplayed()) {
-							Frame1.appendText("File is attached");
+					driver.findElement(By.name("files")).sendKeys(imageURL);
+
+					int tmp = 0;
+					long t = System.currentTimeMillis();
+					long end = t + 100000;
+
+					do {
+						if (System.currentTimeMillis() > end) {
+							Frame1.appendText("image upload timeout");
 							tmp = 1;
-							if (arrSplit.length > 1) {
-								driver.findElement(
-										By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-										.sendKeys(Keys.ENTER);
-							}
+							break;
 						}
-					} else {
-						Frame1.appendText("File is still not attached");
-						tmp = 0;
-					}
-				} while (tmp == 0);
+
+						if (driver.findElements(
+								By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]//following::img["
+										+ attachmentCount + "]"))
+								.size() > 0) {
+							if (driver.findElement(
+									By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]//following::img["
+											+ attachmentCount + "]"))
+									.isDisplayed()) {
+								Frame1.appendText("File is attached");
+								tmp = 1;
+								if (arrSplit.length > 1) {
+									driver.findElement(By.xpath(
+											"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											.sendKeys(Keys.ENTER);
+								}
+							}
+						} else {
+							Frame1.appendText("File is still not attached");
+							tmp = 0;
+						}
+					} while (tmp == 0);
+				}
 			}
 
 			if (orderlist.equals("start") || orderlist.equals("end")) {
