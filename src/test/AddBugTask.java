@@ -73,6 +73,7 @@ public class AddBugTask extends Utilities {
 	String headless;
 	File file;
 	Sheet sh1;
+	Sheet shac;
 	Workbook wb;
 	DateTimeFormatter dtf;
 	LocalDateTime now;
@@ -118,6 +119,7 @@ public class AddBugTask extends Utilities {
 
 		wb = Workbook.getWorkbook(src);
 		sh1 = wb.getSheet(0);
+		shac = wb.getSheet("Automation Acceptance Criteria");
 		username = sh1.getCell(1, 1);
 		uname = username.getContents();
 
@@ -238,10 +240,6 @@ public class AddBugTask extends Utilities {
 			driver.findElement(By.name("password")).sendKeys(Keys.ENTER);
 
 			for (int i = 0; i < sheetNames.length; i++) {
-//				if (sheetNames[i].equals("BranchCreate")) {
-//					BranchCreateSheet = true;
-//					break;
-//				}
 				if (sheetNames[i].equals(GetSheetData.getData("Dev Tracker!B11").get(0).get(0).toString())) {
 					// bug / task status - TO DO
 					ApprovedBugsByPM = true;
@@ -254,6 +252,8 @@ public class AddBugTask extends Utilities {
 					ApprovedBugsByPM = false;
 					sh1 = wb.getSheet(sheetNames[i]);
 					executeSheet(GetSheetData.getData("Dev Tracker!B14").get(0).get(0).toString());
+				} else if (sheetNames[i].equals(GetSheetData.getData("Dev Tracker!B15").get(0).get(0).toString())) {
+					assert true;
 				} else {
 					// bug / task status - as per sheet
 					DeferredBugsByPM = false;
@@ -291,7 +291,7 @@ public class AddBugTask extends Utilities {
 
 			if (project_name_next_row_acceptance_criteria == null
 					|| project_name_next_row_acceptance_criteria.getContents().isEmpty()) {
-				System.out.println("don't check next row");
+
 			}
 
 			if (project_name.getContents().equals(GetSheetData.getData("Dev Tracker!B7").get(0).get(0).toString())) {
@@ -557,7 +557,7 @@ public class AddBugTask extends Utilities {
 			}
 			oltagStringGlobal = "";
 			// COS
-			macTextFormat(imagePath, pmName.getContents(), pmComment.getContents(), cos, "xyz", sh1, row);
+			macTextFormat(imagePath, pmName.getContents(), pmComment.getContents(), cos, "xyz", shac, row);
 
 			if (acceptanceCriteria.equals("false")) {
 //				removeExtraSpace();

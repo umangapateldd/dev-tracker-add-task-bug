@@ -115,7 +115,7 @@ public class Utilities {
 
 	@SuppressWarnings("deprecation")
 	public void macTextFormat(String imagePath, String pmName, String pmComment, Cell descriptionType, String htmlTag,
-			Sheet sh1, int row) throws InterruptedException {
+			Sheet shac, int row) throws InterruptedException {
 		String oltagString = AddBugTask.oltagStringGlobal;
 		int countTag = 0;
 		ArrayList<String> olArray = new ArrayList();
@@ -154,7 +154,6 @@ public class Utilities {
 		if (ACFile.exists()) {
 //			BufferedReader reader;
 			try {
-
 				Scanner scanner = new Scanner(ACFile);
 				while (scanner.hasNextLine()) {
 					ACString = ACString + scanner.nextLine() + "\n";
@@ -169,7 +168,30 @@ public class Utilities {
 		} else {
 			AddBugTask.ACFileAvailable = "false";
 		}
-		String[] arrSplit = cosString.split("\n");
+
+		String[] arrSplit = null;
+		if (cosString.startsWith("AAC")) {
+			int totalRowsAC = shac.getRows();
+			int totalColAC = shac.getColumns();
+
+			boolean shacData = false;
+
+			for (int rowAC = 0; rowAC < totalRowsAC;) {
+				for (int colAC = 0; colAC < totalColAC; colAC++) {
+					if (cosString.equals(shac.getCell(colAC, rowAC).getContents())) {
+						arrSplit = shac.getCell(colAC, rowAC + 1).getContents().split("\n");
+						shacData = true;
+						break;
+					}
+				}
+				rowAC = rowAC + 2;
+			}
+			if (!shacData) {
+				arrSplit = cosString.split("\n");
+			}
+		} else {
+			arrSplit = cosString.split("\n");
+		}
 
 		int attachmentCount = 0;
 		boolean exists = false;
@@ -180,24 +202,32 @@ public class Utilities {
 			int len;
 			String str1;
 			char[] characterArray = new char[250];
+			int spaceCount = 0;
 			sumTab = 0;
 			str1 = arrSplit[ar];
 			len = str1.length();
 			if (arrSplit[ar].toLowerCase(Locale.ENGLISH).contains("{number}") || "start".equals(orderlist)) {
 				for (k1 = 0; k1 < len; k1++) {
-					if (str1.substring(k1, k1 + 1).equals("\t"))
-						sumTab++;
+//					if (str1.substring(k1, k1 + 1).equals("\t")) {
+//						System.out.println("iffffffff with tab");
+//						sumTab++;
+//					}
+					if (str1.substring(k1, k1 + 1).equals(" ")) {
+						spaceCount++;
+					} else {
+						break;
+					}
+				}
+				if (spaceCount % 8 == 0) {
+					sumTab = spaceCount / 8;
 				}
 			}
-			System.out.println("sum tab " + sumTab);
-
+			
 			if ("stop".equals(orderlist)) {
 				if (driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 						.getText().isEmpty()) {
-					System.out.println("222222222222222222");
 
 				} else {
-					System.out.println("333333333333");
 					js = (JavascriptExecutor) driver;
 					js.executeScript(
 							"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(driver
@@ -220,8 +250,6 @@ public class Utilities {
 					countTag++;
 				}
 			}
-
-			System.out.println("start " + arrSplit[ar]);
 
 			if (arrSplit[ar].toLowerCase(Locale.ENGLISH).contains("{number}")) {
 				orderListNumber++;
@@ -314,8 +342,6 @@ public class Utilities {
 			exists = false;
 			arrSplit[ar] = arrSplit[ar].replace("{number}", "");
 			arrSplit[ar] = arrSplit[ar].replace("{/number}", "");
-			arrSplit[ar] = arrSplit[ar].replace("{subnumber}", "");
-			arrSplit[ar] = arrSplit[ar].replace("{/subnumber}", "");
 			File tempFile = new File(imagePath + arrSplit[ar]);
 			String imageURL = "";
 			if (arrSplit[ar].isEmpty()) {
@@ -338,7 +364,12 @@ public class Utilities {
 						}
 					}
 				} else {
-					arrSplit[ar] = arrSplit[ar].trim();
+					if (arrSplit[ar].contains("\t")) {
+						System.out.println("666666666666");
+					} else {
+						System.out.println("77777777777");
+						arrSplit[ar] = arrSplit[ar].trim();
+					}
 				}
 
 				if ("stop".equals(orderlist)) {
@@ -346,7 +377,6 @@ public class Utilities {
 							.findElements(
 									By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 							.size() <= 0) {
-						System.out.println("5555555555555");
 						driver.findElement(
 								By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + (countTag - 1) + "]"))
 								.click();
@@ -357,9 +387,8 @@ public class Utilities {
 						driver.findElement(
 								By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + (countTag - 1) + "]"))
 								.sendKeys(Keys.ENTER);
-					} else {
-						System.out.println("66666666666");
 					}
+
 					Dimension newDimension = new Dimension(1300, 768);
 					if (!driver.manage().window().getSize().equals(newDimension)) {
 						driver.manage().window().setSize(newDimension);
@@ -875,8 +904,6 @@ public class Utilities {
 							driver.findElement(
 									By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 									.sendKeys(Keys.END);
-							System.out.println(arrSplit[ar]);
-
 							js = (JavascriptExecutor) driver;
 							js.executeScript(
 									"arguments[0].innerHTML = '" + StringEscapeUtils.escapeEcmaScript(arrSplit[ar])
@@ -889,12 +916,10 @@ public class Utilities {
 							enter = false;
 						} else {
 							if (arrSplit[ar].isEmpty()) {
-								System.out.println("ifffffffffff");
 								driver.findElement(By.xpath(
 										"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + (countTag - 1) + "]"))
 										.sendKeys(Keys.ENTER);
 							} else {
-								System.out.println("elseeeeeeeeeeeeee");
 								driver.findElement(
 										By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 										.click();
@@ -1387,7 +1412,6 @@ public class Utilities {
 							if (enter) {
 								enter = false;
 							} else {
-								System.out.println("9999999999");
 								js = (JavascriptExecutor) driver;
 								js.executeScript("arguments[0].click();", driver.findElement(By.xpath(xpathNumbering)));
 
@@ -1548,17 +1572,15 @@ public class Utilities {
 
 		Frame1.appendText("Removing Extra Space");
 
-		int pTag = 2;
-		int totalPTag = driver.findElements(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p")).size();
-		while (pTag <= totalPTag) {
-			if (driver.findElements(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br"))
-					.size() > 0) {
-				js = (JavascriptExecutor) driver;
-				js.executeScript("arguments[0].remove()", driver
-						.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + pTag + "]/br")));
-			}
-			pTag++;
+		int pExtratag = 1;
+		int totalPTag = driver.findElements(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p/br")).size();
+		while (pExtratag <= totalPTag) {
+			js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].remove()",
+					driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p/br")));
+			pExtratag++;
 		}
+
 		Frame1.appendText("extra space remove done");
 	}
 
