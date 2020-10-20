@@ -2,15 +2,12 @@ package test;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.channels.FileLock;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -139,34 +136,16 @@ public class Utilities {
 		}
 
 		String cosString = descriptionType.getContents();
+		String onlyCOS = "";
 
 		if (!pmComment.isEmpty()) {
 			if (pmComment.equals(".")) {
+				onlyCOS = cosString;
 				cosString = cosString + "\n~" + pmName.trim() + "~";
 			} else {
+				onlyCOS = cosString;
 				cosString = cosString + "\n$Comment from PM:$ ~" + pmName.trim() + "~\n" + pmComment;
 			}
-		}
-
-		String ACString = "";
-
-		File ACFile = new File(Frame1.imageDirPath + cosString);
-		if (ACFile.exists()) {
-//			BufferedReader reader;
-			try {
-				Scanner scanner = new Scanner(ACFile);
-				while (scanner.hasNextLine()) {
-					ACString = ACString + scanner.nextLine() + "\n";
-				}
-				scanner.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			cosString = ACString;
-			AddBugTask.ACFileAvailable = "true";
-		} else {
-			AddBugTask.ACFileAvailable = "false";
 		}
 
 		String[] arrSplit = null;
@@ -178,14 +157,31 @@ public class Utilities {
 
 			for (int rowAC = 0; rowAC < totalRowsAC;) {
 				for (int colAC = 0; colAC < totalColAC; colAC++) {
-					if (cosString.equals(shac.getCell(colAC, rowAC).getContents())) {
-						arrSplit = shac.getCell(colAC, rowAC + 1).getContents().split("\n");
-						shacData = true;
-						break;
+					if (onlyCOS.isEmpty()) {
+						if (cosString.equals(shac.getCell(colAC, rowAC).getContents())) {
+							arrSplit = shac.getCell(colAC, rowAC + 1).getContents().split("\n");
+							shacData = true;
+							break;
+						}
+					} else {
+						if (onlyCOS.equals(shac.getCell(colAC, rowAC).getContents())) {
+							String str1 = "";
+							if (pmComment.equals(".")) {
+								str1 = shac.getCell(colAC, rowAC + 1).getContents() + "\n~" + pmName.trim() + "~";
+							} else {
+								str1 = shac.getCell(colAC, rowAC + 1).getContents() + "\n$Comment from PM:$ ~"
+										+ pmName.trim() + "~\n" + pmComment;
+							}
+
+							arrSplit = str1.split("\n");
+							shacData = true;
+							break;
+						}
 					}
 				}
 				rowAC = rowAC + 2;
 			}
+
 			if (!shacData) {
 				arrSplit = cosString.split("\n");
 			}
@@ -209,10 +205,6 @@ public class Utilities {
 			len = str1.length();
 			if (arrSplit[ar].toLowerCase(Locale.ENGLISH).contains("{number}") || "start".equals(orderlist)) {
 				for (k1 = 0; k1 < len; k1++) {
-//					if (str1.substring(k1, k1 + 1).equals("\t")) {
-//						System.out.println("iffffffff with tab");
-//						sumTab++;
-//					}
 					if (str1.substring(k1, k1 + 1).equals(" ")) {
 						spaceCount++;
 					} else {
@@ -353,7 +345,7 @@ public class Utilities {
 				imageURL = imagePath + arrSplit[ar];
 			}
 
-			if (!isFile) {
+			if (!isFile || arrSplit[ar].isEmpty()) {
 				List<String> extractedUrls = extractUrls(arrSplit[ar]);
 				if (extractedUrls.size() > 0) {
 					for (int urlCount = 0; urlCount < extractedUrls.size(); urlCount++) {
@@ -389,10 +381,11 @@ public class Utilities {
 								.sendKeys(Keys.ENTER);
 					}
 
-					Dimension newDimension = new Dimension(1300, 768);
+					Dimension newDimension = new Dimension(2500, 2768);
 					if (!driver.manage().window().getSize().equals(newDimension)) {
 						driver.manage().window().setSize(newDimension);
 					}
+
 					if (driver
 							.findElement(
 									By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
@@ -924,12 +917,41 @@ public class Utilities {
 										By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 										.click();
 								Thread.sleep(1500);
-								driver.findElement(
-										By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-										.sendKeys(Keys.END);
-								driver.findElement(
-										By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-										.sendKeys(Keys.ENTER);
+								int size = driver.findElements(By.xpath(
+										"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + (countTag + 1) + "]"))
+										.size();
+
+								if (size > 0) {
+									String str = driver
+											.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p["
+													+ (countTag + 1) + "]"))
+											.getText();
+									if (str.equals("Acceptance Criteria") || str.equals("References")) {
+										driver.findElement(By.xpath(
+												"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+												.sendKeys(Keys.END);
+										driver.findElement(By.xpath(
+												"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+												.sendKeys(Keys.ENTER);
+									} else {
+										driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p["
+												+ (countTag + 1) + "]")).click();
+
+										driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p["
+												+ (countTag + 1) + "]")).sendKeys(Keys.END);
+										driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p["
+												+ (countTag + 1) + "]")).sendKeys(Keys.ENTER);
+
+										countTag++;
+									}
+								} else {
+									driver.findElement(By.xpath(
+											"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											.sendKeys(Keys.END);
+									driver.findElement(By.xpath(
+											"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
+											.sendKeys(Keys.ENTER);
+								}
 							}
 
 						}
@@ -968,6 +990,9 @@ public class Utilities {
 								if (driver.findElement(By.xpath(xpathNumbering + "/b")).getText().isEmpty()
 										|| driver.findElements(By.xpath(xpathNumbering + "/b/br")).size() > 0) {
 									js = (JavascriptExecutor) driver;
+									js.executeScript("arguments[0].click();",
+											driver.findElement(By.xpath("//*[@data-original-title='Bold (CTRL+B)']")));
+
 									js.executeScript("arguments[0].remove()",
 											driver.findElement(By.xpath(xpathNumbering + "/b")));
 
@@ -1465,6 +1490,16 @@ public class Utilities {
 											"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(Keys.ENTER);
 								}
+
+								driver.findElement(By.xpath(
+										"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]/img"))
+										.click();
+								Thread.sleep(1500);
+
+								driver.findElement(By.xpath(
+										"/html/body//div[contains(@style,'display: block')]/div[2]/div[1]/button[1]"))
+										.click();
+								Thread.sleep(1500);
 							}
 						} else {
 							Frame1.appendText("File is still not attached");
@@ -1541,13 +1576,8 @@ public class Utilities {
 			}
 		}
 
-		if (AddBugTask.ACFileAvailable.equals("true")) {
-			if (orderlist.equals("start")) {
-//				driver.findElement(
-//						By.xpath("//div[@id='description']//button[@aria-label='Ordered list (CTRL+SHIFT+NUM7)']"))
-//						.click();
-//				driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
-//						.sendKeys(Keys.ENTER);
+		if ("true".equals(AddBugTask.ACFileAvailable)) {
+			if ("start".equals(orderlist)) {
 				orderlist = "stop";
 			}
 		}
@@ -1555,7 +1585,7 @@ public class Utilities {
 		AddBugTask.oltagStringGlobal = oltagString;
 	}
 
-	public void removeExtraSpace() throws InterruptedException, IOException, GeneralSecurityException {
+	public void removeExtraSpace() {
 		orderListNumber = 0;
 		subOrderListNumber = 0;
 		tempListNumber = 0;

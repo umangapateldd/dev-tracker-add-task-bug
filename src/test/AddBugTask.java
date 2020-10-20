@@ -551,7 +551,7 @@ public class AddBugTask extends Utilities {
 				macTextFormat(imagePath, "", "", objective, "p[2]", sh1, row);
 			}
 
-			Dimension newDimension = new Dimension(1300, 768);
+			Dimension newDimension = new Dimension(2500, 2768);
 			if (!driver.manage().window().getSize().equals(newDimension)) {
 				driver.manage().window().setSize(newDimension);
 			}
