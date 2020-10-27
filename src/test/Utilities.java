@@ -1496,9 +1496,20 @@ public class Utilities {
 										.click();
 								Thread.sleep(1500);
 
-								driver.findElement(By.xpath(
-										"/html/body//div[contains(@style,'display: block')]/div[2]/div[1]/button[1]"))
-										.click();
+								String str = driver
+										.findElement(
+												By.xpath("//*[@id='description']/div/div[3]/div[3]/div[1]/div/div[6]"))
+										.getText();
+								Thread.sleep(1000);
+								String[] ar1 = str.split("Original:", 2);
+								if (ar1[0].replace("(", "").trim().equals(ar1[1].replace(")", "").trim())) {
+								} else {
+									Thread.sleep(1500);
+									driver.findElement(By.xpath(
+											"/html/body//div[contains(@style,'display: block')]/div[2]/div[1]/button[1]"))
+											.click();
+								}
+
 								Thread.sleep(1500);
 							}
 						} else {
