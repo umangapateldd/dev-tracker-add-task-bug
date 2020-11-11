@@ -872,112 +872,246 @@ public class Utilities {
 									abc = abc + 2;
 								} else if (arrSplit[ar].charAt(a[abc]) == '^') {
 									// Click Starting Color Code
-									if (arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).contains("back")) {
-										try {
-											driver.findElement(By.xpath(
-													"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-													.click();
-										} catch (ElementClickInterceptedException e) {
-											js = (JavascriptExecutor) driver;
-											js.executeScript("window.scrollBy(0,-250)");
-											driver.findElement(By.xpath(
-													"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-													.click();
+									if (arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).contains("-")) {
+										String[] color = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).split("-");
+										if (color[0].contains("back")) {
+											try {
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											} catch (ElementClickInterceptedException e) {
+												js = (JavascriptExecutor) driver;
+												js.executeScript("window.scrollBy(0,-250)");
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											}
+
+											if (driver.findElements(By.xpath("//button[@data-original-title='"
+													+ color[0].replace("back", "") + "' and @data-event='backColor']"))
+													.size() > 0) {
+												driver.findElement(By.xpath(
+														"//button[@data-original-title='" + color[0].replace("back", "")
+																+ "' and @data-event='backColor']"))
+														.click();
+											} else {
+												Frame1.appendText("Start back color code is not proper");
+											}
 										}
 
-										if (driver.findElements(By.xpath("//button[@data-original-title='"
-												+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).replace("back", "")
-												+ "' and @data-event='backColor']")).size() > 0) {
-											driver.findElement(By.xpath("//button[@data-original-title='"
+										if (color[1].contains("fore")) {
+											try {
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											} catch (ElementClickInterceptedException e) {
+												js = (JavascriptExecutor) driver;
+												js.executeScript("window.scrollBy(0,-250)");
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											}
+
+											if (driver.findElements(By.xpath("//button[@data-original-title='"
+													+ color[1].replace("fore", "") + "' and @data-event='foreColor']"))
+													.size() > 0) {
+												driver.findElement(By.xpath(
+														"//button[@data-original-title='" + color[1].replace("fore", "")
+																+ "' and @data-event='foreColor']"))
+														.click();
+											} else {
+												Frame1.appendText("Start fore color code is not proper");
+											}
+										}
+									} else {
+										if (arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).contains("back")) {
+											try {
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											} catch (ElementClickInterceptedException e) {
+												js = (JavascriptExecutor) driver;
+												js.executeScript("window.scrollBy(0,-250)");
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											}
+
+											if (driver.findElements(By.xpath("//button[@data-original-title='"
 													+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).replace("back", "")
-													+ "' and @data-event='backColor']")).click();
-										} else {
-											Frame1.appendText("Start back color code is not proper");
-										}
-									}
-
-									if (arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).contains("fore")) {
-										try {
-											driver.findElement(By.xpath(
-													"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-													.click();
-										} catch (ElementClickInterceptedException e) {
-											js = (JavascriptExecutor) driver;
-											js.executeScript("window.scrollBy(0,-250)");
-											driver.findElement(By.xpath(
-													"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-													.click();
+													+ "' and @data-event='backColor']")).size() > 0) {
+												driver.findElement(
+														By.xpath("//button[@data-original-title='"
+																+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
+																		.replace("back", "")
+																+ "' and @data-event='backColor']"))
+														.click();
+											} else {
+												Frame1.appendText("Start back color code is not proper");
+											}
 										}
 
-										if (driver.findElements(By.xpath("//button[@data-original-title='"
-												+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).replace("fore", "")
-												+ "' and @data-event='foreColor']")).size() > 0) {
-											driver.findElement(By.xpath("//button[@data-original-title='"
+										if (arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).contains("fore")) {
+											try {
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											} catch (ElementClickInterceptedException e) {
+												js = (JavascriptExecutor) driver;
+												js.executeScript("window.scrollBy(0,-250)");
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											}
+
+											if (driver.findElements(By.xpath("//button[@data-original-title='"
 													+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).replace("fore", "")
-													+ "' and @data-event='foreColor']")).click();
-										} else {
-											Frame1.appendText("Start fore color code is not proper");
+													+ "' and @data-event='foreColor']")).size() > 0) {
+												driver.findElement(
+														By.xpath("//button[@data-original-title='"
+																+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
+																		.replace("fore", "")
+																+ "' and @data-event='foreColor']"))
+														.click();
+											} else {
+												Frame1.appendText("Start fore color code is not proper");
+											}
 										}
 									}
+									driver.findElement(By
+											.xpath("//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[1]"))
+											.click();
+									Thread.sleep(1500);
 
 									driver.findElement(By.xpath(
 											"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
 											.sendKeys(arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]));
 
-									if (arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).contains("fore")) {
-										try {
-											driver.findElement(By.xpath(
-													"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-													.click();
-										} catch (ElementClickInterceptedException e) {
-											js = (JavascriptExecutor) driver;
-											js.executeScript("window.scrollBy(0,-250)");
-											driver.findElement(By.xpath(
-													"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-													.click();
+									if (arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).contains("-")) {
+										String[] color = arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).split("-");
+										if (color[0].contains("back")) {
+											try {
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											} catch (ElementClickInterceptedException e) {
+												js = (JavascriptExecutor) driver;
+												js.executeScript("window.scrollBy(0,-250)");
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											}
+
+											if (driver.findElements(By.xpath("//button[@data-original-title='"
+													+ color[0].replace("back", "") + "' and @data-event='foreColor']"))
+													.size() > 0) {
+												driver.findElement(By.xpath(
+														"//button[@data-original-title='" + color[0].replace("back", "")
+																+ "' and @data-event='backColor']"))
+														.click();
+											} else {
+												Frame1.appendText("End color code is not proper");
+											}
 										}
 
-										if (driver.findElements(By.xpath("//button[@data-original-title='"
-												+ arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).replace("fore", "")
-												+ "' and @data-event='foreColor']")).size() > 0) {
-											driver.findElement(
-													By.xpath("//button[@data-original-title='"
-															+ arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3])
-																	.replace("fore", "")
-															+ "' and @data-event='foreColor']"))
-													.click();
-										} else {
-											Frame1.appendText("End color code is not proper");
+										if (color[1].contains("fore")) {
+											try {
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											} catch (ElementClickInterceptedException e) {
+												js = (JavascriptExecutor) driver;
+												js.executeScript("window.scrollBy(0,-250)");
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											}
+
+											if (driver.findElements(By.xpath("//button[@data-original-title='"
+													+ color[1].replace("fore", "") + "' and @data-event='foreColor']"))
+													.size() > 0) {
+												driver.findElement(By.xpath(
+														"//button[@data-original-title='" + color[1].replace("fore", "")
+																+ "' and @data-event='foreColor']"))
+														.click();
+											} else {
+												Frame1.appendText("End color code is not proper");
+											}
+										}
+
+									} else {
+										if (arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).contains("fore")) {
+											try {
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											} catch (ElementClickInterceptedException e) {
+												js = (JavascriptExecutor) driver;
+												js.executeScript("window.scrollBy(0,-250)");
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											}
+
+											if (driver
+													.findElements(
+															By.xpath(
+																	"//button[@data-original-title='"
+																			+ arrSplit[ar]
+																					.substring(a[abc + 2] + 1,
+																							a[abc + 3])
+																					.replace("fore", "")
+																			+ "' and @data-event='foreColor']"))
+													.size() > 0) {
+												driver.findElement(
+														By.xpath("//button[@data-original-title='"
+																+ arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3])
+																		.replace("fore", "")
+																+ "' and @data-event='foreColor']"))
+														.click();
+											} else {
+												Frame1.appendText("End color code is not proper");
+											}
+										}
+
+										if (arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).contains("back")) {
+											try {
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											} catch (ElementClickInterceptedException e) {
+												js = (JavascriptExecutor) driver;
+												js.executeScript("window.scrollBy(0,-250)");
+												driver.findElement(By.xpath(
+														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+														.click();
+											}
+
+											if (driver
+													.findElements(
+															By.xpath(
+																	"//button[@data-original-title='"
+																			+ arrSplit[ar]
+																					.substring(a[abc + 2] + 1,
+																							a[abc + 3])
+																					.replace("back", "")
+																			+ "' and @data-event='foreColor']"))
+													.size() > 0) {
+												driver.findElement(
+														By.xpath("//button[@data-original-title='"
+																+ arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3])
+																		.replace("back", "")
+																+ "' and @data-event='backColor']"))
+														.click();
+											} else {
+												Frame1.appendText("End color code is not proper");
+											}
 										}
 									}
-
-									if (arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).contains("back")) {
-										try {
-											driver.findElement(By.xpath(
-													"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-													.click();
-										} catch (ElementClickInterceptedException e) {
-											js = (JavascriptExecutor) driver;
-											js.executeScript("window.scrollBy(0,-250)");
-											driver.findElement(By.xpath(
-													"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-													.click();
-										}
-
-										if (driver.findElements(By.xpath("//button[@data-original-title='"
-												+ arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).replace("back", "")
-												+ "' and @data-event='foreColor']")).size() > 0) {
-											driver.findElement(
-													By.xpath("//button[@data-original-title='"
-															+ arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3])
-																	.replace("back", "")
-															+ "' and @data-event='backColor']"))
-													.click();
-										} else {
-											Frame1.appendText("End color code is not proper");
-										}
-									}
-
+									driver.findElement(By
+											.xpath("//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[1]"))
+											.click();
+									Thread.sleep(1500);
 									if (abc + 4 < a.length) {
 										driver.findElement(By.xpath(
 												"//*[@id='description']/div/div[3]/div[3]/div[2]/p[" + countTag + "]"))
@@ -1531,158 +1665,279 @@ public class Utilities {
 													.sendKeys(Keys.COMMAND + "" + Keys.ARROW_RIGHT);
 										}
 										abc = abc + 2;
-									} else if (arrSplit[ar].charAt(a[abc + 1]) == '^') {
-										// Click Starting Color Code
-										if (arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]).contains("back")) {
-											try {
-												driver.findElement(By.xpath(
-														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-														.click();
-											} catch (ElementClickInterceptedException e) {
-												js = (JavascriptExecutor) driver;
-												js.executeScript("window.scrollBy(0,-250)");
-												driver.findElement(By.xpath(
-														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-														.click();
-											}
+									} else if (arrSplit[ar].charAt(a[abc]) == '^') {
+										if (arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).contains("-")) {
+											String[] color = arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).split("-");
+											if (color[0].contains("back")) {
+												try {
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												} catch (ElementClickInterceptedException e) {
+													js = (JavascriptExecutor) driver;
+													js.executeScript("window.scrollBy(0,-250)");
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												}
 
-											if (driver
-													.findElements(
-															By.xpath(
-																	"//button[@data-original-title='"
-																			+ arrSplit[ar]
-																					.substring(a[abc + 1] + 1,
-																							a[abc + 2])
-																					.replace("back", "")
-																			+ "' and @data-event='backColor']"))
-													.size() > 0) {
-												driver.findElement(
-														By.xpath("//button[@data-original-title='"
-																+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])
-																		.replace("back", "")
+												if (driver.findElements(By.xpath(
+														"//button[@data-original-title='" + color[0].replace("back", "")
 																+ "' and @data-event='backColor']"))
-														.click();
-											} else {
-												Frame1.appendText("Start back color code is not proper");
-											}
-										}
-
-										if (arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]).contains("fore")) {
-											try {
-												driver.findElement(By.xpath(
-														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-														.click();
-											} catch (ElementClickInterceptedException e) {
-												js = (JavascriptExecutor) driver;
-												js.executeScript("window.scrollBy(0,-250)");
-												driver.findElement(By.xpath(
-														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-														.click();
+														.size() > 0) {
+													driver.findElement(By.xpath("//button[@data-original-title='"
+															+ color[0].replace("back", "")
+															+ "' and @data-event='backColor']")).click();
+												} else {
+													Frame1.appendText("Start back color code is not proper");
+												}
 											}
 
-											if (driver
-													.findElements(
-															By.xpath(
-																	"//button[@data-original-title='"
-																			+ arrSplit[ar]
-																					.substring(a[abc + 1] + 1,
-																							a[abc + 2])
-																					.replace("fore", "")
-																			+ "' and @data-event='foreColor']"))
-													.size() > 0) {
-												driver.findElement(
-														By.xpath("//button[@data-original-title='"
-																+ arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2])
-																		.replace("fore", "")
+											if (color[1].contains("fore")) {
+												try {
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												} catch (ElementClickInterceptedException e) {
+													js = (JavascriptExecutor) driver;
+													js.executeScript("window.scrollBy(0,-250)");
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												}
+
+												if (driver.findElements(By.xpath(
+														"//button[@data-original-title='" + color[1].replace("fore", "")
 																+ "' and @data-event='foreColor']"))
-														.click();
-											} else {
-												Frame1.appendText("Start fore color code is not proper");
+														.size() > 0) {
+													driver.findElement(By.xpath("//button[@data-original-title='"
+															+ color[1].replace("fore", "")
+															+ "' and @data-event='foreColor']")).click();
+												} else {
+													Frame1.appendText("Start fore color code is not proper");
+												}
+											}
+										} else {
+											if (arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).contains("back")) {
+												try {
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												} catch (ElementClickInterceptedException e) {
+													js = (JavascriptExecutor) driver;
+													js.executeScript("window.scrollBy(0,-250)");
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												}
+
+												if (driver
+														.findElements(
+																By.xpath(
+																		"//button[@data-original-title='"
+																				+ arrSplit[ar]
+																						.substring(a[abc] + 1,
+																								a[abc + 1])
+																						.replace("back", "")
+																				+ "' and @data-event='backColor']"))
+														.size() > 0) {
+													driver.findElement(
+															By.xpath("//button[@data-original-title='"
+																	+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
+																			.replace("back", "")
+																	+ "' and @data-event='backColor']"))
+															.click();
+												} else {
+													Frame1.appendText("Start back color code is not proper");
+												}
+											}
+
+											if (arrSplit[ar].substring(a[abc] + 1, a[abc + 1]).contains("fore")) {
+												try {
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												} catch (ElementClickInterceptedException e) {
+													js = (JavascriptExecutor) driver;
+													js.executeScript("window.scrollBy(0,-250)");
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												}
+
+												if (driver
+														.findElements(
+																By.xpath(
+																		"//button[@data-original-title='"
+																				+ arrSplit[ar]
+																						.substring(a[abc] + 1,
+																								a[abc + 1])
+																						.replace("fore", "")
+																				+ "' and @data-event='foreColor']"))
+														.size() > 0) {
+													driver.findElement(
+															By.xpath("//button[@data-original-title='"
+																	+ arrSplit[ar].substring(a[abc] + 1, a[abc + 1])
+																			.replace("fore", "")
+																	+ "' and @data-event='foreColor']"))
+															.click();
+												} else {
+													Frame1.appendText("Start fore color code is not proper");
+												}
 											}
 										}
+										driver.findElement(By.xpath(
+												"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[1]"))
+												.click();
+										Thread.sleep(1500);
 
 										driver.findElement(By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/"
 												+ oltagString + "li[" + listVal + "]"))
-												.sendKeys(arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]));
+												.sendKeys(arrSplit[ar].substring(a[abc + 1] + 1, a[abc + 2]));
 
-										if (arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4]).contains("fore")) {
-											try {
-												driver.findElement(By.xpath(
-														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-														.click();
-											} catch (ElementClickInterceptedException e) {
-												js = (JavascriptExecutor) driver;
-												js.executeScript("window.scrollBy(0,-250)");
-												driver.findElement(By.xpath(
-														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-														.click();
+										if (arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).contains("-")) {
+											String[] color = arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3])
+													.split("-");
+											if (color[0].contains("back")) {
+												try {
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												} catch (ElementClickInterceptedException e) {
+													js = (JavascriptExecutor) driver;
+													js.executeScript("window.scrollBy(0,-250)");
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												}
+
+												if (driver.findElements(By.xpath(
+														"//button[@data-original-title='" + color[0].replace("back", "")
+																+ "' and @data-event='foreColor']"))
+														.size() > 0) {
+													driver.findElement(By.xpath("//button[@data-original-title='"
+															+ color[0].replace("back", "")
+															+ "' and @data-event='backColor']")).click();
+												} else {
+													Frame1.appendText("End color code is not proper");
+												}
 											}
 
-											if (driver
-													.findElements(
+											if (color[1].contains("fore")) {
+												try {
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												} catch (ElementClickInterceptedException e) {
+													js = (JavascriptExecutor) driver;
+													js.executeScript("window.scrollBy(0,-250)");
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												}
+
+												if (driver.findElements(By.xpath(
+														"//button[@data-original-title='" + color[1].replace("fore", "")
+																+ "' and @data-event='foreColor']"))
+														.size() > 0) {
+													driver.findElement(By.xpath("//button[@data-original-title='"
+															+ color[1].replace("fore", "")
+															+ "' and @data-event='foreColor']")).click();
+												} else {
+													Frame1.appendText("End color code is not proper");
+												}
+											}
+
+										} else {
+											if (arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).contains("fore")) {
+												try {
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												} catch (ElementClickInterceptedException e) {
+													js = (JavascriptExecutor) driver;
+													js.executeScript("window.scrollBy(0,-250)");
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												}
+
+												if (driver
+														.findElements(
+																By.xpath(
+																		"//button[@data-original-title='"
+																				+ arrSplit[ar]
+																						.substring(a[abc + 2] + 1,
+																								a[abc + 3])
+																						.replace("fore", "")
+																				+ "' and @data-event='foreColor']"))
+														.size() > 0) {
+													driver.findElement(
 															By.xpath(
 																	"//button[@data-original-title='"
 																			+ arrSplit[ar]
-																					.substring(a[abc + 3] + 1,
-																							a[abc + 4])
+																					.substring(a[abc + 2] + 1,
+																							a[abc + 3])
 																					.replace("fore", "")
 																			+ "' and @data-event='foreColor']"))
-													.size() > 0) {
-												driver.findElement(
-														By.xpath("//button[@data-original-title='"
-																+ arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4])
-																		.replace("fore", "")
-																+ "' and @data-event='foreColor']"))
-														.click();
-											} else {
-												Frame1.appendText("End color code is not proper");
-											}
-										}
-
-										if (arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4]).contains("back")) {
-											try {
-												driver.findElement(By.xpath(
-														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-														.click();
-											} catch (ElementClickInterceptedException e) {
-												js = (JavascriptExecutor) driver;
-												js.executeScript("window.scrollBy(0,-250)");
-												driver.findElement(By.xpath(
-														"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
-														.click();
+															.click();
+												} else {
+													Frame1.appendText("End color code is not proper");
+												}
 											}
 
-											if (driver
-													.findElements(
+											if (arrSplit[ar].substring(a[abc + 2] + 1, a[abc + 3]).contains("back")) {
+												try {
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												} catch (ElementClickInterceptedException e) {
+													js = (JavascriptExecutor) driver;
+													js.executeScript("window.scrollBy(0,-250)");
+													driver.findElement(By.xpath(
+															"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[2]"))
+															.click();
+												}
+
+												if (driver
+														.findElements(
+																By.xpath(
+																		"//button[@data-original-title='"
+																				+ arrSplit[ar]
+																						.substring(a[abc + 2] + 1,
+																								a[abc + 3])
+																						.replace("back", "")
+																				+ "' and @data-event='foreColor']"))
+														.size() > 0) {
+													driver.findElement(
 															By.xpath(
 																	"//button[@data-original-title='"
 																			+ arrSplit[ar]
-																					.substring(a[abc + 3] + 1,
-																							a[abc + 4])
+																					.substring(a[abc + 2] + 1,
+																							a[abc + 3])
 																					.replace("back", "")
-																			+ "' and @data-event='foreColor']"))
-													.size() > 0) {
-												driver.findElement(
-														By.xpath("//button[@data-original-title='"
-																+ arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4])
-																		.replace("back", "")
-																+ "' and @data-event='foreColor']"))
-														.click();
-											} else {
-												Frame1.appendText("End color code is not proper");
+																			+ "' and @data-event='backColor']"))
+															.click();
+												} else {
+													Frame1.appendText("End color code is not proper");
+												}
 											}
 										}
+										driver.findElement(By.xpath(
+												"//*[@id='description']/div/div[3]/div[2]/div/div[4]/div/button[1]"))
+												.click();
+										Thread.sleep(1500);
 
 										if (abc + 4 < a.length) {
 											driver.findElement(
-													By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/"
-															+ oltagString + "li[" + listVal + "]"))
-													.sendKeys(arrSplit[ar].substring(a[abc + 4] + 1, a[abc + 5]));
+													By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p["
+															+ countTag + "]"))
+													.sendKeys(arrSplit[ar].substring(a[abc + 3] + 1, a[abc + 4]));
 										} else {
 											driver.findElement(
-													By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/"
-															+ oltagString + "li[" + listVal + "]"))
-													.sendKeys(arrSplit[ar].substring(a[abc + 4] + 1,
+													By.xpath("//*[@id='description']/div/div[3]/div[3]/div[2]/p["
+															+ countTag + "]"))
+													.sendKeys(arrSplit[ar].substring(a[abc + 3] + 1,
 															arrSplit[ar].length()));
 										}
 										abc = abc + 4;
@@ -1774,16 +2029,17 @@ public class Utilities {
 										.findElement(
 												By.xpath("//*[@id='description']/div/div[3]/div[3]/div[1]/div/div[6]"))
 										.getText();
-								Thread.sleep(1000);
-								String[] ar1 = str.split("Original:", 2);
-								if (ar1[0].replace("(", "").trim().equals(ar1[1].replace(")", "").trim())) {
-								} else {
-									Thread.sleep(1500);
-									driver.findElement(By.xpath(
-											"/html/body//div[contains(@style,'display: block')]/div[2]/div[1]/button[1]"))
-											.click();
+								if (str.contains("Original:")) {
+									Thread.sleep(1000);
+									String[] ar1 = str.split("Original:", 2);
+									if (ar1[0].replace("(", "").trim().equals(ar1[1].replace(")", "").trim())) {
+									} else {
+										Thread.sleep(1500);
+										driver.findElement(By.xpath(
+												"/html/body//div[contains(@style,'display: block')]/div[2]/div[1]/button[1]"))
+												.click();
+									}
 								}
-
 								Thread.sleep(1500);
 							}
 						} else {
