@@ -406,6 +406,7 @@ public class AddBugTask extends Utilities {
 				} else {
 					// Create new milestone
 					driver.findElement(By.id("addmilestone")).click();
+					driver.findElement(By.id("milestone_name")).clear();
 					driver.findElement(By.id("milestone_name")).sendKeys(milestone.getContents().trim());
 					((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('readonly','readonly')",
 							driver.findElement(By.id("milestone_startdate")));
@@ -442,6 +443,7 @@ public class AddBugTask extends Utilities {
 					} else {
 						// Create new taskcategory
 						driver.findElement(By.id("addcategory")).click();
+						driver.findElement(By.id("category_name")).clear();
 						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 						driver.findElement(By.id("savecategory")).click();
 					}
@@ -465,6 +467,7 @@ public class AddBugTask extends Utilities {
 					} else {
 						// Create new taskcategory
 						driver.findElement(By.id("addcategory")).click();
+						driver.findElement(By.id("category_name")).clear();
 						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 						driver.findElement(By.id("savecategory")).click();
 					}
@@ -497,6 +500,7 @@ public class AddBugTask extends Utilities {
 						} else {
 							// Create new taskcategory
 							driver.findElement(By.id("addcategory")).click();
+							driver.findElement(By.id("category_name")).clear();
 							driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 							driver.findElement(By.id("savecategory")).click();
 						}
@@ -520,6 +524,7 @@ public class AddBugTask extends Utilities {
 						} else {
 							// Create new taskcategory
 							driver.findElement(By.id("addcategory")).click();
+							driver.findElement(By.id("category_name")).clear();
 							driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 							driver.findElement(By.id("savecategory")).click();
 						}
@@ -533,6 +538,7 @@ public class AddBugTask extends Utilities {
 					task_bug_radio_button_selection();
 				}
 
+				driver.findElement(By.id("task_name")).clear();
 				driver.findElement(By.id("task_name")).sendKeys(taskTitle.getContents());
 
 				js = (JavascriptExecutor) driver;
@@ -551,7 +557,7 @@ public class AddBugTask extends Utilities {
 				macTextFormat(imagePath, "", "", objective, "p[2]", sh1, row);
 			}
 
-			Dimension newDimension = new Dimension(2500, 2768);
+			Dimension newDimension = new Dimension(1920, 1080);
 			if (!driver.manage().window().getSize().equals(newDimension)) {
 				driver.manage().window().setSize(newDimension);
 			}

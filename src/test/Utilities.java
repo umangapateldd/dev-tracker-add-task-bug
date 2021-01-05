@@ -89,7 +89,7 @@ public class Utilities {
 		driver = new ChromeDriver(options);
 		Frame1.driverFrame = driver;
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
 	}
 
 	public void closeBrowser() {
@@ -381,7 +381,7 @@ public class Utilities {
 								.sendKeys(Keys.ENTER);
 					}
 
-					Dimension newDimension = new Dimension(2500, 2768);
+					Dimension newDimension = new Dimension(1920, 1080);
 					if (!driver.manage().window().getSize().equals(newDimension)) {
 						driver.manage().window().setSize(newDimension);
 					}
