@@ -3,6 +3,7 @@ package test;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -28,15 +29,20 @@ public class mailSend extends Utilities {
 	String EMAIL_FROM = "";
 	String CC_Email = "";
 
-	public void mail(String filename, String username, String processStart)
+	public void mail(String filename, String username, String processStart, boolean stage)
 			throws IOException, InterruptedException, GeneralSecurityException {
-		EMAIL_TO = GetSheetData.getData("Dev Tracker!B2").get(0).get(0).toString().toLowerCase();
+		EMAIL_TO = GetSheetData.getData("Dev Tracker!B2").get(0).get(0).toString().toLowerCase(Locale.ENGLISH);
 		String[] EMAIL_TOvalues = EMAIL_TO.trim().split(",");
 
 		EMAIL_FROM = USERNAME;
-
-		CC_Email = GetSheetData.getData("Dev Tracker!B3").get(0).get(0).toString().toLowerCase();
-		String[] CC_Emailvalues = CC_Email.trim().split(",");
+		String[] CC_Emailvalues = null;
+		if (stage) {
+			CC_Email = GetSheetData.getData("Dev Tracker!B16").get(0).get(0).toString().toLowerCase(Locale.ENGLISH);
+			CC_Emailvalues = CC_Email.trim().split(",");
+		} else {
+			CC_Email = GetSheetData.getData("Dev Tracker!B3").get(0).get(0).toString().toLowerCase(Locale.ENGLISH);
+			CC_Emailvalues = CC_Email.trim().split(",");
+		}
 
 		String EMAIL_SUBJECT = "Script run by " + username;
 
