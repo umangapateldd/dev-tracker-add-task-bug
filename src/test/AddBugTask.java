@@ -424,6 +424,7 @@ public class AddBugTask extends Utilities {
 				} else {
 					// Create new milestone
 					driver.findElement(By.id("addmilestone")).click();
+					Thread.sleep(1500);
 					driver.findElement(By.id("milestone_name")).clear();
 					driver.findElement(By.id("milestone_name")).sendKeys(milestone.getContents().trim());
 					((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('readonly','readonly')",
@@ -463,6 +464,7 @@ public class AddBugTask extends Utilities {
 					} else {
 						// Create new taskcategory
 						driver.findElement(By.id("addcategory")).click();
+						Thread.sleep(1500);
 						driver.findElement(By.id("category_name")).clear();
 						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 						driver.findElement(By.id("savecategory")).click();
@@ -487,6 +489,7 @@ public class AddBugTask extends Utilities {
 					} else {
 						// Create new taskcategory
 						driver.findElement(By.id("addcategory")).click();
+						Thread.sleep(1500);
 						driver.findElement(By.id("category_name")).clear();
 						driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 						driver.findElement(By.id("savecategory")).click();
@@ -520,6 +523,7 @@ public class AddBugTask extends Utilities {
 						} else {
 							// Create new taskcategory
 							driver.findElement(By.id("addcategory")).click();
+							Thread.sleep(1500);
 							driver.findElement(By.id("category_name")).clear();
 							driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 							driver.findElement(By.id("savecategory")).click();
@@ -544,6 +548,7 @@ public class AddBugTask extends Utilities {
 						} else {
 							// Create new taskcategory
 							driver.findElement(By.id("addcategory")).click();
+							Thread.sleep(1500);
 							driver.findElement(By.id("category_name")).clear();
 							driver.findElement(By.id("category_name")).sendKeys(taskcategory.getContents().trim());
 							driver.findElement(By.id("savecategory")).click();
