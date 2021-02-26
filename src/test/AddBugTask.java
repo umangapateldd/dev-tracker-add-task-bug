@@ -87,6 +87,7 @@ public class AddBugTask extends Utilities {
 	String DevTrackerStageAccessPassword;
 	MultipleFileUpload multipleFileUpload;
 	String imagePath;
+	File src;
 
 	public boolean checkFiles() {
 		File file = new File("tokens/StoredCredential");
@@ -109,27 +110,27 @@ public class AddBugTask extends Utilities {
 	}
 
 	public boolean checkVersion() throws GeneralSecurityException, IOException, BiffException, InterruptedException {
-		GetSheetData.googleSheetConnection();
-		File src;
-		if (Frame1.filePath.equals("")) {
-			src = new File("Ticket.xls");
-		} else {
-			src = new File(Frame1.filePath);
-		}
-
-		wb = Workbook.getWorkbook(src);
-		sh1 = wb.getSheet(0);
-		shac = wb.getSheet("Automation Acceptance Criteria");
-		username = sh1.getCell(1, 1);
-		uname = username.getContents();
-
 		if (GetSheetData.getData("Dev Tracker!D1").get(0).get(0).toString().equals(version)) {
+			GetSheetData.googleSheetConnection();
+
+			if (Frame1.filePath.equals("")) {
+				src = new File("Ticket.xls");
+			} else {
+				src = new File(Frame1.filePath);
+			}
+
+			wb = Workbook.getWorkbook(src);
+			sh1 = wb.getSheet(0);
+			shac = wb.getSheet("Automation Acceptance Criteria");
+			username = sh1.getCell(1, 1);
+			uname = username.getContents();
+
 			return true;
 		} else {
 			Frame1.appendText("Please download latest build from "
 					+ GetSheetData.getData("Dev Tracker!D2").get(0).get(0).toString());
 			mailSend.mail(renamedFileName, uname,
-					"Version is mismatch. " + uname + " user is working on " + version + " build");
+					"Version is mismatch. " + uname + " user is working on " + version + " build", Frame1.stage);
 			return false;
 		}
 	}
@@ -181,20 +182,37 @@ public class AddBugTask extends Utilities {
 		DeferredBugsByPM = false;
 		BranchCreateSheet = false;
 		ACFileAvailable = "false";
+
+		DevTrackerStageURL = GetSheetData.getData("Dev Tracker!B8").get(0).get(0).toString();
+		DevTrackerStageAccessUsername = GetSheetData.getData("Dev Tracker!B9").get(0).get(0).toString();
+		DevTrackerStageAccessPassword = GetSheetData.getData("Dev Tracker!B10").get(0).get(0).toString();
+
+		dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+		now = LocalDateTime.now();
+		Frame1.appendText(dtf.format(now));
+
+		if (Frame1.filePath.equals("")) {
+			src = new File("Ticket.xls");
+		} else {
+			src = new File(Frame1.filePath);
+		}
+
+		wb = Workbook.getWorkbook(src);
+
+		sh1 = wb.getSheet(0);
+		shac = wb.getSheet("Automation Acceptance Criteria");
+
+		String[] sheetNames = wb.getSheetNames();
+
+		DevTrackerURL = sh1.getCell(1, 0);
+
+		if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
+			Frame1.stage = true;
+		} else {
+			Frame1.stage = false;
+		}
+
 		if (checkVersion() == true) {
-			dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-			now = LocalDateTime.now();
-			Frame1.appendText(dtf.format(now));
-
-			String[] sheetNames = wb.getSheetNames();
-
-			DevTrackerStageURL = GetSheetData.getData("Dev Tracker!B8").get(0).get(0).toString();
-			DevTrackerStageAccessUsername = GetSheetData.getData("Dev Tracker!B9").get(0).get(0).toString();
-			DevTrackerStageAccessPassword = GetSheetData.getData("Dev Tracker!B10").get(0).get(0).toString();
-
-			// column, row
-			DevTrackerURL = sh1.getCell(1, 0);
-
 			password = sh1.getCell(1, 2);
 
 			imagePath = Frame1.imageDirPath;
@@ -206,7 +224,7 @@ public class AddBugTask extends Utilities {
 			if (DevTrackerURL.getContents().trim().equals(DevTrackerStageURL)) {
 			} else {
 				if (GetSheetData.getData("Dev Tracker!B1").get(0).get(0).toString().equalsIgnoreCase("yes")) {
-					mailSend.mail(Frame1.filePath, uname, "start");
+					mailSend.mail(Frame1.filePath, uname, "start", Frame1.stage);
 				} else {
 					Frame1.appendText("no option for mail on start");
 				}
@@ -437,6 +455,8 @@ public class AddBugTask extends Utilities {
 							found = true;
 						}
 					}
+
+					Thread.sleep(1500);
 
 					if (Boolean.TRUE.equals(found)) {
 						selec1.selectByVisibleText(taskcategoryText);
@@ -670,7 +690,7 @@ public class AddBugTask extends Utilities {
 												By.xpath("//*[@id='frmaddedit']/div[7]/div[3]/table/tbody/tr["
 														+ dependentCount + "]/td[1]/a"))
 												.getText();
-								mailSend.mail(renamedFileName, uname, error);
+								mailSend.mail(renamedFileName, uname, error, Frame1.stage);
 							}
 						}
 					} catch (ElementClickInterceptedException e) {
@@ -755,7 +775,7 @@ public class AddBugTask extends Utilities {
 												By.xpath("//*[@id='frmaddedit']/div[8]/div[3]/table/tbody/tr["
 														+ dependentCount + "]/td[1]/a"))
 												.getText();
-								mailSend.mail(renamedFileName, uname, error);
+								mailSend.mail(renamedFileName, uname, error, Frame1.stage);
 							}
 						}
 					} catch (ElementClickInterceptedException e) {
@@ -1065,7 +1085,7 @@ public class AddBugTask extends Utilities {
 		if (Frame1.stop == true) {
 		} else {
 			mailSend mailSend1 = new mailSend();
-			mailSend1.mail(renamedFileName, uname, error);
+			mailSend1.mail(renamedFileName, uname, error, Frame1.stage);
 		}
 
 		Thread.sleep(2000);

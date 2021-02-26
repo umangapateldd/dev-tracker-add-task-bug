@@ -42,6 +42,7 @@ public class Frame1 extends Utilities {
 	static JButton btnStopExecution;
 	static JRadioButton rdbChromeYes;
 	static JRadioButton rdbChromeNo;
+	static boolean stage = false;
 //	static JRadioButton rdbattachmentFolderFromExcelYes;
 //	static JRadioButton rdbattachmentFolderFromExcelNo;
 
@@ -232,7 +233,8 @@ public class Frame1 extends Utilities {
 							System.out.println("driver = " + Frame1.driverFrame);
 							Frame1.driverFrame.close();
 							stop = true;
-							test.mailSend.mail("abc.txt", test.username.getContents(), "Execution is stopped manually");
+							test.mailSend.mail("abc.txt", test.username.getContents(), "Execution is stopped manually",
+									Frame1.stage);
 						} catch (Exception e) {
 							System.out.println(e);
 							alertMessage("Script is stopped 1");
