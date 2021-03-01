@@ -23,8 +23,8 @@ import javax.mail.internet.MimeMultipart;
 public class mailSend extends Utilities {
 	// for example, smtp.mailgun.org
 	String SMTP_SERVER = "smtp.gmail.com";
-	String USERNAME = "vivekbhatt.devdigital@gmail.com";
-	String PASSWORD = "Vivekbhatt@123";
+	String USERNAME = "devdigitalqabaroda@gmail.com";
+	String PASSWORD = "devdigital123#";
 	String EMAIL_TO = "";
 	String EMAIL_FROM = "";
 	String CC_Email = "";
