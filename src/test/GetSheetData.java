@@ -24,11 +24,11 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 public class GetSheetData extends Utilities {
-	private static final String APPLICATION_NAME = "Google Sheets API for Selenium";
+	private static final String APPLICATION_NAME = "DevTracker Add Bug Script";
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	private static final String TOKENS_DIRECTORY_PATH = "tokens";
 	static NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-	static String spreadsheetId = "1185TMWEkVxx1JkLaeKjJbH89DCrNoLhyZGVSH8pLiYs";
+	static String spreadsheetId = "1k1dMRRrg23IHan4pI2EkjsarnsrdQEOG1ynUvpfru7Y";
 	static Sheets service;
 	/**
 	 * Global instance of the scopes required by this quickstart. If modifying these
